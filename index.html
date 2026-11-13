@@ -926,7 +926,7 @@ const Net={mode:"local",peers:[],cpeers:[],members:[],feed:[],reacts:{},room:nul
     const mk=row.marks&&typeof row.marks==="object"?row.marks:{};
     Object.keys(mk).forEach(k=>{if(MARK_RE.test(k))(reacts[k]=reacts[k]||[]).push(row.user_id);});});
   feed.sort((a,b)=>(b.at||0)-(a.at||0));
-  this.members=mem;this.feed=feed;this.reacts=reacts;
+  this.members=mem;this.feed=feed;this.reacts=reacts;this.readPresence();paintLive();
   // the circle went away or this user was removed
   if(!mem.some(m=>m.uid===this.uid)){circleGone();return;}
   if(ui.tab==="circle")softRender();
@@ -937,23 +937,24 @@ const Net={mode:"local",peers:[],cpeers:[],members:[],feed:[],reacts:{},room:nul
   this.cid=cid;
   try{await this.sb.realtime.setAuth();}catch(e){}
   // the user id is the key only while sharing; otherwise members can't tell who is in a session
-  const share=!!S.set.share,pkey=share?this.uid:this.key;this.chanShare=share;
+  const share=!!S.set.share,pkey=share?this.uid:uid4()+uid4();this.chanShare=share;this.pkey=pkey;
   const ch=this.sb.channel("circle:"+cid,{config:{private:true,presence:{key:pkey}}});
-  ch.on("presence",{event:"sync"},()=>{
-    const st=ch.presenceState(),list=[];
-    Object.keys(st).forEach(k=>(st[k]||[]).forEach(pr=>{
-      // a name is trusted only when it is a member's id and is also the presence key
-      const ok=typeof pr.who==="string"&&pr.who===k&&Net.members.some(m=>m.uid===k);
-      list.push({isMe:k===pkey,presence:Object.assign({},pr,{who:ok?pr.who:null})});}));
-    Net.cpeers=list.filter(p=>p.presence&&p.presence.active);
-    paintLive();if(ui.tab==="circle")softRender();
-  });
+  ch.on("presence",{event:"sync"},()=>{Net.readPresence();paintLive();if(ui.tab==="circle")softRender();});
   ch.on("broadcast",{event:"members"},()=>{
     clearTimeout(Net.mTm);Net.mTm=setTimeout(()=>Net.loadMembers(),300);});
   ch.subscribe(s=>{if(s==="SUBSCRIBED")Net.beat();});
   this.chan=ch;
   await this.loadMembers();
   push();
+ },
+ // a name is trusted only when it is a member's id and is also the presence key
+ readPresence(){
+  if(!this.chan){this.cpeers=[];return;}
+  const st=this.chan.presenceState(),list=[];
+  Object.keys(st).forEach(k=>(st[k]||[]).forEach(pr=>{
+    const ok=typeof pr.who==="string"&&pr.who===k&&this.members.some(m=>m.uid===k);
+    list.push({isMe:k===this.pkey,presence:Object.assign({},pr,{who:ok?pr.who:null})});}));
+  this.cpeers=list.filter(p=>p.presence&&p.presence.active);
  },
  // the presence key depends on sharing, so the channel reopens when sharing changes
  shareChanged(){if(this.chan&&this.chanShare!==!!S.set.share)this.openCircle();},
@@ -1191,6 +1192,7 @@ const Cloud={ok:false,err:false,busy:false,again:false,last:{},uid:null,
   ui.dur.focus=S.set.blockMin||50;
   try{localStorage.setItem(LS,JSON.stringify(S));}catch(e){}
   if(Net.mode==="connected"&&S.pod.id!==Net.cid){if(S.pod.id)Net.openCircle();else Net.closeCircle();}
+  else Net.shareChanged();
   render();
  },
  async push(){
@@ -2011,7 +2013,7 @@ function vYou(root){
       ui.resetArm=false;
       if(T.running){clearInterval(T.iv);clearTimeout(bTm);T.running=false;keepAwake(false);persistT();}
       // rows, memberships and empty circles go with the account on the server
-      if(Auth.sb&&!(await Auth.deleteAccount())){ui.delErr=true;render();return;}
+      if(Auth.sb&&Auth.user&&!(await Auth.deleteAccount())){ui.delErr=true;render();return;}
       ui.delErr=false;Net.closeCircle();
       S=fresh();lastPush="";Object.assign(ui,{ob:0,tpl:null,pick:null,pickOwn:"",cue:null,cueOwn:"",tab:"today",flash:"",justFinished:null,sessAct:null,shrink:null});
       day();save();if(Auth.sb)await Auth.fresh();Net.beat();render();}}),
@@ -2064,9 +2066,9 @@ function restoreCard(){
     if(!o){msg.textContent=t("you.restoreBad");armed=false;btn.textContent=t("you.restoreBtn");return;}
     if(!armed){armed=true;btn.textContent=t("you.restoreArm");return;}
     Net.closeCircle();lastPush="";
-    S=normalize(o);if(S.lang)LANG=S.lang;
+    S=normalize(o);if(S.lang)LANG=S.lang;S.owner=Auth.user?Auth.user.id:undefined;
     rollMonth();day();ui.dur.focus=S.set.blockMin||50;
-    save();if(S.pod.id)Net.openCircle();
+    save();if(S.pod.id)Net.openCircle();else Net.closeCircle();
     render();
     const m=document.getElementById("restoreMsg");if(m)m.textContent=t("you.restoreOk");}});
   msg.id="restoreMsg";
