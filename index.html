@@ -1034,6 +1034,13 @@ const Auth={sb:null,user:null,ready:false,sent:"",err:"",mode:"save",busy:false,
  async init(){
   const c=window.AW_CONFIG;
   if(!c||!window.supabase||typeof window.supabase.createClient!=="function"){this.ready=true;softRender();return;}
+  if(!S.owner&&S.onboarded){
+    let prev=null;
+    try{const k="sb-"+new URL(c.url).hostname.split(".")[0]+"-auth-token";
+      const v=JSON.parse(localStorage.getItem(k)||"null");prev=v&&v.user&&v.user.id;}catch(e){}
+    // no stored session: the copy was made offline, so an existing account's copy wins over it
+    S.owner=prev||"local";try{localStorage.setItem(LS,JSON.stringify(S));}catch(e){}
+  }
   try{
     this.sb=window.supabase.createClient(c.url,c.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
     this.sb.auth.onAuthStateChange((ev,s)=>{this.user=s?s.user:null;if(ev==="USER_UPDATED"||ev==="SIGNED_IN")this.sent="";
@@ -1140,6 +1147,9 @@ function acctCard(){
 }
 
 /* ═════════ 6b. Private copy in the user's account ═════════ */
+// two versions of one text: keep the one that already contains the other, else both
+function joinText(a,b){a=String(a||"");b=String(b||"");
+  if(!b||a.includes(b))return a;if(!a||b.includes(a))return b;return a+"\n\n"+b;}
 // user_state holds everything except days; user_days holds one row per month.
 // RLS lets each user read and write only their own rows.
 const Cloud={ok:false,err:false,busy:false,again:false,last:{},uid:null,
@@ -1184,7 +1194,10 @@ const Cloud={ok:false,err:false,busy:false,again:false,last:{},uid:null,
     Object.keys(x.done||{}).forEach(id=>{if(x.done[id])y.done[id]=true;});
     y.focusMin=Math.max(y.focusMin||0,x.focusMin||0);
     y.practiceMin=Math.max(y.practiceMin||0,x.practiceMin||0);
-    if(!y.note&&x.note)y.note=x.note;
+    y.logged=!!(y.logged||x.logged);
+    y.note=joinText(y.note,x.note);y.journal=joinText(y.journal,x.journal);
+    ["dq","grat"].forEach(f=>{const ya=Array.isArray(y[f])?y[f]:[],xa=Array.isArray(x[f])?x[f]:[];
+      y[f]=Array.from({length:Math.max(ya.length,xa.length)},(_,i)=>joinText(ya[i],xa[i]));});
   });
   a.days=days;S=normalize(a);
   if(S.lang)LANG=S.lang;
