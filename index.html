@@ -292,7 +292,7 @@ svg text{font-family:var(--mono)}
 <nav class="nav" role="tablist" id="nav"></nav>
 <main><section id="view"></section></main>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js" integrity="sha384-2zrRDgDHSYB/GN3nFW3fsZXoxEhKIr3N2h63Tc6DEOB9JJdFIu8xMJT2Cph/gBil" crossorigin="anonymous"></script>
 <script src="config.js"></script>
 <script>
 (function(){
@@ -434,7 +434,7 @@ en:{
   syncOk:"Saved to your account", syncAnon:"Saved to this browser's guest account. Add your email above to keep it if this browser is cleared.", syncLocal:"Saved on this device only", syncErr:"Couldn't save to your account. It's still on this device.",
   restore:"Restore from a backup", restorePh:"Paste a JSON backup here, or choose a file", restoreBtn:"Replace my data with this backup",
   restoreArm:"Tap again to replace everything", restoreOk:"Restored.", restoreBad:"That isn't a valid backup.",
-  reset:"Delete everything", resetConfirm:"Tap again to delete everything, for good"
+  reset:"Delete everything", resetConfirm:"Tap again to delete everything, for good", delErr:"Couldn't reach the server, so nothing was deleted. Check your connection and try again."
  }
 },
 ro:{
@@ -571,7 +571,7 @@ ro:{
   syncOk:"Salvat în contul tău", syncAnon:"Salvat în contul de vizitator al acestui browser. Adaugă-ți emailul mai sus ca să nu-l pierzi dacă se șterg datele browserului.", syncLocal:"Salvat doar pe acest dispozitiv", syncErr:"Nu s-a putut salva în cont. Datele sunt încă pe acest dispozitiv.",
   restore:"Restaurează dintr-o copie", restorePh:"Lipește aici o copie JSON sau alege un fișier", restoreBtn:"Înlocuiește datele cu această copie",
   restoreArm:"Apasă din nou ca să înlocuiești tot", restoreOk:"Restaurat.", restoreBad:"Nu e o copie validă.",
-  reset:"Șterge tot", resetConfirm:"Apasă din nou ca să ștergi tot, definitiv"
+  reset:"Șterge tot", resetConfirm:"Apasă din nou ca să ștergi tot, definitiv", delErr:"Nu am putut ajunge la server, așa că nu s-a șters nimic. Verifică conexiunea și încearcă din nou."
  }
 }};
 let LANG="en";
@@ -884,6 +884,7 @@ function lockCard(key){
 // The lobby is a public Realtime channel that carries only {active, mode} under a random key.
 // A circle's channel is private (circle:<id>) and only its members can join it.
 const UUID_RE=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+const MARK_RE=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\|\d{4}-\d{2}-\d{2}$/;
 const Net={mode:"local",peers:[],cpeers:[],members:[],feed:[],reacts:{},room:null,chan:null,cid:null,key:uid4()+uid4(),
  get sb(){return Auth.sb&&Auth.user?Auth.sb:null;},
  get db(){return this.sb;},
@@ -918,11 +919,12 @@ const Net={mode:"local",peers:[],cpeers:[],members:[],feed:[],reacts:{},room:nul
   const cid=this.cid;if(!cid||!this.sb)return;
   const r=await this.sb.from("circle_members").select("user_id,label,shared,marks").eq("circle_id",cid);
   if(r.error||this.cid!==cid)return;
-  const mem=[],feed=[],reacts={};
+  const mem=[],feed=[],reacts=Object.create(null);
   (r.data||[]).forEach(row=>{const x=row.shared||{};
     mem.push(Object.assign({},x,{uid:row.user_id,label:row.label||""}));
     (Array.isArray(x.items)?x.items:[]).forEach(it=>feed.push(Object.assign({},it,{uid:row.user_id})));
-    Object.keys(row.marks||{}).forEach(k=>(reacts[k]=reacts[k]||[]).push(row.user_id));});
+    const mk=row.marks&&typeof row.marks==="object"?row.marks:{};
+    Object.keys(mk).forEach(k=>{if(MARK_RE.test(k))(reacts[k]=reacts[k]||[]).push(row.user_id);});});
   feed.sort((a,b)=>(b.at||0)-(a.at||0));
   this.members=mem;this.feed=feed;this.reacts=reacts;
   // the circle went away or this user was removed
@@ -934,23 +936,30 @@ const Net={mode:"local",peers:[],cpeers:[],members:[],feed:[],reacts:{},room:nul
   const cid=S.pod.id;if(!cid||!this.sb)return;
   this.cid=cid;
   try{await this.sb.realtime.setAuth();}catch(e){}
-  const ch=this.sb.channel("circle:"+cid,{config:{private:true,presence:{key:this.uid}}});
+  // the user id is the key only while sharing; otherwise members can't tell who is in a session
+  const share=!!S.set.share,pkey=share?this.uid:this.key;this.chanShare=share;
+  const ch=this.sb.channel("circle:"+cid,{config:{private:true,presence:{key:pkey}}});
   ch.on("presence",{event:"sync"},()=>{
     const st=ch.presenceState(),list=[];
-    Object.keys(st).forEach(k=>(st[k]||[]).forEach(pr=>list.push({isMe:k===Net.uid,presence:pr})));
+    Object.keys(st).forEach(k=>(st[k]||[]).forEach(pr=>{
+      // a name is trusted only when it is a member's id and is also the presence key
+      const ok=typeof pr.who==="string"&&pr.who===k&&Net.members.some(m=>m.uid===k);
+      list.push({isMe:k===pkey,presence:Object.assign({},pr,{who:ok?pr.who:null})});}));
     Net.cpeers=list.filter(p=>p.presence&&p.presence.active);
     paintLive();if(ui.tab==="circle")softRender();
   });
-  ch.on("postgres_changes",{event:"*",schema:"public",table:"circle_members",filter:"circle_id=eq."+cid},()=>{
+  ch.on("broadcast",{event:"members"},()=>{
     clearTimeout(Net.mTm);Net.mTm=setTimeout(()=>Net.loadMembers(),300);});
   ch.subscribe(s=>{if(s==="SUBSCRIBED")Net.beat();});
   this.chan=ch;
   await this.loadMembers();
   push();
  },
+ // the presence key depends on sharing, so the channel reopens when sharing changes
+ shareChanged(){if(this.chan&&this.chanShare!==!!S.set.share)this.openCircle();},
  closeCircle(){
   if(this.chan){try{Auth.sb.removeChannel(this.chan);}catch(e){}this.chan=null;}
-  this.cid=null;this.members=[];this.feed=[];this.reacts={};this.cpeers=[];
+  this.cid=null;this.members=[];this.feed=[];this.reacts=Object.create(null);this.cpeers=[];
  },
  beat(){
   const act=!!T.running,mode=act?T.mode:null,sh=!!S.set.share;
@@ -1073,7 +1082,8 @@ const Auth={sb:null,user:null,ready:false,sent:"",err:"",mode:"save",busy:false,
  async signOut(){
   if(!this.sb)return;
   // the account must hold the latest copy before this device forgets it
-  if(Cloud.ok&&!(await Cloud.flush())){this.err=t("you.syncErr");render();return;}
+  if(!Cloud.ok)await Cloud.pull();
+  if(!Cloud.ok||!(await Cloud.flush())){this.err=t("you.syncErr");render();return;}
   try{await this.sb.auth.signOut();}catch(e){}
   Net.stop();this.user=null;this.sent="";this.mode="save";this.err="";Cloud.reset();
   if(T.running){clearInterval(T.iv);clearTimeout(bTm);T.running=false;keepAwake(false);persistT();}
@@ -1082,13 +1092,15 @@ const Auth={sb:null,user:null,ready:false,sent:"",err:"",mode:"save",busy:false,
   await this.fresh();render();
  },
  // deletes the account on the server; its rows cascade
+ // false (and nothing changed) when the server couldn't be reached or refused
  async deleteAccount(){
-  if(!this.sb||!this.user)return true;
-  try{const r=await this.sb.functions.invoke("delete-account",{method:"POST"});if(r.error)throw r.error;}
+  if(!this.sb||!this.user)return false;
+  try{const r=await this.sb.functions.invoke("delete-account",{method:"POST"});
+    if(r.error||!r.data||r.data.deleted!==true)throw r.error||new Error("not deleted");}
   catch(e){return false;}
+  Net.stop();Cloud.reset();
   try{await this.sb.auth.signOut({scope:"local"});}catch(e){}
-  this.user=null;this.sent="";this.mode="save";
-  await this.fresh();
+  this.user=null;this.sent="";this.mode="save";this.err="";
   return true;
  }
 };
@@ -1141,6 +1153,7 @@ const Cloud={ok:false,err:false,busy:false,again:false,last:{},uid:null,
  async pull(){
   if(!this.can())return;
   const uid=Auth.user.id;this.reset();this.uid=uid;
+  const switched=!!(S.owner&&S.owner!==uid);
   try{
     const a=await Auth.sb.from("user_state").select("doc").eq("user_id",uid).maybeSingle();
     if(a.error)throw a.error;
@@ -1151,17 +1164,19 @@ const Cloud={ok:false,err:false,busy:false,again:false,last:{},uid:null,
       c.days={};(d.data||[]).forEach(r=>Object.assign(c.days,r.doc||{}));
       delete c.parts;
       if(this.uid!==uid)return;
-      this.merge(c);
+      this.merge(c,switched);
     }
+    if(S.owner!==uid){S.owner=uid;try{localStorage.setItem(LS,JSON.stringify(S));}catch(e){}}
     this.ok=true;
   }catch(e){if(this.uid===uid){this.err=true;softRender();}return;} // never overwrite the account from a device that couldn't read it
   softRender();this.push();
  },
  // the newer side wins, except that a day done on either device stays done
- merge(c){
-  const useC=!S.onboarded||(c.updatedAt||0)>(S.updatedAt||0);
+ // switched: this device held another user's copy, so the account's copy replaces it whole
+ merge(c,switched){
+  const useC=switched||!S.onboarded||(c.updatedAt||0)>(S.updatedAt||0);
   const a=useC?c:S,b=useC?S:c,days=a.days||{};
-  Object.keys(b.days||{}).forEach(k=>{
+  if(!switched)Object.keys(b.days||{}).forEach(k=>{
     const x=b.days[k],y=days[k];
     if(!y){days[k]=x;return;}
     y.done=y.done||{};
@@ -1203,7 +1218,7 @@ const Cloud={ok:false,err:false,busy:false,again:false,last:{},uid:null,
   for(let i=0;i<50&&this.busy;i++)await new Promise(r=>setTimeout(r,100));
   await this.push();
   for(let i=0;i<50&&(this.busy||this.again);i++)await new Promise(r=>setTimeout(r,100));
-  return !this.err;
+  return !this.err&&!this.busy&&!this.again;
  },
  async wipe(){
   if(!this.can())return;
@@ -1788,7 +1803,7 @@ function board(){
   c.appendChild(el("div",{class:"notice"+(sh?"":" acc"),style:"margin-top:12px"},[el("div",{style:"flex:1;min-width:0"},[
     el("div",{text:sh?t("circ.sharingNote"):t("circ.privateNote")}),
     el("button",{class:"btn "+(sh?"ghost":"accent")+" sm",style:"margin-top:8px",text:sh?t("circ.stopShare"):t("circ.shareNow"),
-      onclick:()=>{S.set.share=!S.set.share;save();push();Net.beat();render();}})])]));
+      onclick:()=>{S.set.share=!S.set.share;save();Net.shareChanged();push();Net.beat();render();}})])]));
   const h=el("div",{style:"margin-top:8px"});c.appendChild(h);
   if(!mem.some(m=>m.uid!==Net.uid))
     h.appendChild(el("div",{class:"empty",text:t("circ.first")}));
@@ -1964,7 +1979,7 @@ function vYou(root){
   stack.appendChild(el("div",{class:"card"},[el("div",{class:"row between"},[
     el("div",{style:"flex:1;min-width:0"},[el("b",{text:t("you.share")}),el("div",{class:"tiny muted",text:t("you.shareHint")})]),
     el("button",{class:"btn "+(S.set.share?"accent":"ghost")+" sm",text:S.set.share?t("you.shareOn"):t("you.shareOff"),
-      onclick:()=>{S.set.share=!S.set.share;save();push();Net.beat();render();}})])]));
+      onclick:()=>{S.set.share=!S.set.share;save();Net.shareChanged();push();Net.beat();render();}})])]));
   stack.appendChild(el("div",{class:"card"},[E("div","eyebrow",t("you.language")),
     el("div",{class:"row",style:"margin-top:9px;gap:6px"},[
       el("button",{class:"btn "+(LANG==="en"?"":"ghost")+" sm",text:"English",onclick:()=>{LANG="en";save();render();}}),
@@ -1995,10 +2010,12 @@ function vYou(root){
       if(!ui.resetArm){ui.resetArm=true;render();return;}
       ui.resetArm=false;
       if(T.running){clearInterval(T.iv);clearTimeout(bTm);T.running=false;keepAwake(false);persistT();}
-      const code=S.pod.id;Net.closeCircle();
-      await dropMember(code);await Cloud.wipe();await Auth.deleteAccount();
+      // rows, memberships and empty circles go with the account on the server
+      if(Auth.sb&&!(await Auth.deleteAccount())){ui.delErr=true;render();return;}
+      ui.delErr=false;Net.closeCircle();
       S=fresh();lastPush="";Object.assign(ui,{ob:0,tpl:null,pick:null,pickOwn:"",cue:null,cueOwn:"",tab:"today",flash:"",justFinished:null,sessAct:null,shrink:null});
-      day();save();Net.beat();render();}})]));
+      day();save();if(Auth.sb)await Auth.fresh();Net.beat();render();}}),
+    ui.delErr?el("div",{class:"tiny",style:"color:var(--crit);margin-top:8px",text:t("you.delErr")}):null]));
   root.appendChild(stack);
 }
 

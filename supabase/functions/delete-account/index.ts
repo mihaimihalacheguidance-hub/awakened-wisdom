@@ -26,14 +26,17 @@ Deno.serve(async (req) => {
   const uid = data.user.id;
 
   // circles this user leaves empty go too
-  const { data: mine } = await admin.from("circle_members").select("circle_id").eq("user_id", uid);
+  const { data: mine, error: mineErr } = await admin.from("circle_members").select("circle_id").eq("user_id", uid);
+  if (mineErr) return json({ error: "could not delete account" }, 500);
 
   const { error: delErr } = await admin.auth.admin.deleteUser(uid);
   if (delErr) return json({ error: "could not delete account" }, 500);
 
   for (const { circle_id } of mine ?? []) {
-    const { count } = await admin.from("circle_members").select("*", { count: "exact", head: true }).eq("circle_id", circle_id);
-    if (!count) await admin.from("circles").delete().eq("id", circle_id);
+    const { count, error: cErr } = await admin
+      .from("circle_members").select("*", { count: "exact", head: true }).eq("circle_id", circle_id);
+    // only a circle known to be empty goes; on any error it stays
+    if (!cErr && count === 0) await admin.from("circles").delete().eq("id", circle_id);
   }
   return json({ deleted: true });
 });
