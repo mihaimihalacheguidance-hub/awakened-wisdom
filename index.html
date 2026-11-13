@@ -1,0 +1,2093 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Awakened Wisdom</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+:root{
+  --paper:#F6F2FB; --surface:#FFFFFF; --surface-2:#ECE5F6; --surface-3:#F4EFFA;
+  --ink:#1E1A2E; --ink-2:#4E4864; --ink-3:#6B6484;
+  --line:#E4DCF1; --line-2:#CDC1E2;
+  --accent:#6D3FD6; --accent-2:#8B5CF6; --accent-ink:#FFF; --accent-soft:#EEE7FD; --accent-line:#C6B2F3;
+  --calm:#2F7A60; --calm-soft:#DDEFE6; --calm-ring:rgba(47,122,96,.10); --calm-glow:rgba(47,122,96,.22);
+  --good:#2C7A4B; --warn:#8F5E0C; --crit:#B03A2E;
+  --good-soft:#D9EDDF; --warn-soft:#F5E8CC; --crit-soft:#F6DDD8;
+  --glow:rgba(139,92,246,.16); --glow-2:rgba(47,122,96,.08);
+  --shadow:0 1px 2px rgba(30,26,46,.04),0 14px 34px -20px rgba(76,52,140,.30);
+  --r:16px;
+  --mono:"DM Mono",ui-monospace,Menlo,monospace;
+  --display:"Lora",Georgia,"Times New Roman",serif;
+  --body:"Raleway","Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0F0C1A; --surface:#181428; --surface-2:#241E3A; --surface-3:#1D1830;
+  --ink:#EEEAF8; --ink-2:#B0A8C8; --ink-3:#8C84A8;
+  --line:#2B2444; --line-2:#3F3562;
+  --accent:#A98BFA; --accent-2:#C4B0FF; --accent-ink:#1A0E3D; --accent-soft:#2A1F52; --accent-line:#4E3A94;
+  --calm:#72D1A9; --calm-soft:#14302A; --calm-ring:rgba(114,209,169,.08); --calm-glow:rgba(114,209,169,.20);
+  --good:#5DBE84; --warn:#DDAA3A; --crit:#EB7C67;
+  --good-soft:#12301F; --warn-soft:#2E2510; --crit-soft:#36190F;
+  --glow:rgba(139,92,246,.20); --glow-2:rgba(114,209,169,.06);
+  --shadow:0 1px 2px rgba(0,0,0,.45),0 14px 34px -20px rgba(0,0,0,.95);
+}}
+:root[data-theme="dark"]{
+  --paper:#0F0C1A; --surface:#181428; --surface-2:#241E3A; --surface-3:#1D1830;
+  --ink:#EEEAF8; --ink-2:#B0A8C8; --ink-3:#8C84A8;
+  --line:#2B2444; --line-2:#3F3562;
+  --accent:#A98BFA; --accent-2:#C4B0FF; --accent-ink:#1A0E3D; --accent-soft:#2A1F52; --accent-line:#4E3A94;
+  --calm:#72D1A9; --calm-soft:#14302A; --calm-ring:rgba(114,209,169,.08); --calm-glow:rgba(114,209,169,.20);
+  --good:#5DBE84; --warn:#DDAA3A; --crit:#EB7C67;
+  --good-soft:#12301F; --warn-soft:#2E2510; --crit-soft:#36190F;
+  --glow:rgba(139,92,246,.20); --glow-2:rgba(114,209,169,.06);
+  --shadow:0 1px 2px rgba(0,0,0,.45),0 14px 34px -20px rgba(0,0,0,.95);
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{margin:0;color:var(--ink);font-family:var(--body);font-size:15.5px;line-height:1.6;font-variant-numeric:lining-nums;
+  background:radial-gradient(900px 420px at 15% -120px,var(--glow),transparent 70%),
+    radial-gradient(700px 380px at 95% -80px,var(--glow-2),transparent 70%),var(--paper);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;overscroll-behavior-y:contain;-webkit-tap-highlight-color:transparent}
+h1,h2,h3{font-family:var(--display);font-weight:600;margin:0;text-wrap:balance;letter-spacing:-.01em;line-height:1.2}
+button{cursor:pointer;transition:background-color .18s ease,border-color .18s ease,color .18s ease,box-shadow .18s ease,transform .12s ease}
+p{margin:0}
+button,input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+.topbar{background:transparent}
+.tb{max-width:1080px;margin:0 auto;padding:14px 16px 10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:11px;margin-right:auto;min-width:0}
+.mark{width:36px;height:36px;border-radius:50%;flex:none;display:grid;place-items:center;color:#fff;
+  background:radial-gradient(circle at 30% 25%,var(--accent-2),var(--accent) 55%,#3E2391);
+  box-shadow:0 0 0 4px var(--accent-soft),0 8px 20px -8px var(--accent)}
+.mark svg{width:20px;height:20px;display:block}
+.brand b{font-family:var(--display);font-weight:600;font-size:19px;display:block;letter-spacing:-.01em;line-height:1.15}
+.brand span{font-family:var(--body);font-size:11.5px;font-weight:500;letter-spacing:.04em;color:var(--ink-3);display:block}
+.chip{font-family:var(--mono);font-size:11.5px;border:1px solid var(--line);background:var(--surface);color:var(--ink-2);
+  padding:5px 11px;border-radius:999px;display:inline-flex;align-items:center;gap:7px;white-space:nowrap;box-shadow:var(--shadow)}
+.chip b{color:var(--ink)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--ink-3);flex:none;display:inline-block}
+.dot.live{background:var(--calm);box-shadow:0 0 0 3px var(--calm-soft);animation:breathe 3.2s ease-in-out infinite}
+.dot.good{background:var(--good)}
+@keyframes breathe{50%{box-shadow:0 0 0 6px var(--calm-ring)}}
+.iconbtn{background:var(--surface);border:1px solid var(--line);color:var(--ink-2);height:40px;min-width:40px;padding:0 10px;
+  border-radius:999px;cursor:pointer;display:inline-grid;place-items:center;font-family:var(--mono);font-size:12px;box-shadow:var(--shadow)}
+.iconbtn:hover{color:var(--accent);border-color:var(--accent-line)}
+
+.nav{max-width:1080px;margin:0 auto;width:100%;padding:6px 16px;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;
+  position:sticky;top:env(safe-area-inset-top,0px);z-index:29;
+  background:color-mix(in srgb,var(--paper) 82%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line)}
+.nav::-webkit-scrollbar{display:none}
+.nav button{background:none;border:0;cursor:pointer;padding:9px 15px;color:var(--ink-3);font-family:var(--body);font-weight:600;
+  font-size:13.5px;letter-spacing:.01em;border-radius:999px;white-space:nowrap;min-height:40px;
+  display:flex;align-items:center;gap:7px}
+.nav button:hover{color:var(--ink);background:var(--surface-3)}
+.nav button[aria-selected="true"]{color:var(--accent);background:var(--accent-soft)}
+.nav .badge{font-size:10px;font-family:var(--mono);background:var(--accent);color:var(--accent-ink);border-radius:999px;padding:1px 6px;letter-spacing:0}
+main{max-width:1080px;margin:0 auto;width:100%;padding:26px 16px 80px}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.card.lift{box-shadow:var(--shadow)}
+.stack{display:flex;flex-direction:column;gap:14px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.between{justify-content:space-between}
+.eyebrow{font-family:var(--body);font-weight:700;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+.muted{color:var(--ink-2)} .tiny{font-size:13.5px} .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.rule{height:1px;background:var(--line);border:0;margin:0}
+.btn{background:var(--ink);color:var(--paper);border:1px solid var(--ink);padding:10px 18px;border-radius:999px;cursor:pointer;
+  font-weight:600;font-size:14.5px;min-height:42px}
+.btn:hover{transform:translateY(-1px);box-shadow:0 8px 18px -10px rgba(30,26,46,.5)}
+.btn:active{transform:translateY(0) scale(.98)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+.btn.ghost{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--accent-line);color:var(--accent);box-shadow:none}
+.btn.accent{background:linear-gradient(135deg,var(--accent),var(--accent-2));border-color:transparent;color:var(--accent-ink)}
+.btn.accent:hover{box-shadow:0 10px 22px -10px var(--accent)}
+.btn.sm{padding:6px 13px;font-size:13px;min-height:34px}
+.btn.lg{padding:14px 24px;font-size:16px;min-height:52px}
+.btn.wide{width:100%}
+label.field{display:flex;flex-direction:column;gap:6px;flex:1 1 180px;min-width:0}
+label.field>span{font-family:var(--body);font-weight:600;font-size:12.5px;letter-spacing:.02em;color:var(--ink-2)}
+input[type=text],input[type=date],textarea,select{background:var(--surface-3);border:1px solid var(--line);
+  border-radius:12px;padding:10px 13px;font-size:15.5px;width:100%;min-width:0;transition:border-color .18s,box-shadow .18s,background-color .18s}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent);background:var(--surface);box-shadow:0 0 0 4px var(--accent-soft)}
+textarea{resize:vertical;min-height:58px;font-family:var(--body)}
+textarea.auto{resize:none;overflow:hidden;min-height:0;line-height:1.4;display:block}
+.pill{font-family:var(--mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;padding:3px 8px;border-radius:999px;
+  border:1px solid var(--line);color:var(--ink-2);background:var(--surface-3);white-space:nowrap}
+.pill.good{background:var(--good-soft);color:var(--good);border-color:transparent}
+.pill.warn{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.pill.acc{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+.pill.calm{background:var(--calm-soft);color:var(--calm);border-color:transparent}
+.notice{border:1px dashed var(--line-2);border-radius:14px;padding:12px 14px;font-size:14px;color:var(--ink-2);
+  display:flex;gap:10px;align-items:flex-start}
+.notice b{color:var(--ink)}
+.notice.acc{border-style:solid;border-color:var(--accent-line);background:var(--accent-soft);color:var(--ink)}
+.notice.crit{border-style:solid;border-color:var(--crit);background:var(--crit-soft);color:var(--ink)}
+.lock{border:1px dashed var(--line-2);border-radius:var(--r);padding:14px 16px;display:flex;gap:12px;align-items:center;color:var(--ink-2)}
+.lock .ic{font-family:var(--mono);font-size:16px;color:var(--ink-3)}
+.empty{padding:22px 12px;text-align:center;color:var(--ink-3);font-size:14px}
+.hidden{display:none!important}
+details.fold>summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.fold>summary::-webkit-details-marker{display:none}
+details.fold>summary::after{content:"＋";font-family:var(--mono);color:var(--ink-3)}
+details.fold[open]>summary::after{content:"－"}
+
+/* onboarding */
+.ob{max-width:620px;margin:0 auto}
+.ob h1{font-size:clamp(28px,5.5vw,40px);font-weight:600;letter-spacing:-.015em}
+.ob .lede{font-size:17.5px;color:var(--ink-2);margin-top:12px}
+.steps{display:flex;gap:6px;margin-bottom:26px}
+.steps i{height:4px;flex:1;background:var(--surface-2);border-radius:999px}
+.steps i.on{background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+.tpl{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:560px){.tpl{grid-template-columns:1fr 1fr}}
+.tplcard{text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;cursor:pointer;
+  display:flex;gap:12px;align-items:flex-start;box-shadow:var(--shadow)}
+.tplcard:hover{border-color:var(--accent-line);transform:translateY(-2px)}
+.tplcard[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.tplcard .ic{font-size:18px;line-height:1;flex:none;margin-top:2px;font-family:var(--mono);color:var(--accent)}
+.tplcard b{display:block;font-size:15.5px}
+.tplcard span{font-size:13.5px;color:var(--ink-2)}
+.pick{display:flex;flex-direction:column;gap:8px}
+.pickrow{display:flex;gap:10px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;
+  padding:13px 15px;cursor:pointer;text-align:left;width:100%;min-height:48px}
+.pickrow:hover{border-color:var(--accent-line)}
+.pickrow[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+
+/* today */
+.hero{position:relative;overflow:hidden;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:var(--shadow)}
+.hero::before{content:"";position:absolute;inset:-40% -20% auto auto;width:320px;height:320px;border-radius:50%;
+  background:radial-gradient(circle,var(--glow),transparent 65%);pointer-events:none}
+.hero>*{position:relative}
+.act{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--line)}
+.act:last-of-type{border-bottom:0}
+.tick{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--line-2);background:var(--surface);cursor:pointer;flex:none;
+  display:grid;place-items:center;color:transparent;font-size:15px;font-weight:700;margin-top:1px}
+.tick:hover{border-color:var(--accent)}
+.tick[aria-pressed="true"]{background:linear-gradient(135deg,var(--accent),var(--accent-2));border-color:transparent;color:var(--accent-ink);
+  box-shadow:0 0 0 4px var(--accent-soft)}
+.tick:active{transform:scale(.9)}
+.tick.sm{width:26px;height:26px;font-size:12px}
+.actb{flex:1;min-width:0}
+.actb .nm{border:0;background:none;padding:0;font-size:16.5px;font-weight:600;width:100%;border-radius:4px}
+.act.done .actb .nm{color:var(--ink-3);text-decoration:line-through;text-decoration-color:var(--accent-line)}
+.cue{display:flex;gap:7px;align-items:baseline;margin-top:4px}
+.cue .k{font-family:var(--body);font-weight:700;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);flex:none}
+.cue input{border:0;background:none;padding:0;font-size:14px;color:var(--ink-2);border-radius:4px}
+.actb .nm:focus,.cue input:focus,.goal textarea:focus{border:0;background:none;box-shadow:0 2px 0 var(--accent)}
+.side{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:none}
+.mini{font-family:var(--mono);font-size:11px;color:var(--ink-3);text-align:right}
+.kind{font-family:var(--body);font-weight:700;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--calm)}
+.mom{display:flex;gap:5px;margin-top:14px}
+.mom i{flex:1;height:28px;border-radius:999px;background:var(--surface-2);border:1.5px solid transparent;transition:background .3s}
+.mom i.on{background:linear-gradient(180deg,var(--accent-2),var(--accent))}
+.mom i.today{border-color:var(--accent)}
+.goal{display:flex;gap:10px;align-items:flex-start;padding:6px 0}
+.goal .b{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);flex:none;margin-top:10px}
+.goal textarea{border:0;background:none;padding:2px 0;font-size:15.5px;border-radius:4px}
+.tag{font-family:var(--body);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--line);
+  border-radius:999px;padding:2px 8px;background:var(--surface);cursor:pointer;flex:none;margin-top:4px}
+.q{display:flex;flex-direction:column;gap:5px}
+.q>span{font-size:13.5px;font-weight:600}
+.q>em{font-size:12px;color:var(--ink-3);font-style:normal}
+
+/* session */
+.modes{display:flex;gap:7px;flex-wrap:wrap}
+.modes button{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:8px 15px;cursor:pointer;min-height:40px;
+  font-size:13.5px;font-weight:600;color:var(--ink-2);display:flex;gap:7px;align-items:center}
+.modes button:hover{border-color:var(--accent-line);color:var(--ink)}
+.modes button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);border-color:var(--accent-line)}
+.timer{text-align:center;padding:12px 0 6px}
+.timer .t{font-family:var(--display);font-weight:500;font-size:clamp(56px,15vw,84px);letter-spacing:-.03em;
+  font-variant-numeric:tabular-nums lining-nums;line-height:1}
+.timer .t.run{color:var(--accent);text-shadow:0 0 40px var(--glow)}
+.bar{height:8px;background:var(--surface-2);border-radius:999px;overflow:hidden;margin:16px 0}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--calm),var(--accent));border-radius:999px;transition:width .5s linear}
+.seg{display:flex;gap:6px}
+.seg button{flex:1;background:var(--surface-3);border:1px solid var(--line);border-radius:12px;padding:10px 0;cursor:pointer;min-height:42px;
+  font-family:var(--mono);font-size:12.5px;color:var(--ink-2)}
+.seg button:hover{border-color:var(--accent-line)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.pacewrap{display:grid;place-items:center;height:240px}
+.pacer{width:180px;height:180px;border-radius:50%;
+  background:radial-gradient(circle at 50% 40%,var(--surface),var(--calm-soft) 70%);border:1.5px solid var(--calm);
+  box-shadow:0 0 0 16px var(--calm-ring),0 0 0 34px var(--calm-ring),0 0 70px var(--calm-glow);
+  transform:scale(.55);transition-property:transform;transition-timing-function:ease-in-out;display:grid;place-items:center}
+.pacer span{font-family:var(--body);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--calm)}
+.guide{font-size:14.5px;color:var(--ink-2);text-align:center;max-width:46ch;margin:0 auto}
+.peer{display:flex;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}
+.peer:last-child{border-bottom:0}
+.av{width:34px;height:34px;border-radius:50%;flex:none;background:var(--surface-2);object-fit:cover;box-shadow:0 0 0 2px var(--surface),0 0 0 3.5px var(--accent-line)}
+.avd{width:34px;height:34px;border-radius:50%;flex:none;background:linear-gradient(135deg,var(--accent-soft),var(--calm-soft));color:var(--accent);display:grid;
+  place-items:center;font-family:var(--body);font-size:13px;font-weight:700}
+.support{background:var(--surface-3);border:1px solid var(--line);border-radius:999px;padding:5px 12px;cursor:pointer;min-height:32px;
+  font-family:var(--body);font-weight:600;font-size:12px;color:var(--ink-2)}
+.support:hover{border-color:var(--accent-line)}
+.support[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent)}
+
+/* progress */
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media(min-width:720px){.tiles{grid-template-columns:repeat(4,1fr)}}
+.tile{border:1px solid var(--line);border-radius:var(--r);padding:16px;background:var(--surface);box-shadow:var(--shadow);position:relative;overflow:hidden}
+.tile::after{content:"";position:absolute;left:16px;right:16px;top:0;height:3px;border-radius:0 0 3px 3px;
+  background:linear-gradient(90deg,var(--accent),var(--calm));opacity:.7}
+.tile .v{font-family:var(--display);font-weight:600;font-size:32px;letter-spacing:-.02em;font-variant-numeric:tabular-nums lining-nums;line-height:1.05}
+.tile .l{font-family:var(--body);font-weight:600;font-size:12px;letter-spacing:.02em;color:var(--ink-3);margin-top:8px}
+.chartwrap{overflow-x:auto}
+svg text{font-family:var(--mono)}
+
+/* guide */
+.msgs{display:flex;flex-direction:column;gap:12px;max-height:440px;overflow-y:auto;padding-right:4px}
+.msg{padding:12px 15px;border-radius:18px;font-size:15px;max-width:min(680px,92%)}
+.msg.me{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:var(--accent-ink);align-self:flex-end;border-bottom-right-radius:6px}
+.msg.ai{background:var(--surface-3);border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:6px;white-space:pre-wrap}
+.prompts{display:flex;gap:8px;flex-wrap:wrap}
+.prompts button{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 14px;cursor:pointer;font-size:13.5px;color:var(--ink-2);min-height:36px}
+.prompts button:hover{border-color:var(--accent-line);color:var(--accent)}
+
+/* library */
+.ev{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);overflow:hidden}
+.ev>summary{cursor:pointer;padding:16px 18px;display:flex;gap:12px;align-items:baseline;list-style:none}
+.ev>summary::-webkit-details-marker{display:none}
+.ev>summary:hover{background:var(--surface-3)}
+.ev[open]{box-shadow:var(--shadow);border-color:var(--accent-line)}
+.ev .n{font-family:var(--display);font-style:italic;font-size:15px;color:var(--accent);flex:none;width:22px}
+.ev h3{font-size:16.5px;font-weight:600;flex:1}
+.ev .body{padding:0 18px 18px 52px;display:flex;flex-direction:column;gap:10px}
+.ev .body p{font-size:15px;color:var(--ink-2)}
+.ev .do,.ev .cav{padding:10px 14px;border-radius:0 12px 12px 0}
+.ev .do{background:var(--accent-soft);border-left:3px solid var(--accent)}
+.ev .cav{background:var(--warn-soft);border-left:3px solid var(--warn)}
+.ev .do b,.ev .cav b{font-family:var(--body);font-weight:700;font-size:11px;letter-spacing:.12em;text-transform:uppercase;display:block;margin-bottom:3px}
+.ev .do b{color:var(--accent)} .ev .cav b{color:var(--warn)}
+.ev .do p,.ev .cav p{color:var(--ink)}
+.ev a{color:var(--accent)}
+.effect{font-family:var(--body);font-weight:600;font-size:11.5px;background:var(--calm-soft);color:var(--calm);padding:3px 9px;border-radius:999px;flex:none}
+.src{font-family:var(--mono);font-size:11.5px;color:var(--ink-3)}
+
+@media (max-width:660px){
+  .nav{position:fixed;top:auto;left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom,0px));z-index:40;max-width:none;margin:0;
+    padding:5px;gap:2px;border:1px solid var(--line);border-radius:22px;box-shadow:0 12px 30px -12px rgba(30,26,46,.35);
+    background:color-mix(in srgb,var(--surface) 88%,transparent)}
+  .nav button{flex:1 1 0;justify-content:center;padding:10px 1px;font-size:10.5px;letter-spacing:0;min-width:0;min-height:44px;border-radius:16px}
+  .nav .badge{display:none}
+  main{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+  .ev .body{padding-left:18px}
+}
+</style>
+
+<header class="topbar">
+  <div class="tb">
+    <div class="brand"><div class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16.5h16"/><path d="M7.5 16.5a4.5 4.5 0 0 1 9 0"/><path d="M12 5.5v2.2"/><path d="M5.8 8.6l1.5 1.5"/><path d="M18.2 8.6l-1.5 1.5"/><path d="M8 19.5h8"/></svg></div><div><b>Awakened Wisdom</b><span id="tagline"></span></div></div>
+    <button class="chip" id="betaBtn" style="cursor:pointer"></button>
+    <div class="chip hidden" id="liveChip"><span class="dot live"></span><b id="liveN">0</b><span id="liveL"></span></div>
+    <button class="iconbtn" id="langBtn" aria-label="Language"></button>
+    <button class="iconbtn" id="themeBtn" aria-label="Theme">◐</button>
+  </div>
+</header>
+<nav class="nav" role="tablist" id="nav"></nav>
+<main><section id="view"></section></main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script>
+(function(){
+"use strict";
+
+/* ═════════ 1. Text (EN / RO) ═════════ */
+const STR={
+en:{
+ tag:"Small practice · daily · witnessed", lang:"EN", beta:"Beta",
+ fb:{short:"Feedback", title:"Beta feedback",
+  sub:"This is a beta. Tell us what broke, what confused you or what you'd add. The app's owner reads it, with your name.",
+  kind:{bug:"Something broke",confusing:"Confusing",idea:"Idea"},
+  ph:"What happened, or what would help?", send:"Send", sent:"Thank you, it's been sent.",
+  err:"Couldn't send that. Try again in a moment.",
+  off:"Feedback needs you signed in, with Contributor access or higher to this page."},
+ nav:{today:"Today",session:"Session",circle:"Circle",progress:"Progress",library:"Why",you:"You"},
+ live:{n:"practising now"},
+ kind:{do:"task",meditate:"meditation",breathe:"breath",gratitude:"gratitude",visualize:"visualise",journal:"journal"},
+ mode:{focus:"Focus",meditate:"Meditate",breathe:"Breathe",gratitude:"Gratitude",visualize:"Visualise",journal:"Journal"},
+ ob:{
+  t1:"You don't need more motivation.",
+  lede:"You need one small practice, a cue that starts it, and people who notice. Setup takes about a minute.",
+  start:"Start", honest:"No streak punishment. No paywall. No promises we can't back up.",
+  s1:"What are you working on?", s1sub:"Pick the closest one. You can change everything later.",
+  s2:"Pick one daily practice", s2sub:"One. Not three. Starting with too much is the most common reason people quit.",
+  s2own:"Or write your own",
+  s3:"When will you do it?", s3sub:"Tying it to something you already do is the strongest predictor that it sticks.",
+  s3own:"Or describe your own cue", next:"Next", back:"Back"
+ },
+ today:{
+  hello:"Today", nothing:"Nothing ticked yet — that's fine, the day isn't over.",
+  allDone:"Done for today.", partial:"You've started.",
+  run:"days in a row", runNone:"Start today", monthN:"days this month", monthN1:"day this month",
+  win:"Done. Practised {label}.", back:"You came back. That's the part that matters most: one missed day doesn't undo a habit.", when:"when", start:"Start",
+  momentum:"Last 14 days", cta:"Start a session",
+  add:"Add a practice", addHint:"Only once the first one feels easy.", cuePh:"When? For example: after my morning coffee", cueNeed:"Add a cue first. It's what starts the practice.",
+  missTwice:"Two missed days in a row",
+  missTwiceBody:"The only rule here: never miss twice. It's not a verdict on you — it's a sign the practice is too big. Make it smaller.",
+  shrink:"Make it smaller", shrinkPrompt:"What's the version you could do on your worst day?", shrinkSave:"Save",
+  week3:"You're still in the early stretch",
+  week3body:"The effort is still high and the habit isn't automatic yet. In one real-world study, automaticity took a median of 66 days, with a range of 18 to 254. You're on schedule.",
+  direction:"Direction", year:"12 months", month:"This month",
+  yearPh:"Something you want to be true in a year", monthPh:"What moves it forward this month",
+  toward:"toward", away:"away from",
+  awayNote:"Goals framed as moving away from something tend to sustain effort less well over months. Try naming what the same effort moves you toward.",
+  evening:"Evening", note:"Anything worth remembering about today?", save:"Save the day", saved:"Saved",
+  debrief:"Four evening questions"
+ },
+ dq:[
+  ["Biggest win today — what made it possible?","Name the mechanism, not the mood."],
+  ["What broke today? What one change stops it repeating?","The setup, not your character."],
+  ["Best moment of the day — how do you get more of those?","Good moments make repetition stick."],
+  ["One thing you'll do better tomorrow, and why.","Specific enough to act on."]
+ ],
+ lock:{after:"Unlocks after {n} days you show up — {x} to go",
+  why:"Things appear gradually on purpose: starting with too much is the most common reason people quit. You can unlock everything in You.",
+  more:"More practices", guide:"The Guide", week:"Weekly review and contrast", cascade:"Direction: year and month goals"},
+ sess:{
+  eyebrow:"Practice", title:"Session",
+  sub:"Practising alongside other people, even in silence, can make it easier to start. Others see only an anonymous count. Your circle sees your name if you turn sharing on.",
+  what:"What are you working on?", start:"Start", stop:"Stop", finish:"Finish",
+  medGuide:"Sit comfortably. Rest your attention on the breath. When the mind wanders — it will — notice, and come back. Coming back is the practice.",
+  breathGuide:"Cyclic sighing: breathe in through the nose, top up with a second short inhale, then a long, slow exhale through the mouth. Stop if you feel dizzy.",
+  b_in:"Inhale", b_in2:"Top up", b_out:"Long exhale",
+  gratSub:"Three specific things from today. Specific beats general.",
+  gratPh:"Something specific…", gratSave:"Save",
+  vizSub:"Hold the outcome next to the real obstacle, then plan for the obstacle. About three minutes.",
+  wish:"Wish — what do you want?", outcome:"Outcome — the best thing about having it", outPh:"One vivid phrase",
+  obstacle:"Obstacle — the main one, inside you", obsPh:"Not \"no time\". Something like \"I open my phone first\".",
+  plan:"Plan — if the obstacle shows up, then I…", planPh:"If …, then I …", vizSave:"Save",
+  jSave:"Save",
+  saved:"Saved. Practice marked for today.",
+  after:"Session done. What did you get through?", note:"Save", skip:"Skip",
+  others:"practising right now", other1:"person practising right now", you:"you",
+  nobody:"Nobody else is here right now. Start a session and the next person to arrive will see that someone is practising.",
+  anon1:"1 person, anonymous", anon:"{n} people, anonymous", short:"Too short to log, so this one wasn't saved.",
+  solo:"Solo mode", soloBody:"Sessions work fully. You just won't see other people here.",
+  todayMin:"minutes today", week:"this week"
+ },
+ jp:["What did you avoid today, and what was it protecting you from?","Where did you feel most like yourself today?",
+  "What would make tomorrow 10% easier?","What are you carrying that isn't yours to carry?",
+  "What did today teach you about how you work?","Who helped you today, even in a small way?",
+  "What's one thing from today you want to remember?"],
+ circ:{
+  eyebrow:"Accountability", title:"Your circle",
+  sub:"Three to eight people. Small enough that your showing up is visible. Small groups produce follow-through; big groups and leaderboards don't.",
+  none:"You're not in a circle yet.", create:"Create a circle", join:"Join", name:"Circle name", full:"Full", leave:"Leave",
+  members:"members", member:"member",
+  commit:"This week I will…", commitPh:"One thing, verifiable, by a date", by:"by",
+  stake:"If I don't", stakeHint:"Optional. Keep it small, social and chosen by you. The app never holds money. After a miss, re-plan rather than raise the stake.", stakePh:"Optional, e.g. I tell the circle what got in the way",
+  kept:"Kept", missed:"Missed", newWeek:"New week", open:"open",
+  first:"You're the first one here. Send the invite code to the people you want in it.",
+  joinCode:"Invite code", codeHint:"Circles are private. Only people who have the code can join or see one.",
+  invite:"Invite code", copy:"Copy", copied:"Copied",
+  badCode:"No circle found with that code.", fullMsg:"That circle is full.", failed:"That didn't work. Check your connection and try again.",
+  tooMany:"Too many wrong codes. Try again in an hour.", myName:"Your name in the circle", myNamePh:"How the others will see you",
+  privateNote:"You're private here. The others see only that you're a member.", shareNow:"Share with this circle",
+  sharingNote:"You're sharing your practice, run, commitment, evening notes and session label with this circle.", stopShare:"Stop sharing",
+  activity:"Circle activity", noActivity:"No logged days yet.", support:"support",
+  practicing:"practising now", solo:"Solo mode",
+  soloBody:"Circles need other people connected. Everything else works without this.",
+  days:"practices", min:"min"
+ },
+ prog:{
+  eyebrow:"Last 28 days", title:"Progress", sub:"Honest numbers. A missed day doesn't erase the days before it.",
+  shown:"days you showed up", run:"days in a row", focusH:"focus hours", practiceH:"practice hours",
+  auto:"Becoming automatic", autoSub:"Toward the 66-day median. The real range is 18–254 days — a rough gauge, not a countdown.",
+  grid:"Last 28 days", gridSub:"A day counts when you did at least one practice.",
+  chart:"Minutes per day", legendF:"focus", legendP:"practice",
+  never:"Never miss twice", clean:"Clean. You haven't let one missed day become two.", breaches:"times missed twice",
+  week:"Weekly review", weekSub:"Five questions, once a week. Friday works for most people.",
+  contrast:"Contrast a goal", contrastSub:"The weekly version of the Visualise session, tied to your year goals."
+ },
+ wq:["Did you do what you set out to do this week?","Biggest failure this week — what would stop it repeating?",
+  "Biggest win — and why did it actually work?","The one step, right after this review, that moves you forward.",
+  "What are you committing to next week — and what happens if you don't?"],
+ lib:{eyebrow:"Evidence", title:"Why this works",
+  sub:"Each mechanic in the app traces to something here, with its effect size and its caveat. This field is full of confident claims; these are the ones that hold up, and the places where they don't.",
+  run:"How to use it", cav:"The caveat", src:"Source"},
+ you:{
+  eyebrow:"Settings", title:"You", mode:"Mode",
+  acct:"Account", acctOff:"Accounts aren't reachable right now. Everything still works on this device.",
+  acctAnon:"You're using the app without an account. Add your email to keep your progress and use it on any device.",
+  acctPh:"you@example.com", acctSave:"Save my progress", acctHave:"I already have an account", acctNew:"I'm new here",
+  acctSignIn:"Send me a sign-in link", acctSent:"Check your email: we sent a link to {e}. Open it on this device.",
+  acctAs:"Signed in as {e}", signOut:"Sign out", signOutArm:"Tap again to sign out",
+  acctBad:"That doesn't look like an email address.", acctErr:"That didn't work. Try again in a minute.",
+  acctWait:"Too many emails for now. Try again in an hour.",
+  legalPre:"By saving your progress you agree to the ", legalTerms:"Terms", legalAnd:" and the ", legalPrivacy:"Privacy policy", legalEnd:".",
+  connected:"Connected — circle and live sessions active", solo:"Solo — everything works except the circle and seeing others",
+  share:"Share my activity with my circle", shareOn:"Sharing", shareOff:"Private",
+  shareHint:"Only your circle sees this: your practice, run, weekly commitment, evening notes and session label. Private means they see only that you're a member. Nothing is shared while you're not in a circle.",
+  language:"Language",
+  unlock:"Unlock everything now", unlockOn:"Everything unlocked", unlockHint:"For people who already have a routine. Everything appears at once.",
+  about:"About this app", version:"Version",
+  aboutBody:"Awakened Wisdom is a practice tracker built on published research — see Why. The year → month → day structure is adapted from a daily performance-dashboard format taught in the Success Insider programme; this app is independent and not affiliated with it. It isn't therapy or medical care. If you're struggling, please talk to a professional or someone you trust.",
+  data:"Your data", copy:"Copy my data", copied:"Copied",
+  dataHint:"Your practices and history are kept on this device and, when you're signed in, in a private part of your account that nobody else can read. This copies them as JSON so you can keep or move them.",
+  syncOk:"Saved to your account", syncAnon:"Saved to this browser's guest account. Add your email above to keep it if this browser is cleared.", syncLocal:"Saved on this device only", syncErr:"Couldn't save to your account. It's still on this device.",
+  restore:"Restore from a backup", restorePh:"Paste a JSON backup here, or choose a file", restoreBtn:"Replace my data with this backup",
+  restoreArm:"Tap again to replace everything", restoreOk:"Restored.", restoreBad:"That isn't a valid backup.",
+  reset:"Delete everything", resetConfirm:"Tap again to delete everything, for good"
+ }
+},
+ro:{
+ tag:"Practică mică · zilnic · cu martori", lang:"RO", beta:"Beta",
+ fb:{short:"Părerea ta", title:"Părerea ta despre beta",
+  sub:"Aceasta e o versiune beta. Spune-ne ce nu a mers, ce te-a încurcat sau ce ai adăuga. Proprietarul aplicației citește mesajul, împreună cu numele tău.",
+  kind:{bug:"Ceva nu merge",confusing:"Neclar",idea:"Idee"},
+  ph:"Ce s-a întâmplat sau ce te-ar ajuta?", send:"Trimite", sent:"Mulțumim, s-a trimis.",
+  err:"Nu s-a putut trimite. Încearcă din nou peste puțin timp.",
+  off:"Ca să trimiți păreri trebuie să fii autentificat și să ai cel puțin acces de Contributor la această pagină."},
+ nav:{today:"Azi",session:"Sesiune",circle:"Cerc",progress:"Progres",library:"De ce",you:"Tu"},
+ live:{n:"practică acum"},
+ kind:{do:"sarcină",meditate:"meditație",breathe:"respirație",gratitude:"recunoștință",visualize:"vizualizare",journal:"jurnal"},
+ mode:{focus:"Concentrare",meditate:"Meditație",breathe:"Respirație",gratitude:"Recunoștință",visualize:"Vizualizare",journal:"Jurnal"},
+ ob:{
+  t1:"Nu ai nevoie de mai multă motivație.",
+  lede:"Ai nevoie de o practică mică, de un semnal care o pornește și de oameni care observă. Configurarea durează cam un minut.",
+  start:"Începe", honest:"Fără pedepse pentru serii rupte. Fără abonament. Fără promisiuni pe care nu le putem susține.",
+  s1:"La ce lucrezi?", s1sub:"Alege varianta cea mai apropiată. Poți schimba orice mai târziu.",
+  s2:"Alege o singură practică zilnică", s2sub:"Una, nu trei. Să începi cu prea mult e motivul cel mai frecvent pentru care oamenii renunță.",
+  s2own:"Sau scrie-o pe a ta",
+  s3:"Când o faci?", s3sub:"Să o legi de ceva ce faci deja e cel mai puternic semn că o vei păstra.",
+  s3own:"Sau descrie-ți propriul semnal", next:"Mai departe", back:"Înapoi"
+ },
+ today:{
+  hello:"Azi", nothing:"Încă nimic bifat — e în regulă, ziua nu s-a terminat.",
+  allDone:"Gata pe azi.", partial:"Ai început.",
+  run:"zile la rând", runNone:"Începe azi", monthN:"zile luna asta", monthN1:"zi luna asta",
+  win:"Gata. Ai practicat {label}.", back:"Ai revenit. Asta contează cel mai mult: o zi ratată nu strică un obicei.", when:"când", start:"Pornește",
+  momentum:"Ultimele 14 zile", cta:"Pornește o sesiune",
+  add:"Adaugă o practică", addHint:"Doar după ce prima îți vine ușor.", cuePh:"Când? De exemplu: după cafeaua de dimineață", cueNeed:"Adaugă întâi un semnal. El pornește practica.",
+  missTwice:"Două zile ratate la rând",
+  missTwiceBody:"Singura regulă de aici: nu rata de două ori la rând. Nu e o judecată despre tine — e semnul că practica e prea mare. Fă-o mai mică.",
+  shrink:"Fă-o mai mică", shrinkPrompt:"Care e varianta pe care ai putea-o face și în cea mai grea zi?", shrinkSave:"Salvează",
+  week3:"Ești încă la început de drum",
+  week3body:"Efortul e încă mare, iar obiceiul nu e automat. Într-un studiu din viața reală, automatismul a apărut după o mediană de 66 de zile, cu un interval între 18 și 254. Ești exact unde trebuie.",
+  direction:"Direcție", year:"12 luni", month:"Luna asta",
+  yearPh:"Ceva ce vrei să fie adevărat peste un an", monthPh:"Ce te duce spre el luna asta",
+  toward:"spre", away:"departe de",
+  awayNote:"Obiectivele formulate ca „a scăpa de ceva” susțin efortul mai slab pe termen lung. Încearcă să numești spre ce te duce același efort.",
+  evening:"Seara", note:"Ceva de reținut despre ziua de azi?", save:"Salvează ziua", saved:"Salvat",
+  debrief:"Patru întrebări de seară"
+ },
+ dq:[
+  ["Cea mai mare reușită de azi — ce a făcut-o posibilă?","Numește cauza, nu starea."],
+  ["Ce nu a mers azi? Ce schimbare mică ar împiedica să se repete?","Felul în care e organizat, nu caracterul tău."],
+  ["Cel mai bun moment al zilei — cum ai putea avea mai multe?","Momentele bune ajută repetiția să prindă."],
+  ["Un lucru pe care îl faci mai bine mâine și de ce contează.","Destul de concret încât să-l poți face."]
+ ],
+ lock:{after:"Se deblochează după {n} zile în care apari — mai ai {x}",
+  why:"Lucrurile apar treptat, intenționat: să începi cu prea mult e motivul cel mai frecvent de abandon. Poți debloca tot din secțiunea Tu.",
+  more:"Mai multe practici", guide:"Ghidul", week:"Recapitularea săptămânală și contrastul", cascade:"Direcție: obiective pe an și pe lună"},
+ sess:{
+  eyebrow:"Practică", title:"Sesiune",
+  sub:"Să practici alături de alți oameni, chiar și în tăcere, poate face începutul mai ușor. Ceilalți văd doar un număr anonim. Cercul tău îți vede numele dacă pornești partajarea.",
+  what:"La ce lucrezi?", start:"Pornește", stop:"Oprește", finish:"Termină",
+  medGuide:"Stai confortabil. Lasă atenția pe respirație. Când mintea pleacă — și va pleca — observă și revino. Revenirea este practica.",
+  breathGuide:"Respirație ciclică: inspiră pe nas, completează cu o a doua inspirație scurtă, apoi expiră lung și lent pe gură. Oprește-te dacă ai amețeli.",
+  b_in:"Inspiră", b_in2:"Completează", b_out:"Expiră lung",
+  gratSub:"Trei lucruri concrete de azi. Concretul bate generalul.",
+  gratPh:"Ceva concret…", gratSave:"Salvează",
+  vizSub:"Ține rezultatul dorit lângă obstacolul real, apoi fă un plan pentru obstacol. Cam trei minute.",
+  wish:"Dorința — ce vrei?", outcome:"Rezultatul — cel mai bun lucru când îl ai", outPh:"O singură imagine vie",
+  obstacle:"Obstacolul — cel principal, din tine", obsPh:"Nu „n-am timp”. Ceva de genul „deschid întâi telefonul”.",
+  plan:"Planul — dacă apare obstacolul, atunci eu…", planPh:"Dacă …, atunci …", vizSave:"Salvează",
+  jSave:"Salvează",
+  saved:"Salvat. Practica e bifată pentru azi.",
+  after:"Sesiune încheiată. Ce ai reușit?", note:"Salvează", skip:"Sari peste",
+  others:"practică chiar acum", other1:"persoană practică chiar acum", you:"tu",
+  nobody:"Nu mai e nimeni aici acum. Pornește o sesiune, iar următorul care vine va vedea că practică cineva.",
+  anon1:"1 persoană, anonim", anon:"{n} persoane, anonim", short:"Prea scurt ca să fie înregistrat, așa că nu s-a salvat.",
+  solo:"Mod solo", soloBody:"Sesiunile funcționează complet. Doar că nu vei vedea alți oameni aici.",
+  todayMin:"minute azi", week:"săptămâna asta"
+ },
+ jp:["Ce ai evitat azi și de ce te proteja asta?","Când te-ai simțit cel mai mult tu însuți azi?",
+  "Ce ar face ziua de mâine cu 10% mai ușoară?","Ce cari după tine și nu e al tău de cărat?",
+  "Ce te-a învățat ziua de azi despre felul în care lucrezi?","Cine te-a ajutat azi, fie și puțin?",
+  "Ce vrei să-ți amintești din ziua de azi?"],
+ circ:{
+  eyebrow:"Responsabilitate", title:"Cercul tău",
+  sub:"Între trei și opt oameni. Destul de puțini încât prezența ta să se vadă. Grupurile mici te țin consecvent; grupurile mari și clasamentele, nu.",
+  none:"Încă nu ești într-un cerc.", create:"Creează un cerc", join:"Intră", name:"Numele cercului", full:"Plin", leave:"Ieși",
+  members:"membri", member:"membru",
+  commit:"Săptămâna asta voi…", commitPh:"Un singur lucru, verificabil, până la o dată", by:"până la",
+  stake:"Dacă nu reușesc", stakeHint:"Opțional. Mică, socială și aleasă de tine. Aplicația nu ține niciodată bani. După o ratare, refă planul, nu crește miza.", stakePh:"Opțional, ex.: le spun celorlalți ce m-a oprit",
+  kept:"Respectat", missed:"Ratat", newWeek:"Săptămână nouă", open:"deschis",
+  first:"Ești primul aici. Trimite codul de invitație oamenilor pe care îi vrei alături.",
+  joinCode:"Cod de invitație", codeHint:"Cercurile sunt private. Doar cine are codul poate intra sau vedea un cerc.",
+  invite:"Cod de invitație", copy:"Copiază", copied:"Copiat",
+  badCode:"Nu există niciun cerc cu acest cod.", fullMsg:"Cercul e plin.", failed:"N-a mers. Verifică-ți conexiunea și încearcă din nou.",
+  tooMany:"Prea multe coduri greșite. Încearcă din nou peste o oră.", myName:"Numele tău în cerc", myNamePh:"Cum te vor vedea ceilalți",
+  privateNote:"Ești privat aici. Ceilalți văd doar că ești membru.", shareNow:"Arată cercului",
+  sharingNote:"Arăți cercului practica, seria, angajamentul, notele de seară și eticheta sesiunii.", stopShare:"Oprește partajarea",
+  activity:"Activitatea cercului", noActivity:"Încă nu sunt zile înregistrate.", support:"susțin",
+  practicing:"practică acum", solo:"Mod solo",
+  soloBody:"Cercurile au nevoie de alți oameni conectați. Restul aplicației funcționează și fără.",
+  days:"practici", min:"min"
+ },
+ prog:{
+  eyebrow:"Ultimele 28 de zile", title:"Progres", sub:"Cifre oneste. O zi ratată nu șterge zilele dinaintea ei.",
+  shown:"zile în care ai apărut", run:"zile la rând", focusH:"ore de concentrare", practiceH:"ore de practică",
+  auto:"Pe drumul spre automatism", autoSub:"Spre mediana de 66 de zile. Intervalul real e 18–254 de zile — un reper aproximativ, nu o numărătoare inversă.",
+  grid:"Ultimele 28 de zile", gridSub:"O zi contează dacă ai făcut cel puțin o practică.",
+  chart:"Minute pe zi", legendF:"concentrare", legendP:"practică",
+  never:"Nu rata de două ori", clean:"Curat. N-ai lăsat nicio zi ratată să devină două.", breaches:"ori ratat de două ori",
+  week:"Recapitularea săptămânii", weekSub:"Cinci întrebări, o dată pe săptămână. Vinerea merge pentru cei mai mulți.",
+  contrast:"Contrastează un obiectiv", contrastSub:"Varianta săptămânală a sesiunii de vizualizare, legată de obiectivele tale pe un an."
+ },
+ wq:["Ai făcut săptămâna asta ce ți-ai propus?","Cel mai mare eșec al săptămânii — ce l-ar împiedica să se repete?",
+  "Cea mai mare reușită — și de ce a funcționat de fapt?","Singurul pas care, imediat după recapitulare, te duce mai departe.",
+  "La ce te angajezi săptămâna viitoare — și ce se întâmplă dacă nu?"],
+ lib:{eyebrow:"Dovezi", title:"De ce funcționează",
+  sub:"Fiecare mecanism din aplicație vine din ceva de aici, cu mărimea efectului și cu rezerva lui. Domeniul e plin de afirmații sigure pe ele; acestea sunt cele care rezistă, plus locurile unde nu rezistă.",
+  run:"Cum o folosești", cav:"Rezerva", src:"Sursa"},
+ you:{
+  eyebrow:"Setări", title:"Tu",
+  acct:"Cont", acctOff:"Conturile nu sunt disponibile acum. Totul funcționează în continuare pe acest dispozitiv.",
+  acctAnon:"Folosești aplicația fără cont. Adaugă-ți emailul ca să-ți păstrezi progresul și să-l ai pe orice dispozitiv.",
+  acctPh:"tu@exemplu.ro", acctSave:"Păstrează-mi progresul", acctHave:"Am deja cont", acctNew:"Sunt nou aici",
+  acctSignIn:"Trimite-mi un link de conectare", acctSent:"Verifică-ți emailul: am trimis un link la {e}. Deschide-l pe acest dispozitiv.",
+  acctAs:"Conectat ca {e}", signOut:"Deconectează-te", signOutArm:"Apasă din nou ca să te deconectezi",
+  acctBad:"Nu pare o adresă de email.", acctErr:"N-a mers. Încearcă din nou peste un minut.",
+  acctWait:"Prea multe emailuri deocamdată. Încearcă din nou peste o oră.",
+  legalPre:"Dacă îți păstrezi progresul, ești de acord cu ", legalTerms:"Termenii", legalAnd:" și cu ", legalPrivacy:"Politica de confidențialitate", legalEnd:".", mode:"Mod",
+  connected:"Conectat — cercul și sesiunile live sunt active", solo:"Solo — funcționează tot, mai puțin cercul și vizibilitatea celorlalți",
+  share:"Arată activitatea mea cercului", shareOn:"Se arată", shareOff:"Privat",
+  shareHint:"Doar cercul tău vede asta: practica, seria, angajamentul săptămânal, notele de seară și eticheta sesiunii. Privat înseamnă că văd doar că ești membru. Cât timp nu ești într-un cerc, nu se arată nimic.",
+  language:"Limbă",
+  unlock:"Deblochează tot acum", unlockOn:"Totul e deblocat", unlockHint:"Pentru cine are deja o rutină. Totul apare dintr-odată.",
+  about:"Despre aplicație", version:"Versiunea",
+  aboutBody:"Awakened Wisdom urmărește practici zilnice și se bazează pe cercetare publicată — vezi „De ce”. Structura an → lună → zi e adaptată după un format de panou zilnic de performanță predat în programul Success Insider; aplicația e independentă și nu e afiliată. Nu este terapie și nici îngrijire medicală. Dacă îți e greu, vorbește cu un specialist sau cu cineva în care ai încredere.",
+  data:"Datele tale", copy:"Copiază-mi datele", copied:"Copiat",
+  dataHint:"Practicile și istoricul tău stau pe acest dispozitiv și, când ești autentificat, într-o zonă privată a contului tău pe care nimeni altcineva nu o poate citi. Butonul le copiază ca JSON, ca să le păstrezi sau să le muți.",
+  syncOk:"Salvat în contul tău", syncAnon:"Salvat în contul de vizitator al acestui browser. Adaugă-ți emailul mai sus ca să nu-l pierzi dacă se șterg datele browserului.", syncLocal:"Salvat doar pe acest dispozitiv", syncErr:"Nu s-a putut salva în cont. Datele sunt încă pe acest dispozitiv.",
+  restore:"Restaurează dintr-o copie", restorePh:"Lipește aici o copie JSON sau alege un fișier", restoreBtn:"Înlocuiește datele cu această copie",
+  restoreArm:"Apasă din nou ca să înlocuiești tot", restoreOk:"Restaurat.", restoreBad:"Nu e o copie validă.",
+  reset:"Șterge tot", resetConfirm:"Apasă din nou ca să ștergi tot, definitiv"
+ }
+}};
+let LANG="en";
+function t(path){
+  const ps=path.split(".");let a=STR[LANG],b=STR.en;
+  for(const p of ps){a=a&&a[p];b=b&&b[p];}
+  return a!=null?a:(b!=null?b:path);
+}
+function tf(path,v){let s=t(path);for(const k in v)s=s.split("{"+k+"}").join(String(v[k]));return s;}
+
+/* ═════════ 2. Templates ═════════ */
+const KIC={do:"◆",meditate:"◯",breathe:"≈",gratitude:"✦",visualize:"◈",journal:"✎"};
+const TPL=[
+ {id:"inner",ic:"◯",en:{n:"Inner practice",d:"Meditation, breath, gratitude, reflection"},ro:{n:"Practică interioară",d:"Meditație, respirație, recunoștință, reflecție"},
+  acts:[{k:"meditate",min:10,en:"Meditate for 10 minutes",ro:"Meditez 10 minute"},
+        {k:"breathe",min:5,en:"Five minutes of slow breathing",ro:"Cinci minute de respirație lentă"},
+        {k:"gratitude",en:"Write three things I'm grateful for",ro:"Scriu trei lucruri pentru care sunt recunoscător"},
+        {k:"journal",en:"Five minutes of evening journaling",ro:"Cinci minute de jurnal seara"}]},
+ {id:"business",ic:"◆",en:{n:"Build something",d:"A business, a product, a project"},ro:{n:"Construiesc ceva",d:"O afacere, un produs, un proiect"},
+  acts:[{k:"do",en:"One 90-minute build block, before anything else",ro:"Un bloc de 90 de minute de lucru, înaintea oricărui altceva"},
+        {k:"do",en:"Talk to one potential customer",ro:"Vorbesc cu un potențial client"},
+        {k:"do",en:"Ship one visible thing",ro:"Public un lucru vizibil"}]},
+ {id:"fitness",ic:"▲",en:{n:"Get in shape",d:"Training, weight, energy"},ro:{n:"Intru în formă",d:"Antrenament, greutate, energie"},
+  acts:[{k:"do",en:"Train for 40 minutes",ro:"Mă antrenez 40 de minute"},
+        {k:"do",en:"Walk 8,000 steps",ro:"Merg 8.000 de pași"},
+        {k:"do",en:"Protein with breakfast",ro:"Proteină la micul dejun"}]},
+ {id:"study",ic:"▮",en:{n:"Study / exams",d:"A degree, a certificate, a language"},ro:{n:"Studiu / examene",d:"Facultate, certificare, o limbă străină"},
+  acts:[{k:"do",en:"One 50-minute study block",ro:"Un bloc de studiu de 50 de minute"},
+        {k:"do",en:"Review yesterday's notes for 10 minutes",ro:"Recitesc notițele de ieri 10 minute"},
+        {k:"do",en:"No phone until the first block is done",ro:"Fără telefon până termin primul bloc"}]},
+ {id:"create",ic:"✎",en:{n:"Write or create",d:"Writing, video, music, art"},ro:{n:"Scriu sau creez",d:"Scris, video, muzică, artă"},
+  acts:[{k:"do",en:"Write 500 words",ro:"Scriu 500 de cuvinte"},
+        {k:"do",en:"Publish one piece",ro:"Public o lucrare"},
+        {k:"do",en:"Read 20 pages",ro:"Citesc 20 de pagini"}]},
+ {id:"discipline",ic:"◷",en:{n:"Rebuild discipline",d:"Sleep, mornings, phone, focus"},ro:{n:"Îmi reconstruiesc disciplina",d:"Somn, dimineți, telefon, concentrare"},
+  acts:[{k:"do",en:"Out of bed at the time I set",ro:"Mă ridic din pat la ora stabilită"},
+        {k:"do",en:"Ten minutes outside in the morning",ro:"Zece minute afară dimineața"},
+        {k:"do",en:"Phone out of the bedroom at night",ro:"Telefonul stă noaptea în afara dormitorului"}]},
+ {id:"custom",ic:"＋",en:{n:"Something else",d:"Write your own from scratch"},ro:{n:"Altceva",d:"Scrie-ți propria variantă"},acts:[]}
+];
+const CUES={
+ en:["After I wake up","After my morning coffee","When I sit down at my desk","After work ends","After dinner","Before bed"],
+ ro:["După ce mă trezesc","După cafeaua de dimineață","Când mă așez la birou","După ce termin lucrul","După cină","Înainte de culcare"]
+};
+
+/* ═════════ 3. Evidence ═════════ */
+const EV=[
+ {eff:"design principle",u:"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11694054/",
+  en:{t:"Why a missed day doesn't reset you here",
+   w:"A scoping review of lifestyle and mental-health apps found most people stop using them within weeks. Streak mechanics that wipe out your progress after one miss turn a habit into guilt, and self-determination research links guilt-driven motivation to burnout rather than persistence.",
+   d:"One missed day changes nothing here. Two in a row trigger one thing only: a prompt to make the practice smaller. The standard stays; the punishment doesn't exist.",
+   c:"This isn't permission to drift. 'Never miss twice' is strict — it just points at how the practice is designed instead of at you.",
+   s:"Scoping review of app abandonment (2024); self-determination theory"},
+  ro:{t:"De ce o zi ratată nu te trimite înapoi la zero",
+   w:"O analiză a studiilor despre aplicațiile de stil de viață și sănătate mintală a arătat că majoritatea oamenilor renunță la ele în câteva săptămâni. Seriile care îți șterg progresul după o singură zi ratată transformă obiceiul în vinovăție, iar cercetarea despre autodeterminare leagă motivația bazată pe vinovăție de epuizare, nu de perseverență.",
+   d:"O zi ratată nu schimbă nimic aici. Două la rând declanșează un singur lucru: propunerea de a face practica mai mică. Standardul rămâne; pedeapsa nu există.",
+   c:"Nu e o permisiune să te lași. „Nu rata de două ori” e o regulă strictă — doar că se uită la felul în care e gândită practica, nu la tine.",
+   s:"Analiză despre abandonul aplicațiilor (2024); teoria autodeterminării"}},
+ {eff:"d ≈ 0.27–0.66",u:"https://www.researchgate.net/publication/378870694_The_When_and_How_of_Planning_Meta-Analysis_of_the_Scope_and_Components_of_Implementation_Intentions_in_642_Tests",
+  en:{t:"The cue does the work, not your willpower",
+   w:"An if-then plan names when and where you'll act: \"After my morning coffee, I meditate for ten minutes.\" Gollwitzer and Sheeran's meta-analysis found a medium-to-large effect on reaching goals; a later synthesis of 642 tests puts it at d ≈ 0.27–0.66. Control passes from willpower to a situation.",
+   d:"Every practice here gets a cue at setup. It's the one field the app won't let you skip.",
+   c:"If-then plans turn motivation you already have into action. For a goal you don't really care about, they do nothing.",
+   s:"Gollwitzer & Sheeran (2006); meta-analysis of 642 tests"},
+  ro:{t:"Semnalul face treaba, nu voința ta",
+   w:"Un plan „dacă–atunci” spune când și unde acționezi: „După cafeaua de dimineață, meditez zece minute.” Meta-analiza lui Gollwitzer și Sheeran a găsit un efect mediu spre mare asupra atingerii obiectivelor; o sinteză ulterioară a 642 de teste îl situează la d ≈ 0,27–0,66. Controlul trece de la voință la o situație.",
+   d:"Fiecare practică primește un semnal încă de la configurare. E singurul câmp pe care aplicația nu te lasă să-l sari.",
+   c:"Planurile „dacă–atunci” transformă în acțiune motivația pe care o ai deja. Pentru un obiectiv care nu-ți pasă cu adevărat, nu fac nimic.",
+   s:"Gollwitzer & Sheeran (2006); meta-analiză a 642 de teste"}},
+ {eff:"median 66 days",u:"https://onlinelibrary.wiley.com/doi/abs/10.1002/ejsp.674",
+  en:{t:"A habit takes longer than you think",
+   w:"Lally and colleagues followed 96 people forming a daily behaviour in real life. Automaticity levelled off at a median of 66 days, with a range of 18 to 254, and the curve fitted well for only 39 of the 82 people with enough data. Missing one opportunity didn't materially affect the process.",
+   d:"The app reminds you in the early stretch that this is normal, and shows progress toward 66 days rather than toward an outcome you can't control yet.",
+   c:"'21 days to a habit' is a myth, and a fixed 66 is nearly as bad. This was one modest study that relied on self-reported automaticity.",
+   s:"Lally et al. (2010), European Journal of Social Psychology"},
+  ro:{t:"Un obicei ia mai mult timp decât crezi",
+   w:"Lally și colegii au urmărit 96 de oameni care își formau un obicei zilnic în viața reală. Automatismul s-a stabilizat la o mediană de 66 de zile, cu un interval între 18 și 254, iar curba s-a potrivit bine doar pentru 39 dintre cei 82 de participanți cu date suficiente. O singură ocazie ratată nu a afectat semnificativ procesul.",
+   d:"Aplicația îți amintește la început de drum că e normal și îți arată progresul spre 66 de zile, nu spre un rezultat pe care încă nu-l poți controla.",
+   c:"„21 de zile pentru un obicei” e un mit, iar un 66 fix e aproape la fel de greșit. A fost un singur studiu, de dimensiuni modeste, bazat pe automatism raportat de participanți.",
+   s:"Lally et al. (2010), European Journal of Social Psychology"}},
+ {eff:"self-reported",u:"https://www.focusmate.com/virtual-coworking-research/",
+  en:{t:"Practising next to someone, even a stranger",
+   w:"Body doubling — working alongside another person, in silence, on unrelated things — shows strong effects. Among Focusmate members, 99% say it improves their productivity, 96% that it helps them follow through, and 83% that it makes them feel less isolated.",
+   d:"The Session tab shows how many people are practising right now, anonymously, and your circle by name if they share.",
+   c:"These numbers come from the company's own survey of engaged members, so read them as a strong signal, not a controlled estimate. The underlying idea — that other people's presence helps you start — is well supported.",
+   s:"Focusmate member research; self-determination theory"},
+  ro:{t:"Să practici lângă cineva, chiar și lângă un străin",
+   w:"„Body doubling” — să lucrezi alături de altcineva, în tăcere, la lucruri diferite — are efecte puternice. Dintre membrii Focusmate, 99% spun că le crește productivitatea, 96% că îi ajută să ducă la capăt ce și-au propus, iar 83% că se simt mai puțin izolați.",
+   d:"Secțiunea Sesiune arată câți oameni practică acum, anonim, iar cercul tău pe nume, dacă au pornit partajarea.",
+   c:"Cifrele vin dintr-un sondaj al companiei printre membrii ei activi, deci ia-le ca pe un semnal puternic, nu ca pe o măsurătoare controlată. Ideea de bază — că prezența altora te ajută să începi — e bine susținută.",
+   s:"Cercetarea Focusmate pe membri; teoria autodeterminării"}},
+ {eff:"≈ established therapies",u:"https://centerhealthyminds.org/assets/files-publications/GoldbergMindfulness-basedInterventions.pdf",
+  en:{t:"Meditation: real effects, honestly sized",
+   w:"A meta-analysis of 142 randomised trials with over 12,000 people found mindfulness programmes outperformed waitlists and most comparison activities, and performed about as well as established psychological treatments.",
+   d:"Short and daily beats long and occasional. Five to ten minutes: attend to the breath, notice when the mind wanders, come back. Coming back is the practice.",
+   c:"Against other active activities the difference was small and not significant, and most of the evidence comes from structured programmes, not apps. It's a practice, not a cure — for depression or anxiety it complements professional help rather than replacing it.",
+   s:"Goldberg et al. (2018), Clinical Psychology Review"},
+  ro:{t:"Meditația: efecte reale, măsurate onest",
+   w:"O meta-analiză a 142 de studii randomizate, cu peste 12.000 de participanți, a arătat că programele de mindfulness dau rezultate mai bune decât lipsa oricărei intervenții și decât majoritatea activităților de comparație, și aproximativ la fel de bune ca terapiile psihologice consacrate.",
+   d:"Puțin și zilnic bate mult și rar. Cinci-zece minute: atenția pe respirație, observi când mintea pleacă, revii. Revenirea este practica.",
+   c:"Față de alte activități active diferența a fost mică și nesemnificativă, iar majoritatea dovezilor vin din programe structurate, nu din aplicații. E o practică, nu un tratament — în depresie sau anxietate completează ajutorul de specialitate, nu îl înlocuiește.",
+   s:"Goldberg et al. (2018), Clinical Psychology Review"}},
+ {eff:"5 min/day · 1 month",u:"https://www.researchgate.net/publication/367032629_Brief_structured_respiration_practices_enhance_mood_and_reduce_physiological_arousal",
+  en:{t:"Five minutes of slow exhaling",
+   w:"In a Stanford randomised study of 108 people, five minutes a day of cyclic sighing — two inhales through the nose, then a long slow exhale — improved mood and lowered breathing rate more than the same time spent in mindfulness meditation, over one month.",
+   d:"The Breathe session paces it for you: inhale, top up, long exhale. Five minutes.",
+   c:"One study, in healthy adults, over a month. Promising and cheap to try — not settled science. Stop if you feel dizzy.",
+   s:"Balban et al. (2023), Cell Reports Medicine"},
+  ro:{t:"Cinci minute de expirație lentă",
+   w:"Într-un studiu randomizat de la Stanford, cu 108 participanți, cinci minute pe zi de respirație ciclică — două inspirații pe nas, apoi o expirație lungă și lentă — au îmbunătățit starea de spirit și au scăzut ritmul respirator mai mult decât același timp de meditație mindfulness, pe parcursul unei luni.",
+   d:"Sesiunea Respirație îți dă ritmul: inspiri, completezi, expiri lung. Cinci minute.",
+   c:"Un singur studiu, pe adulți sănătoși, pe o lună. Promițător și ușor de încercat — nu e știință stabilită. Oprește-te dacă ai amețeli.",
+   s:"Balban et al. (2023), Cell Reports Medicine"}},
+ {eff:"small, d ≈ 0.14–0.31",u:"https://scottbarrykaufman.com/wp-content/uploads/2021/05/davis2016.pdf",
+  en:{t:"Gratitude: gentle, and modest",
+   w:"A meta-analysis of gratitude exercises found small benefits to well-being compared with doing nothing, and no advantage over other psychologically active exercises. It's a gentle, low-cost practice; the evidence doesn't support big claims about it.",
+   d:"Write three specific things, not general ones. \"The way my sister laughed at dinner\" beats \"my family\".",
+   c:"If it starts to feel forced, or like you're covering up real difficulties, set it aside for a while. Gratitude isn't meant to paper over pain.",
+   s:"Davis et al. (2016), Journal of Counseling Psychology"},
+  ro:{t:"Recunoștința: blândă și modestă",
+   w:"O meta-analiză a exercițiilor de recunoștință a găsit beneficii mici pentru starea de bine față de lipsa oricărei activități, dar niciun avantaj față de alte exerciții psihologice active. E o practică blândă și ieftină; dovezile nu susțin promisiuni mari despre ea.",
+   d:"Scrie trei lucruri concrete, nu generale. „Felul în care a râs sora mea la cină” bate „familia mea”.",
+   c:"Dacă începe să pară forțat sau ca o acoperire a unor greutăți reale, las-o deoparte o vreme. Recunoștința nu e menită să ascundă durerea.",
+   s:"Davis et al. (2016), Journal of Counseling Psychology"}},
+ {eff:"fantasy alone lowers energy",u:"https://pmc.ncbi.nlm.nih.gov/articles/PMC8149892/",
+  en:{t:"Visualise the obstacle, not only the dream",
+   w:"Imagining only the ideal outcome feels good and measurably lowers energy: across four studies, positive fantasies reduced both reported energy and systolic blood pressure, as if the mind had already arrived. Holding the outcome next to a real obstacle and planning for that obstacle — Oettingen's WOOP — is the version with a meta-analysis behind it.",
+   d:"The Visualise session walks you through wish, outcome, obstacle and plan. About three minutes.",
+   c:"Effects are modest and vary by person and goal. It works best for goals you care about and believe are possible.",
+   s:"Kappes & Oettingen (2011); MCII meta-analysis (2021)"},
+  ro:{t:"Vizualizează obstacolul, nu doar visul",
+   w:"Să-ți imaginezi doar rezultatul ideal e plăcut, dar îți scade măsurabil energia: în patru studii, fanteziile pozitive au redus atât energia raportată, cât și tensiunea arterială, ca și cum mintea ar fi ajuns deja la destinație. Varianta cu o meta-analiză în spate e să ții rezultatul lângă un obstacol real și să faci un plan pentru acel obstacol — metoda WOOP a lui Oettingen.",
+   d:"Sesiunea Vizualizare te poartă prin dorință, rezultat, obstacol și plan. Cam trei minute.",
+   c:"Efectele sunt modeste și variază de la om la om și de la obiectiv la obiectiv. Funcționează cel mai bine pentru obiective la care ții și pe care le crezi posibile.",
+   s:"Kappes & Oettingen (2011); meta-analiza MCII (2021)"}},
+ {eff:"effort drives drive",u:"https://www.annualreviews.org/content/journals/10.1146/annurev-psych-020223-012208",
+  en:{t:"Action comes before the drive",
+   w:"The common model says wait until you feel motivated, then act. It runs the other way: the brain's dopamine system responds to pursuing a goal and spending effort, not mainly to getting the reward. Effort itself produces the signal that keeps you going.",
+   d:"Make starting absurdly easy. A session starts by sitting down, not by feeling ready. Two minutes of real effort often produce the state you were waiting for.",
+   c:"A mechanism, not a licence to push through exhaustion. Effort-based decisions get worse with fatigue — rest is part of the system, not a reward for finishing.",
+   s:"Annual Review of Psychology; neuroscience of effort"},
+  ro:{t:"Acțiunea vine înaintea elanului",
+   w:"Modelul obișnuit spune să aștepți să te simți motivat și apoi să acționezi. De fapt e invers: sistemul dopaminergic al creierului răspunde la urmărirea unui scop și la efortul depus, nu în principal la primirea recompensei. Efortul însuși produce semnalul care te ține în mișcare.",
+   d:"Fă începutul absurd de ușor. O sesiune începe când te așezi, nu când te simți pregătit. Două minute de efort real aduc adesea starea pe care o așteptai.",
+   c:"E un mecanism, nu o invitație să forțezi până la epuizare. Deciziile bazate pe efort se strică la oboseală — odihna face parte din sistem, nu e o răsplată după ce termini.",
+   s:"Annual Review of Psychology; neuroștiința efortului"}},
+ {eff:"best of 54 programmes",u:"https://authors.library.caltech.edu/records/mys88-cc756",
+  en:{t:"Reward the comeback, not the streak",
+   w:"A 2021 megastudy tested 54 four-week programmes on 61,293 gym members. About 45% raised weekly visits, by roughly 9-27%. The best one rewarded people for coming back after a missed workout. Separately, broken streaks lower engagement, less so when a streak can be repaired.",
+   d:"There's no streak to lose here. The day you come back after a gap, the app says so warmly and asks about the setup, not the miss.",
+   c:"Only 8% of the programmes still had an effect after the four weeks ended. Rewards help you start; after that the practice has to carry itself, which is why enjoying it in the moment matters.",
+   s:"Milkman et al. (2021), Nature; Silverman & Barasch (2023), Journal of Consumer Research"},
+  ro:{t:"Răsplătește revenirea, nu seria",
+   w:"Un megastudiu din 2021 a testat 54 de programe de patru săptămâni pe 61.293 de membri ai unor săli de sport. Cam 45% au crescut vizitele săptămânale, cu aproximativ 9-27%. Cel mai bun a răsplătit revenirea după un antrenament ratat. Separat, seriile întrerupte scad implicarea, mai puțin când seria poate fi reparată.",
+   d:"Aici nu ai o serie de pierdut. În ziua în care revii după o pauză, aplicația îți spune asta cu căldură și te întreabă despre felul în care e organizată practica, nu despre ratare.",
+   c:"Doar 8% dintre programe mai aveau efect după cele patru săptămâni. Recompensele te ajută să începi; după aceea practica trebuie să se susțină singură, de aceea contează să-ți placă pe moment.",
+   s:"Milkman et al. (2021), Nature; Silverman & Barasch (2023), Journal of Consumer Research"}},
+ {eff:"optional · about 1 in 8 choose it",u:"https://ojs.aaai.org/index.php/ICWSM/article/download/31440/33600",
+  en:{t:"Stakes: optional, small, social",
+   w:"Commitment contracts work for the people who choose them. In a Philippines smoking study the offer raised quit rates by about 3-6 percentage points, still visible in surprise tests at 12 months, but only 11% took it up. In a trial of 2,538 smokers, 14% accepted a deposit versus 90% a reward. In stickK data, commitments with a stake succeeded far more often (50-68% vs 13%); having a referee made only a small difference.",
+   d:"The circle's \"If I don't\" field is optional. Keep the stake small, social and chosen by you, such as telling the circle what got in the way. The app never holds money.",
+   c:"The stickK numbers come from people who chose stakes themselves, so they overstate the effect. Stakes help people who know they'll be tempted; for others they add pressure. After a miss, re-plan rather than raise the stake.",
+   s:"Giné, Karlan & Zinman (2010); Halpern et al. (2015), NEJM; Jangra et al. (2024), ICWSM"},
+  ro:{t:"Mizele: opționale, mici, sociale",
+   w:"Contractele de angajament funcționează pentru cei care le aleg. Într-un studiu despre fumat din Filipine, oferta a crescut renunțarea cu aproximativ 3-6 puncte procentuale, efect vizibil și la teste-surpriză după 12 luni, dar doar 11% au acceptat-o. Într-un studiu cu 2.538 de fumători, 14% au acceptat un depozit, față de 90% o recompensă. În datele stickK, angajamentele cu miză au reușit mult mai des (50-68% față de 13%); un arbitru a schimbat foarte puțin.",
+   d:"Câmpul „Dacă nu reușesc” din cerc e opțional. Păstrează miza mică, socială și aleasă de tine, de exemplu să le spui celorlalți ce te-a oprit. Aplicația nu ține niciodată bani.",
+   c:"Cifrele stickK vin de la oameni care și-au ales singuri mizele, deci exagerează efectul. Mizele îi ajută pe cei care știu că vor fi tentați; pentru ceilalți adaugă doar presiune. După o ratare, refă planul în loc să crești miza.",
+   s:"Giné, Karlan & Zinman (2010); Halpern et al. (2015), NEJM; Jangra et al. (2024), ICWSM"}},
+ {eff:"faster recovery",u:"https://pmc.ncbi.nlm.nih.gov/articles/PMC10288131/",
+  en:{t:"Being hard on yourself makes it worse",
+   w:"A lot of advice in this space says raise the pressure on yourself. The research points the other way. People who meet a bad day with self-compassion are more motivated to try again. Self-criticism undermines self-regulation and recovery; athletes higher in self-compassion recover physiologically faster after failure.",
+   d:"After a missed day the app asks what broke in the setup, never what's wrong with you. That's a deliberate design choice.",
+   c:"This isn't lowering the standard. The standard stays; what changes is the tone of the debrief.",
+   s:"Research on self-compassion and recovery from failure"},
+  ro:{t:"Să fii dur cu tine înrăutățește lucrurile",
+   w:"Multe sfaturi din domeniul ăsta spun să-ți crești presiunea pe tine. Cercetarea arată invers. Oamenii care întâmpină o zi proastă cu blândețe față de ei înșiși sunt mai motivați să reîncerce. Autocritica slăbește autocontrolul și refacerea; sportivii mai blânzi cu ei înșiși se refac fiziologic mai repede după un eșec.",
+   d:"După o zi ratată, aplicația te întreabă ce nu a mers în felul în care e organizată practica, niciodată ce e în neregulă cu tine. E o alegere deliberată.",
+   c:"Asta nu înseamnă să cobori standardul. Standardul rămâne; se schimbă doar tonul analizei.",
+   s:"Cercetare despre autocompasiune și refacerea după eșec"}}
+];
+
+/* ═════════ 4. State ═════════ */
+const LS="pow.v5", LS_OLD="pow.v3", LS_T="pow.timer", APP_V="0.1.0-lite";
+let S=null;
+const ui={tab:"today",ob:0,tpl:null,pick:null,pickKind:"do",pickMin:null,pickOwn:"",cue:null,cueOwn:"",
+  mode:"focus",dur:{focus:50,meditate:10,breathe:5},justFinished:null,flash:"",woopIdx:0,busy:false,
+  sessAct:null,shrink:null,resetArm:false,};
+const pad=n=>String(n).padStart(2,"0");
+const dayKey=d=>{const x=d?new Date(d):new Date();return x.getFullYear()+"-"+pad(x.getMonth()+1)+"-"+pad(x.getDate());};
+function addD(k,n){const[y,m,d]=k.split("-").map(Number);return dayKey(new Date(y,m-1,d+n));}
+function pretty(k){const[y,m,d]=k.split("-").map(Number);
+  return new Date(y,m-1,d).toLocaleDateString(LANG==="ro"?"ro-RO":"en-GB",{weekday:"short",day:"numeric",month:"short"});}
+const monthKey=()=>dayKey().slice(0,7);
+function monthLabel(lang,k){const[y,m]=(k||monthKey()).split("-").map(Number);
+  return new Date(y,m-1,1).toLocaleDateString((lang||LANG)==="ro"?"ro-RO":"en-GB",{month:"long",year:"numeric"});}
+function weekKey(k){const[y,m,d]=k.split("-").map(Number);const dt=new Date(y,m-1,d);
+  const x=new Date(dt);x.setDate(dt.getDate()+4-(dt.getDay()||7));const s=new Date(x.getFullYear(),0,1);
+  return x.getFullYear()+"-W"+pad(Math.ceil((((x-s)/864e5)+1)/7));}
+const uid4=()=>Math.random().toString(36).slice(2,10);
+function blank(){return{done:{},focusMin:0,practiceMin:0,note:"",logged:false,dq:["","","",""],grat:["","",""],journal:""};}
+function day(k){k=k||dayKey();if(!S.days[k])S.days[k]=blank();const d=S.days[k];
+  if(!d.dq)d.dq=["","","",""];if(!d.grat)d.grat=["","",""];if(d.journal==null)d.journal="";
+  if(d.practiceMin==null)d.practiceMin=0;if(d.focusMin==null)d.focusMin=0;if(!d.done)d.done={};return d;}
+function fresh(){
+  return {v:6,updatedAt:0,lang:LANG,onboarded:false,tpl:null,actions:[],days:{},
+    pod:{id:null,name:null,marks:{},commit:{text:"",due:"",stake:"",status:"open"}},
+    set:{share:false,blockMin:50,unlockAll:false},sessions:[],
+    year:{goals:[0,1,2].map(()=>({t:"",dir:"toward",outcome:"",obstacle:"",plan:""}))},
+    month:{key:monthKey(),goals:[0,1,2].map(()=>({t:"",done:false}))},months:{},
+    weeks:{},viz:{wish:"",outcome:"",obstacle:"",plan:""},};
+}
+function normalize(o){
+  const base=fresh();
+  for(const k in base)if(o[k]==null)o[k]=base[k];
+  if(o.v===5){ // circles moved to invite codes, and sharing became opt-in
+    o.pod={id:null,name:null,marks:{},commit:o.pod.commit||base.pod.commit};
+    o.set.share=false;o.v=6;
+  }
+  if(!o.pod.marks)o.pod.marks={};
+  if(o.pod.id&&!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(o.pod.id)){o.pod.id=null;o.pod.name=null;o.pod.code=null;}
+  delete o.coach;delete o.mem;delete o.cs;
+  if(o.set.unlockAll==null)o.set.unlockAll=false;
+  return o;
+}
+// a new month keeps unfinished goals and files the old list under months
+function rollMonth(){
+  const now=monthKey();let k=S.month.key;
+  if(!k&&(S.month.label===monthLabel("ro",now)||S.month.label===monthLabel("en",now)))k=now;
+  if(k===now){S.month.key=now;delete S.month.label;return false;}
+  if(S.month.goals.some(g=>g.t))S.months[k||S.month.label||"earlier"]=S.month.goals.map(g=>({t:g.t,done:!!g.done}));
+  const keep=S.month.goals.filter(g=>g.t&&!g.done).map(g=>({t:g.t,done:false}));
+  while(keep.length<3)keep.push({t:"",done:false});
+  S.month={key:now,goals:keep.slice(0,3)};
+  return true;
+}
+function load(){
+  let raw=null;try{raw=localStorage.getItem(LS);}catch(e){}
+  if(raw){try{S=JSON.parse(raw);}catch(e){S=null;}}
+  if(!S||(S.v!==5&&S.v!==6)){
+    S=fresh();
+    // carry v4 testers' data forward instead of dropping it
+    let old=null;try{old=JSON.parse(localStorage.getItem(LS_OLD)||"null");}catch(e){}
+    if(old&&old.v===3){
+      S.onboarded=!!old.onboarded;S.tpl=old.tpl||null;S.lang=old.lang||LANG;
+      S.actions=(old.actions||[]).map(a=>({id:a.id||uid4(),name:a.name||"",cue:a.cue||"",kind:"do",created:a.created||dayKey()}));
+      S.days=old.days||{};
+      if(old.pod)S.pod={id:old.pod.id||null,name:old.pod.name||null,commit:old.pod.commit||S.pod.commit};
+      if(old.set){S.set.share=old.set.share!==false;S.set.blockMin=old.set.blockMin||50;}
+      S.sessions=(old.sessions||[]).map(x=>Object.assign({mode:"focus"},x));
+    }
+  }
+  if(S.lang)LANG=S.lang;
+  normalize(S);
+  rollMonth();
+  day();
+  // persist a migration straight away rather than waiting for the first tap
+  try{localStorage.setItem(LS,JSON.stringify(S));}catch(e){}
+}
+let sTm=null;
+function save(){
+  S.lang=LANG;S.updatedAt=Date.now();
+  try{localStorage.setItem(LS,JSON.stringify(S));}catch(e){}
+  clearTimeout(sTm);sTm=setTimeout(()=>{push();Cloud.push();},1200);
+}
+
+/* ═════════ 5. Metrics and unlocks ═════════ */
+const lastN=n=>{const o=[];for(let i=n-1;i>=0;i--)o.push(addD(dayKey(),-i));return o;};
+function dayDone(k){const d=S.days[k];return !!d&&Object.values(d.done||{}).some(Boolean);}
+function runOf(test){
+  let n=0;
+  for(let i=0;i<500;i++){const k=addD(dayKey(),-i);const on=test(k);
+    if(i===0&&!on)continue; if(on)n++; else break;}
+  return n;
+}
+const runLen=()=>runOf(dayDone);
+const actRun=id=>runOf(k=>{const d=S.days[k];return !!(d&&d.done&&d.done[id]);});
+function firstDay(){let f=dayKey();
+  Object.keys(S.days).concat(S.actions.map(a=>a.created||f)).forEach(k=>{if(k<f)f=k;});return f;}
+// "1 day", "2 days"; Romanian also needs "de" from 20 up ("20 de zile")
+function monthLabelN(n){return n+" "+(n===1?t("today.monthN1"):(LANG==="ro"&&n>=20?"de ":"")+t("today.monthN"));}
+function monthDays(){const p=dayKey().slice(0,7);return Object.keys(S.days).filter(k=>k.slice(0,7)===p&&dayDone(k)).length;}
+// immediate, informational feedback; the warmest message is for coming back after a gap
+function winMsg(){
+  const y=addD(dayKey(),-1),earlier=Object.keys(S.days).some(k=>k<y&&dayDone(k));
+  if(earlier&&!dayDone(y))return t("today.back");
+  return tf("today.win",{label:monthLabelN(monthDays())});
+}
+function shownUp(){return Object.keys(S.days).filter(dayDone).length;}
+function stats(){
+  const keys=lastN(28);let done=0,fm=0,pm=0;
+  keys.forEach(k=>{if(dayDone(k))done++;const d=S.days[k];if(d){fm+=d.focusMin||0;pm+=d.practiceMin||0;}});
+  // today is still open, and a day the app wasn't opened on counts as missed
+  const f=firstDay();let breaches=0;
+  for(let i=1;i<keys.length-1;i++){const a=keys[i-1],b=keys[i];
+    if(a>=f&&!dayDone(a)&&!dayDone(b))breaches++;}
+  return {done,pct:Math.round(100*done/28),fh:+(fm/60).toFixed(1),ph:+(pm/60).toFixed(1),run:runLen(),breaches};
+}
+function missedTwice(){const a=addD(dayKey(),-1),b=addD(dayKey(),-2);
+  return b>=firstDay()&&!dayDone(a)&&!dayDone(b);}
+const UNLOCK={more:3,guide:3,week:7,cascade:14};
+const open=key=>S.set.unlockAll||shownUp()>=UNLOCK[key];
+function lockCard(key){
+  const n=UNLOCK[key],x=Math.max(0,n-shownUp());
+  return el("div",{class:"lock"},[E("span","ic","◌"),el("div",{style:"flex:1;min-width:0"},[
+    el("b",{text:t("lock."+key)}),el("div",{class:"tiny",text:tf("lock.after",{n,x})})])]);
+}
+
+/* ═════════ 6. Network adapter (Supabase) ═════════ */
+// Circles live in circles / circle_members, reachable only through the invite-code RPCs.
+// The lobby is a public Realtime channel that carries only {active, mode} under a random key.
+// A circle's channel is private (circle:<id>) and only its members can join it.
+const UUID_RE=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+const Net={mode:"local",peers:[],cpeers:[],members:[],feed:[],reacts:{},room:null,chan:null,cid:null,key:uid4()+uid4(),
+ get sb(){return Auth.sb&&Auth.user?Auth.sb:null;},
+ get db(){return this.sb;},
+ get uid(){return Auth.user?Auth.user.id:null;},
+ // names come from the label each member chose; no other profile data exists
+ user:{async profiles(ids){const o={};ids.forEach(i=>{const m=Net.members.find(x=>x.uid===i);
+   const n=(m&&m.label)||(i===Net.uid?String(S.set.name||""):"");o[i]={name:n};});return o;}},
+ init(){}, // real start happens once Auth has a user (Net.start)
+ start(){
+  if(!this.sb)return;
+  this.stop();this.mode="connected";this.watch();
+  if(S.pod.id)this.openCircle();
+  softRender();
+ },
+ stop(){
+  this.closeCircle();
+  if(this.room){try{Auth.sb.removeChannel(this.room);}catch(e){}this.room=null;}
+  this.peers=[];this.mode="local";
+ },
+ watch(){
+  const ch=this.sb.channel("lobby",{config:{presence:{key:this.key}}});
+  ch.on("presence",{event:"sync"},()=>{
+    const st=ch.presenceState(),list=[];
+    Object.keys(st).forEach(k=>(st[k]||[]).forEach(pr=>list.push({isMe:k===Net.key,presence:pr})));
+    Net.peers=list.filter(p=>p.presence&&p.presence.active);
+    liveChip();paintLive();
+  });
+  ch.subscribe(s=>{if(s==="SUBSCRIBED")Net.beat();});
+  this.room=ch;
+ },
+ async loadMembers(){
+  const cid=this.cid;if(!cid||!this.sb)return;
+  const r=await this.sb.from("circle_members").select("user_id,label,shared,marks").eq("circle_id",cid);
+  if(r.error||this.cid!==cid)return;
+  const mem=[],feed=[],reacts={};
+  (r.data||[]).forEach(row=>{const x=row.shared||{};
+    mem.push(Object.assign({},x,{uid:row.user_id,label:row.label||""}));
+    (Array.isArray(x.items)?x.items:[]).forEach(it=>feed.push(Object.assign({},it,{uid:row.user_id})));
+    Object.keys(row.marks||{}).forEach(k=>(reacts[k]=reacts[k]||[]).push(row.user_id));});
+  feed.sort((a,b)=>(b.at||0)-(a.at||0));
+  this.members=mem;this.feed=feed;this.reacts=reacts;
+  // the circle went away or this user was removed
+  if(!mem.some(m=>m.uid===this.uid)){circleGone();return;}
+  if(ui.tab==="circle")softRender();
+ },
+ async openCircle(){
+  this.closeCircle();
+  const cid=S.pod.id;if(!cid||!this.sb)return;
+  this.cid=cid;
+  try{await this.sb.realtime.setAuth();}catch(e){}
+  const ch=this.sb.channel("circle:"+cid,{config:{private:true,presence:{key:this.uid}}});
+  ch.on("presence",{event:"sync"},()=>{
+    const st=ch.presenceState(),list=[];
+    Object.keys(st).forEach(k=>(st[k]||[]).forEach(pr=>list.push({isMe:k===Net.uid,presence:pr})));
+    Net.cpeers=list.filter(p=>p.presence&&p.presence.active);
+    paintLive();if(ui.tab==="circle")softRender();
+  });
+  ch.on("postgres_changes",{event:"*",schema:"public",table:"circle_members",filter:"circle_id=eq."+cid},()=>{
+    clearTimeout(Net.mTm);Net.mTm=setTimeout(()=>Net.loadMembers(),300);});
+  ch.subscribe(s=>{if(s==="SUBSCRIBED")Net.beat();});
+  this.chan=ch;
+  await this.loadMembers();
+  push();
+ },
+ closeCircle(){
+  if(this.chan){try{Auth.sb.removeChannel(this.chan);}catch(e){}this.chan=null;}
+  this.cid=null;this.members=[];this.feed=[];this.reacts={};this.cpeers=[];
+ },
+ beat(){
+  const act=!!T.running,mode=act?T.mode:null,sh=!!S.set.share;
+  if(this.room)this.room.track({active:act,mode}).catch(()=>{});
+  if(this.chan)this.chan.track({active:act,mode,
+    label:sh&&act&&T.mode==="focus"&&T.label?String(T.label).slice(0,60):null,
+    who:sh?this.uid||null:null}).catch(()=>{});
+ }
+};
+function liveChip(){
+  const others=Net.peers.filter(p=>!p.isMe).length;
+  const c=document.getElementById("liveChip");
+  c.classList.toggle("hidden",others===0);
+  document.getElementById("liveN").textContent=others;
+}
+function circleGone(){
+  Net.closeCircle();S.pod.id=null;S.pod.name=null;S.pod.code=null;S.pod.marks={};lastPush="";
+  save();render();
+}
+let pushing=false,pushAgain=false,lastPush="";
+// Publishes to the circle only. Outside a circle nothing leaves this person's private data.
+async function push(){
+  if(!Net.sb||!Net.uid||!S.pod.id||Net.cid!==S.pod.id)return;
+  if(pushing){pushAgain=true;return;}pushing=true;
+  try{
+    const st=stats(),sh=S.set.share,items=[];
+    if(sh)lastN(14).slice().reverse().forEach(k=>{
+      const d=S.days[k];if(!d||!(dayDone(k)||d.logged))return;
+      items.push({date:k,at:new Date(k+"T12:00:00").getTime(),
+        done:S.actions.filter(a=>d.done[a.id]).length,of:S.actions.length,
+        fm:d.focusMin||0,pm:d.practiceMin||0,note:String(d.note||"").slice(0,200)});
+    });
+    const body={focus:sh?String((S.actions[0]||{}).name||"").slice(0,120):"",
+      commit:sh?S.pod.commit:null,run:sh?st.run:null,pct:sh?st.pct:null,
+      items:items.slice(0,10),updatedAt:Date.now()};
+    const label=String(S.set.name||"").trim().slice(0,60)||null;
+    const j=S.pod.id+JSON.stringify([label,body.focus,body.commit,body.run,body.pct,body.items,S.pod.marks]);
+    if(j!==lastPush){
+      const r=await Net.sb.from("circle_members").update({label,shared:body,marks:S.pod.marks||{}})
+        .eq("circle_id",S.pod.id).eq("user_id",Net.uid).select("user_id");
+      if(r.error)throw r.error;
+      if(!(r.data||[]).length){circleGone();return;}
+      lastPush=j;
+    }
+  }catch(e){}
+  finally{pushing=false;if(pushAgain){pushAgain=false;setTimeout(push,400);}}
+}
+function react(key,on){
+  const m=S.pod.marks;
+  if(on)m[key]=1;else delete m[key];
+  const keep={};Object.keys(m).slice(-200).forEach(k=>keep[k]=1);
+  S.pod.marks=keep;save();push();
+}
+function enterCircle(id,name,code){
+  S.pod.id=id;S.pod.name=name;S.pod.code=code||null;S.pod.marks={};lastPush="";
+  save();Net.openCircle();render();
+}
+async function dropMember(id){
+  if(Net.sb&&id&&UUID_RE.test(id)){try{await Net.sb.rpc("leave_circle",{p_circle:id});}catch(e){}}
+}
+async function leaveCircle(){
+  const id=S.pod.id;
+  Net.closeCircle();S.pod.id=null;S.pod.name=null;S.pod.code=null;S.pod.marks={};lastPush="";
+  save();await dropMember(id);render();
+}
+
+/* ═════════ 6a. Accounts (Supabase Auth) ═════════ */
+// Everyone starts as an anonymous user, so nothing waits on a sign-up form.
+// Adding an email keeps the same user id, so whatever is saved stays theirs.
+const Auth={sb:null,user:null,ready:false,sent:"",err:"",mode:"save",busy:false,
+ async init(){
+  const c=window.AW_CONFIG;
+  if(!c||!window.supabase||typeof window.supabase.createClient!=="function"){this.ready=true;softRender();return;}
+  try{
+    this.sb=window.supabase.createClient(c.url,c.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+    this.sb.auth.onAuthStateChange((ev,s)=>{this.user=s?s.user:null;if(ev==="USER_UPDATED"||ev==="SIGNED_IN")this.sent="";
+      // a different user (signed in on this device): bring their copy in; never await inside this callback
+      if(this.ready&&this.user&&this.user.id!==Cloud.uid)setTimeout(()=>{Cloud.pull();Net.start();},0);
+      softRender();});
+    const {data}=await this.sb.auth.getSession();
+    let session=data&&data.session;
+    if(!session){const r=await this.sb.auth.signInAnonymously();if(r.error)throw r.error;session=r.data.session;}
+    this.user=session?session.user:null;
+    await this.check();
+    // the email link may be opened in another tab or browser; pick up the change on return
+    window.addEventListener("focus",()=>this.check());
+  }catch(e){this.sb=null;this.user=null;}
+  this.ready=true;softRender();
+  if(this.user){Cloud.pull();Net.start();}
+ },
+ // an anonymous user waiting on an email confirmation gets a fresh token once the server has it
+ async check(){
+  if(!this.sb||!this.user||!this.user.is_anonymous||!(this.sent||this.user.new_email))return;
+  try{const r=await this.sb.auth.getUser();
+    if(r.data&&r.data.user&&!r.data.user.is_anonymous){
+      const s=await this.sb.auth.refreshSession();
+      this.user=(s.data&&s.data.user)||r.data.user;this.sent="";softRender();}}catch(e){}
+ },
+ get anon(){return !!(this.user&&this.user.is_anonymous);},
+ back(){return location.origin+location.pathname;},
+ fail(e){const s=String((e&&(e.code||e.message))||"");
+  this.err=/rate|limit|429/i.test(s)?t("you.acctWait"):t("you.acctErr");},
+ async email(addr){
+  addr=String(addr||"").trim();this.err="";
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(addr)){this.err=t("you.acctBad");render();return;}
+  if(!this.sb||this.busy)return;this.busy=true;render();
+  try{
+    // anonymous -> permanent keeps the user id; "I already have an account" signs in instead
+    const r=this.mode==="save"&&this.anon
+      ?await this.sb.auth.updateUser({email:addr},{emailRedirectTo:this.back()})
+      :await this.sb.auth.signInWithOtp({email:addr,options:{emailRedirectTo:this.back()}});
+    if(r.error)throw r.error;
+    this.sent=addr;
+  }catch(e){this.fail(e);}
+  this.busy=false;render();
+ },
+ async fresh(){
+  try{const r=await this.sb.auth.signInAnonymously();this.user=r.data&&r.data.session?r.data.session.user:null;}catch(e){this.user=null;}
+ },
+ async signOut(){
+  if(!this.sb)return;
+  // the account must hold the latest copy before this device forgets it
+  if(Cloud.ok&&!(await Cloud.flush())){this.err=t("you.syncErr");render();return;}
+  try{await this.sb.auth.signOut();}catch(e){}
+  Net.stop();this.user=null;this.sent="";this.mode="save";this.err="";Cloud.reset();
+  if(T.running){clearInterval(T.iv);clearTimeout(bTm);T.running=false;keepAwake(false);persistT();}
+  S=fresh();Object.assign(ui,{ob:0,tab:"today",flash:"",justFinished:null,sessAct:null,shrink:null});day();
+  try{localStorage.setItem(LS,JSON.stringify(S));}catch(e){}
+  await this.fresh();render();
+ },
+ // deletes the account on the server; its rows cascade
+ async deleteAccount(){
+  if(!this.sb||!this.user)return true;
+  try{const r=await this.sb.functions.invoke("delete-account",{method:"POST"});if(r.error)throw r.error;}
+  catch(e){return false;}
+  try{await this.sb.auth.signOut({scope:"local"});}catch(e){}
+  this.user=null;this.sent="";this.mode="save";
+  await this.fresh();
+  return true;
+ }
+};
+function legalLinks(withPre){
+  const a=(href,txt)=>el("a",{href,target:"_blank",rel:"noopener",text:txt});
+  return el("p",{class:"tiny muted",style:"margin-top:10px"},withPre
+    ?[document.createTextNode(t("you.legalPre")),a("terms.html"+(LANG==="en"?"#en":""),t("you.legalTerms")),
+      document.createTextNode(t("you.legalAnd")),a("privacy.html"+(LANG==="en"?"#en":""),t("you.legalPrivacy")),document.createTextNode(t("you.legalEnd"))]
+    :[a("privacy.html"+(LANG==="en"?"#en":""),t("you.legalPrivacy")),document.createTextNode(" · "),a("terms.html"+(LANG==="en"?"#en":""),t("you.legalTerms"))]);
+}
+function acctCard(){
+  const c=el("div",{class:"card",id:"acctCard"});
+  c.appendChild(E("div","eyebrow",t("you.acct")));
+  if(!Auth.ready){c.appendChild(el("p",{class:"tiny muted",style:"margin-top:6px",text:"…"}));return c;}
+  if(!Auth.sb||!Auth.user){c.appendChild(el("p",{class:"tiny muted",style:"margin-top:6px",text:t("you.acctOff")}));return c;}
+  if(!Auth.anon){
+    c.appendChild(el("div",{class:"row",style:"margin-top:8px;gap:8px"},[el("span",{class:"dot good"}),
+      el("span",{class:"tiny",text:tf("you.acctAs",{e:Auth.user.email||""})})]));
+    c.appendChild(el("button",{class:"btn ghost sm",style:"margin-top:10px",text:ui.outArm?t("you.signOutArm"):t("you.signOut"),onclick:()=>{
+      if(!ui.outArm){ui.outArm=true;render();return;}ui.outArm=false;Auth.signOut();}}));
+    if(Auth.err)c.appendChild(el("div",{class:"tiny",style:"color:var(--crit);margin-top:8px",text:Auth.err}));
+    return c;
+  }
+  c.appendChild(el("p",{class:"tiny muted",style:"margin-top:6px",text:t("you.acctAnon")}));
+  if(Auth.sent){c.appendChild(el("div",{class:"notice acc",style:"margin-top:10px"},[el("div",{class:"tiny",text:tf("you.acctSent",{e:Auth.sent})})]));return c;}
+  const inp=el("input",{type:"email",placeholder:t("you.acctPh"),autocomplete:"email",style:"margin-top:10px",
+    onkeydown:e=>{if(e.key==="Enter"){e.preventDefault();Auth.email(inp.value);}}});
+  c.appendChild(inp);
+  c.appendChild(el("div",{class:"row",style:"margin-top:9px;gap:8px;flex-wrap:wrap"},[
+    el("button",{class:"btn accent sm",disabled:Auth.busy,text:Auth.mode==="save"?t("you.acctSave"):t("you.acctSignIn"),onclick:()=>Auth.email(inp.value)}),
+    el("button",{class:"btn ghost sm",text:Auth.mode==="save"?t("you.acctHave"):t("you.acctNew"),onclick:()=>{
+      Auth.mode=Auth.mode==="save"?"signin":"save";Auth.err="";render();}})]));
+  if(Auth.err)c.appendChild(el("div",{class:"tiny",style:"color:var(--crit);margin-top:8px",text:Auth.err}));
+  c.appendChild(legalLinks(true));
+  return c;
+}
+
+/* ═════════ 6b. Private copy in the user's account ═════════ */
+// user_state holds everything except days; user_days holds one row per month.
+// RLS lets each user read and write only their own rows.
+const Cloud={ok:false,err:false,busy:false,again:false,last:{},uid:null,
+ can(){return !!(Auth.sb&&Auth.user);},
+ reset(){this.ok=false;this.err=false;this.last={};this.uid=null;},
+ parts(){
+  const st=Object.assign({},S),ms={};delete st.days;
+  Object.keys(S.days).forEach(k=>{const m=k.slice(0,7);(ms[m]=ms[m]||{})[k]=S.days[k];});
+  st.parts=Object.keys(ms);
+  return {st,ms};
+ },
+ async pull(){
+  if(!this.can())return;
+  const uid=Auth.user.id;this.reset();this.uid=uid;
+  try{
+    const a=await Auth.sb.from("user_state").select("doc").eq("user_id",uid).maybeSingle();
+    if(a.error)throw a.error;
+    if(a.data&&a.data.doc&&a.data.doc.v){
+      const c=JSON.parse(JSON.stringify(a.data.doc));
+      const d=await Auth.sb.from("user_days").select("month,doc").eq("user_id",uid);
+      if(d.error)throw d.error;
+      c.days={};(d.data||[]).forEach(r=>Object.assign(c.days,r.doc||{}));
+      delete c.parts;
+      if(this.uid!==uid)return;
+      this.merge(c);
+    }
+    this.ok=true;
+  }catch(e){if(this.uid===uid){this.err=true;softRender();}return;} // never overwrite the account from a device that couldn't read it
+  softRender();this.push();
+ },
+ // the newer side wins, except that a day done on either device stays done
+ merge(c){
+  const useC=!S.onboarded||(c.updatedAt||0)>(S.updatedAt||0);
+  const a=useC?c:S,b=useC?S:c,days=a.days||{};
+  Object.keys(b.days||{}).forEach(k=>{
+    const x=b.days[k],y=days[k];
+    if(!y){days[k]=x;return;}
+    y.done=y.done||{};
+    Object.keys(x.done||{}).forEach(id=>{if(x.done[id])y.done[id]=true;});
+    y.focusMin=Math.max(y.focusMin||0,x.focusMin||0);
+    y.practiceMin=Math.max(y.practiceMin||0,x.practiceMin||0);
+    if(!y.note&&x.note)y.note=x.note;
+  });
+  a.days=days;S=normalize(a);
+  if(S.lang)LANG=S.lang;
+  rollMonth();day();
+  ui.dur.focus=S.set.blockMin||50;
+  try{localStorage.setItem(LS,JSON.stringify(S));}catch(e){}
+  if(Net.mode==="connected"&&S.pod.id!==Net.cid){if(S.pod.id)Net.openCircle();else Net.closeCircle();}
+  render();
+ },
+ async push(){
+  if(!this.can()||!this.ok||!S.onboarded||Auth.user.id!==this.uid)return;
+  if(this.busy){this.again=true;return;}this.busy=true;
+  const uid=this.uid,was=this.err;
+  try{
+    const {st,ms}=this.parts();
+    const js=JSON.stringify(st);
+    if(this.last.state!==js){
+      const r=await Auth.sb.from("user_state").upsert({user_id:uid,doc:st});
+      if(r.error)throw r.error;this.last.state=js;}
+    const rows=[],seen={};
+    for(const m in ms){const j=JSON.stringify(ms[m]);
+      if(this.last["d"+m]!==j){rows.push({user_id:uid,month:m,doc:ms[m]});seen["d"+m]=j;}}
+    if(rows.length){const r=await Auth.sb.from("user_days").upsert(rows);if(r.error)throw r.error;Object.assign(this.last,seen);}
+    this.err=false;
+  }catch(e){this.err=true;}
+  finally{this.busy=false;if(was!==this.err&&ui.tab==="you")softRender();
+    if(this.again){this.again=false;setTimeout(()=>Cloud.push(),400);}}
+ },
+ // waits for anything pending; true when the account has the latest copy
+ async flush(){
+  clearTimeout(sTm);
+  for(let i=0;i<50&&this.busy;i++)await new Promise(r=>setTimeout(r,100));
+  await this.push();
+  for(let i=0;i<50&&(this.busy||this.again);i++)await new Promise(r=>setTimeout(r,100));
+  return !this.err;
+ },
+ async wipe(){
+  if(!this.can())return;
+  const uid=Auth.user.id;
+  try{
+    const a=await Auth.sb.from("user_days").delete().eq("user_id",uid);
+    const b=await Auth.sb.from("user_state").delete().eq("user_id",uid);
+    if(a.error||b.error)this.err=true;
+  }catch(e){this.err=true;}
+  this.last={};
+ }
+};
+
+/* ═════════ 7. Timer, breath pacer, bell ═════════ */
+const T={running:false,endsAt:0,min:50,label:"",mode:"focus",iv:null,act:null};
+let wake=null,AC=null,bTm=null;
+async function keepAwake(on){
+  try{if(on){if(("wakeLock" in navigator)&&!wake)wake=await navigator.wakeLock.request("screen");}
+      else if(wake){await wake.release();wake=null;}}catch(e){wake=null;}
+}
+function buzz(p){try{if(navigator.userActivation&&!navigator.userActivation.hasBeenActive)return;
+  if(navigator.vibrate)navigator.vibrate(p);}catch(e){}}
+function bell(){
+  try{if(!AC)return;const t0=AC.currentTime,o=AC.createOscillator(),g=AC.createGain();
+    o.type="sine";o.frequency.value=660;
+    g.gain.setValueAtTime(0.0001,t0);g.gain.exponentialRampToValueAtTime(0.22,t0+0.03);
+    g.gain.exponentialRampToValueAtTime(0.0001,t0+2.8);
+    o.connect(g);g.connect(AC.destination);o.start(t0);o.stop(t0+2.9);}catch(e){}
+}
+const BREATH=[{k:"in",s:2,sc:.88},{k:"in2",s:1,sc:1},{k:"out",s:5.5,sc:.55}];
+function breathLoop(){
+  let i=0;
+  const step=()=>{
+    if(!T.running||T.mode!=="breathe")return;
+    const ph=BREATH[i%3],c=document.getElementById("pacer"),l=document.getElementById("pacerL");
+    if(c){c.style.transitionDuration=ph.s+"s";c.style.transform="scale("+ph.sc+")";}
+    if(l)l.textContent=t("sess.b_"+ph.k);
+    i++;bTm=setTimeout(step,ph.s*1000);
+  };
+  step();
+}
+// a running session survives a reload or a closed tab
+function persistT(){
+  try{if(T.running)localStorage.setItem(LS_T,JSON.stringify({endsAt:T.endsAt,min:T.min,mode:T.mode,
+      label:T.label,act:T.act,day:dayKey()}));
+    else localStorage.removeItem(LS_T);}catch(e){}
+}
+function resumeT(){
+  let o=null;try{o=JSON.parse(localStorage.getItem(LS_T)||"null");}catch(e){}
+  if(!o||!o.endsAt||!o.mode)return;
+  // a session that ended on an earlier day isn't credited to today
+  if(Date.now()>=o.endsAt&&o.day!==dayKey()){try{localStorage.removeItem(LS_T);}catch(e){}return;}
+  Object.assign(T,{running:true,endsAt:o.endsAt,min:o.min||10,mode:o.mode,label:o.label||"",act:o.act||null});
+  ui.mode=o.mode;
+  if(Date.now()>=T.endsAt){stopT("end");return;}
+  T.iv=setInterval(tickT,500);keepAwake(true);
+  if(T.mode==="breathe")breathLoop();
+}
+function startT(){
+  try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==="suspended")AC.resume();}catch(e){}
+  T.mode=ui.mode;T.act=ui.sessAct;T.min=ui.dur[ui.mode]||10;T.running=true;T.endsAt=Date.now()+T.min*6e4;
+  T.iv=setInterval(tickT,500);keepAwake(true);buzz(12);persistT();Net.beat();render();
+  if(T.mode==="breathe")breathLoop();
+}
+// how: "end" = the timer ran out, "finish" = done early, "stop" = abandoned
+function stopT(how){
+  const spent=T.min*6e4-Math.max(0,T.endsAt-Date.now());
+  const mins=how==="end"?T.min:Math.min(T.min,Math.round(spent/6e4));
+  clearInterval(T.iv);T.iv=null;clearTimeout(bTm);T.running=false;persistT();
+  keepAwake(false);buzz(how==="stop"?12:[40,70,40]);
+  const d=day();
+  if(mins>=(T.mode==="focus"?5:1)){
+    if(T.mode==="focus")d.focusMin+=mins;else d.practiceMin+=mins;
+    if(how!=="stop")tickSession();
+    S.sessions.unshift({at:Date.now(),min:mins,mode:T.mode,label:T.label||"",note:""});
+    S.sessions=S.sessions.slice(0,80);
+    ui.justFinished=T.mode;save();
+  }else if(how==="finish")ui.flash=t("sess.short");
+  if(how==="end"&&T.mode!=="focus")bell();
+  T.label="";T.act=null;ui.sessAct=null;Net.beat();
+  if(ui.tab==="session")render();else softRender();
+}
+// a session started from a practice ticks that practice; a free focus block
+// ticks a task only when there is exactly one it could mean
+function tickSession(){
+  const d=day(),a=S.actions.find(x=>x.id===T.act);
+  if(a){d.done[a.id]=true;return;}
+  if(T.mode!=="focus"){markKind(T.mode);return;}
+  const left=S.actions.filter(x=>x.kind==="do"&&!d.done[x.id]);
+  if(left.length===1)d.done[left[0].id]=true;
+}
+function tickT(){
+  const left=T.endsAt-Date.now();
+  if(left<=0){stopT("end");return;}
+  const e=document.getElementById("tmr");if(e)e.textContent=fmt(left);
+  const b=document.getElementById("tbar");if(b)b.style.width=(100*(1-left/(T.min*6e4))).toFixed(1)+"%";
+}
+const fmt=ms=>{const s=Math.ceil(ms/1000);return pad(Math.floor(s/60))+":"+pad(s%60);};
+function markKind(kind){
+  const d=day();let hit=false;
+  S.actions.forEach(a=>{if(a.kind===kind&&!d.done[a.id]&&!hit){d.done[a.id]=true;hit=true;}});
+  return hit;
+}
+document.addEventListener("visibilitychange",()=>{
+  if(document.visibilityState!=="visible"){Cloud.push();push();return;}
+  if(T.running){keepAwake(true);tickT();}
+  fitAll();
+});
+
+/* ═════════ 8. DOM helpers ═════════ */
+function el(tag,a,kids){
+  const n=document.createElement(tag);
+  if(a)for(const p in a){const v=a[p];
+    if(v===false||v==null)continue;
+    if(p==="class")n.className=v;
+    else if(p==="text")n.textContent=v;
+    else if(p.startsWith("on"))n.addEventListener(p.slice(2),v);
+    else if(p==="value")n.value=v;
+    else n.setAttribute(p,v===true?"":v);}
+  (kids||[]).forEach(c=>{if(c)n.appendChild(c);});
+  return n;
+}
+const E=(tag,c,x)=>el(tag,{class:c,text:x});
+const F=(l,c)=>el("label",{class:"field"},[el("span",{text:l}),c]);
+function fit(ta){ta.style.height="auto";ta.style.height=(ta.scrollHeight||20)+"px";}
+function fitAll(){document.querySelectorAll("textarea.auto").forEach(fit);}
+function autoT(a){
+  const n=el("textarea",Object.assign({rows:"1"},a));n.className=("auto "+(a.class||"")).trim();
+  n.addEventListener("input",()=>fit(n));
+  if(window.ResizeObserver){let lw=-1;
+    new ResizeObserver(es=>{const w=es[0].contentRect.width;if(Math.abs(w-lw)>1){lw=w;fit(n);}}).observe(n);}
+  return n;
+}
+function head(eb,title,sub){
+  return el("div",{},[E("div","eyebrow",eb),el("h2",{style:"font-size:22px;margin-top:4px",text:title}),
+    sub?el("p",{class:"muted tiny",style:"margin-top:6px;max-width:62ch",text:sub}):null]);
+}
+// network updates must never wipe what someone is typing
+function softRender(){
+  const a=document.activeElement;
+  if(a&&document.getElementById("view").contains(a)&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))return;
+  render();
+}
+function tabs(){
+  const list=["today","session","circle","progress"];
+  list.push("library","you");
+  return list;
+}
+function render(){
+  document.getElementById("tagline").textContent=t("tag");
+  document.getElementById("betaBtn").textContent=t("beta")+" · "+t("fb.short");
+  document.getElementById("langBtn").textContent=t("lang");
+  document.getElementById("liveL").textContent=t("live.n");
+  document.documentElement.lang=LANG;
+  const nav=document.getElementById("nav");nav.innerHTML="";
+  nav.classList.toggle("hidden",!S.onboarded);
+  if(S.onboarded){
+    const tl=tabs();if(tl.indexOf(ui.tab)<0)ui.tab="today";
+    tl.forEach(id=>{
+      const b=el("button",{role:"tab","aria-selected":ui.tab===id?"true":"false",
+        onclick:()=>{ui.tab=id;ui.resetArm=false;ui.todayMsg=null;if(!T.running)ui.sessAct=null;render();window.scrollTo(0,0);}},[document.createTextNode(t("nav."+id))]);
+      const o=Net.peers.filter(p=>!p.isMe).length;
+      if(id==="session"&&o)b.appendChild(el("span",{class:"badge",text:String(o)}));
+      nav.appendChild(b);
+    });
+  }
+  const v=document.getElementById("view");v.innerHTML="";
+  if(!S.onboarded)vOnboard(v);
+  else ({today:vToday,session:vSession,circle:vCircle,progress:vProg,library:vLib,you:vYou})[ui.tab](v);
+  fitAll();requestAnimationFrame(fitAll);
+}
+
+/* ═════════ 9. Onboarding ═════════ */
+function vOnboard(root){
+  const box=el("div",{class:"ob stack"});
+  if(ui.ob>0)box.appendChild(el("div",{class:"steps"},[1,2,3].map(i=>el("i",{class:i<=ui.ob?"on":""}))));
+  if(ui.ob===0){
+    box.appendChild(el("h1",{text:t("ob.t1")}));
+    box.appendChild(el("p",{class:"lede",text:t("ob.lede")}));
+    box.appendChild(el("div",{class:"notice acc"},[el("span",{text:"✓"}),el("div",{text:t("ob.honest")})]));
+    box.appendChild(el("button",{class:"btn accent lg",style:"align-self:flex-start",text:t("ob.start"),
+      onclick:()=>{ui.ob=1;render();}}));
+  }
+  if(ui.ob===1){
+    box.appendChild(el("h1",{style:"font-size:24px",text:t("ob.s1")}));
+    box.appendChild(el("p",{class:"muted",text:t("ob.s1sub")}));
+    box.appendChild(el("div",{class:"tpl"},TPL.map(x=>el("button",{class:"tplcard","aria-pressed":ui.tpl===x.id?"true":"false",
+      onclick:()=>{ui.tpl=x.id;ui.pick=null;render();}},[E("div","ic",x.ic),
+      el("div",{},[el("b",{text:x[LANG].n}),el("span",{text:x[LANG].d})])]))));
+    box.appendChild(obNav(()=>{ui.ob=0;render();},()=>{ui.ob=2;render();},!ui.tpl));
+  }
+  if(ui.ob===2){
+    const tp=TPL.find(x=>x.id===ui.tpl)||TPL[TPL.length-1];
+    box.appendChild(el("h1",{style:"font-size:24px",text:t("ob.s2")}));
+    box.appendChild(el("p",{class:"muted",text:t("ob.s2sub")}));
+    box.appendChild(el("div",{class:"pick"},tp.acts.map(a=>{
+      const on=ui.pick===a[LANG];
+      return el("button",{class:"pickrow","aria-pressed":on?"true":"false",
+        onclick:()=>{ui.pick=a[LANG];ui.pickKind=a.k;ui.pickMin=a.min||null;ui.pickOwn="";render();}},[
+        el("span",{class:"tick sm","aria-pressed":on?"true":"false",text:"✓"}),
+        el("span",{style:"flex:1",text:a[LANG]}),
+        a.k!=="do"?E("span","kind",t("kind."+a.k)):null]);
+    })));
+    box.appendChild(F(t("ob.s2own"),el("input",{type:"text",value:ui.pickOwn,oninput:e=>{
+      ui.pickOwn=e.target.value;if(e.target.value){ui.pick=null;ui.pickKind="do";}
+      document.querySelectorAll(".pickrow").forEach(r=>r.setAttribute("aria-pressed","false"));
+      const n=document.getElementById("obNext");if(n)n.disabled=!(ui.pick||ui.pickOwn.trim());}})));
+    box.appendChild(obNav(()=>{ui.ob=1;render();},()=>{ui.ob=3;render();},!(ui.pick||ui.pickOwn.trim())));
+  }
+  if(ui.ob===3){
+    box.appendChild(el("h1",{style:"font-size:24px",text:t("ob.s3")}));
+    box.appendChild(el("p",{class:"muted",text:t("ob.s3sub")}));
+    box.appendChild(el("div",{class:"pick"},CUES[LANG].map(c=>{
+      const on=ui.cue===c;
+      return el("button",{class:"pickrow","aria-pressed":on?"true":"false",onclick:()=>{ui.cue=c;ui.cueOwn="";render();}},[
+        el("span",{class:"tick sm","aria-pressed":on?"true":"false",text:"✓"}),el("span",{text:c})]);
+    })));
+    box.appendChild(F(t("ob.s3own"),el("input",{type:"text",value:ui.cueOwn,oninput:e=>{
+      ui.cueOwn=e.target.value;if(e.target.value)ui.cue=null;
+      document.querySelectorAll(".pickrow").forEach(r=>r.setAttribute("aria-pressed","false"));
+      const n=document.getElementById("obNext");if(n)n.disabled=!(ui.cue||ui.cueOwn.trim());}})));
+    box.appendChild(obNav(()=>{ui.ob=2;render();},finishOb,!(ui.cue||ui.cueOwn.trim())));
+  }
+  root.appendChild(box);
+}
+function obNav(back,next,dis){
+  return el("div",{class:"row",style:"margin-top:8px"},[
+    el("button",{class:"btn ghost",text:t("ob.back"),onclick:back}),
+    el("button",{id:"obNext",class:"btn accent",text:t("ob.next"),disabled:!!dis,onclick:next})]);
+}
+function finishOb(){
+  const own=ui.pickOwn.trim();
+  S.tpl=ui.tpl;
+  S.actions=[{id:uid4(),name:own||ui.pick||"",cue:(ui.cueOwn.trim()||ui.cue||""),
+    kind:own?"do":(ui.pickKind||"do"),min:own?null:ui.pickMin,created:dayKey()}];
+  S.onboarded=true;ui.tab="today";
+  if(S.actions[0].kind!=="do")ui.mode=S.actions[0].kind;
+  if(S.actions[0].min&&ui.dur[S.actions[0].kind]!=null)ui.dur[S.actions[0].kind]=S.actions[0].min;
+  save();render();
+}
+
+/* ═════════ 10. Today ═════════ */
+function goSession(kind,id){
+  ui.mode=kind==="do"?"focus":kind;ui.sessAct=id||null;ui.tab="session";render();window.scrollTo(0,0);
+}
+function vToday(root){
+  const k=dayKey(),d=day(),st=stats(),stack=el("div",{class:"stack"});
+  const n=S.actions.filter(a=>d.done[a.id]).length;
+  const hero=el("div",{class:"hero"});
+  hero.appendChild(el("div",{class:"row between"},[
+    el("div",{style:"flex:1;min-width:0"},[E("div","eyebrow",t("today.hello")+" · "+pretty(k)),
+      el("h1",{style:"font-size:21px;margin-top:4px",
+        text:n===0?t("today.nothing"):(n===S.actions.length?t("today.allDone"):t("today.partial"))})]),
+    el("span",{class:"pill "+(monthDays()>0?"acc":""),text:monthDays()>0?monthLabelN(monthDays()):t("today.runNone")})]));
+  S.actions.forEach(a=>{
+    const on=!!d.done[a.id],r=actRun(a.id);
+    hero.appendChild(el("div",{class:"act"+(on?" done":"")},[
+      el("button",{class:"tick","aria-pressed":on?"true":"false",text:"✓","aria-label":a.name||"✓",
+        onclick:()=>{d.done[a.id]=!on;buzz(on?8:[14,40,14]);ui.todayMsg=on?null:winMsg();save();render();}}),
+      el("div",{class:"actb"},[
+        autoT({class:"nm",value:a.name,placeholder:"—",oninput:e=>{a.name=e.target.value;save();}}),
+        el("div",{class:"cue"},[E("span","k",t("today.when")),
+          el("input",{type:"text",value:a.cue,placeholder:CUES[LANG][0],oninput:e=>{a.cue=e.target.value;save();}})])]),
+      el("div",{class:"side"},[
+        a.kind!=="do"?E("span","kind",KIC[a.kind]+" "+t("kind."+a.kind)):null,
+        !on?el("button",{class:"btn ghost sm",text:t("today.start"),onclick:()=>goSession(a.kind||"do",a.id)}):null,
+        el("div",{class:"mini",text:r+"d · "+(r>=66?"✓":Math.round(100*Math.min(1,r/66))+"%")})])
+    ]));
+  });
+  const mom=el("div",{class:"mom"});
+  lastN(14).forEach(kk=>mom.appendChild(el("i",{class:(dayDone(kk)?"on":"")+(kk===k?" today":""),title:pretty(kk)})));
+  hero.appendChild(mom);
+  hero.appendChild(el("div",{class:"tiny muted",style:"margin-top:6px",text:t("today.momentum")}));
+  if(ui.todayMsg&&dayDone(k))hero.appendChild(el("div",{class:"notice acc",style:"margin-top:12px"},[el("span",{text:"✓"}),el("div",{text:ui.todayMsg})]));
+  stack.appendChild(hero);
+
+  if(missedTwice()){
+    stack.appendChild(el("div",{class:"notice crit"},[el("span",{text:"▲"}),el("div",{},[
+      el("b",{text:t("today.missTwice")+". "}),document.createTextNode(t("today.missTwiceBody")),
+      el("div",{class:"row",style:"margin-top:9px"},S.actions.map(a=>ui.shrink===a.id?shrinkForm(a):el("button",{class:"btn ghost sm",
+        text:t("today.shrink")+(S.actions.length>1?": "+(a.name||"").slice(0,24):""),onclick:()=>{ui.shrink=a.id;render();}})))])]));
+  }else if(st.run>=12&&st.run<=24){
+    stack.appendChild(el("div",{class:"notice acc"},[el("span",{text:"◈"}),el("div",{},[
+      el("b",{text:t("today.week3")+". "}),document.createTextNode(t("today.week3body"))])]));
+  }
+
+  stack.appendChild(el("button",{class:"btn accent lg wide",text:t("today.cta"),onclick:()=>{const x=S.actions.find(a=>!d.done[a.id])||S.actions[0]||{};goSession(x.kind||"do",x.id);}}));
+
+
+  if(open("cascade"))stack.appendChild(directionCard());
+
+  if(S.actions.length<3){
+    if(open("more")){
+      const nm=el("input",{type:"text",placeholder:t("today.add")});
+      const cu=el("input",{type:"text",placeholder:t("today.cuePh")});
+      const need=el("div",{class:"tiny",style:"color:var(--crit);margin-top:4px"});
+      const kd=el("select",{},["do","meditate","breathe","gratitude","visualize","journal"].map(x=>
+        el("option",{value:x,text:KIC[x]+" "+t("kind."+x)})));
+      stack.appendChild(el("div",{class:"card"},[el("b",{text:t("today.add")}),
+        el("div",{class:"tiny muted",text:t("today.addHint")}),
+        el("div",{class:"row",style:"margin-top:10px;flex-wrap:nowrap"},[nm,el("div",{style:"flex:0 0 150px"},[kd])]),
+        el("div",{style:"margin-top:8px"},[cu]),need,
+        el("button",{class:"btn ghost sm",style:"margin-top:9px",text:"＋ "+t("today.add"),onclick:()=>{
+          if(!nm.value.trim())return;
+          if(!cu.value.trim()){need.textContent=t("today.cueNeed");cu.focus();return;}
+          S.actions.push({id:uid4(),name:nm.value.trim(),cue:cu.value.trim(),kind:kd.value,created:dayKey()});save();render();}})]));
+    }else stack.appendChild(lockCard("more"));
+  }
+
+  const ev=el("div",{class:"card"});
+  ev.appendChild(E("div","eyebrow",t("today.evening")));
+  ev.appendChild(el("textarea",{style:"margin-top:8px",placeholder:t("today.note"),value:d.note,
+    oninput:e=>{d.note=e.target.value;save();}}));
+  if(open("week")){
+    const det=el("details",{class:"fold",style:"margin-top:12px"});
+    det.appendChild(el("summary",{},[el("b",{style:"font-size:14px",text:t("today.debrief")})]));
+    const g=el("div",{class:"stack",style:"margin-top:10px;gap:11px"});
+    STR[LANG].dq.forEach((q,i)=>g.appendChild(el("div",{class:"q"},[el("span",{text:q[0]}),el("em",{text:q[1]}),
+      el("textarea",{value:d.dq[i],oninput:e=>{d.dq[i]=e.target.value;save();}})])));
+    det.appendChild(g);
+    if(d.dq.some(Boolean))det.setAttribute("open","");
+    ev.appendChild(det);
+  }
+  ev.appendChild(el("div",{class:"row",style:"margin-top:10px"},[
+    el("button",{class:"btn "+(d.logged?"ghost":"accent"),text:d.logged?t("today.saved"):t("today.save"),
+      onclick:()=>{d.logged=true;save();render();}})]));
+  stack.appendChild(ev);
+
+  const next=["more","week","cascade"].find(x=>!open(x));
+  if(next&&next!=="more")stack.appendChild(el("div",{},[lockCard(next),
+    el("p",{class:"tiny muted",style:"margin-top:6px",text:t("lock.why")})]));
+  root.appendChild(stack);
+}
+function shrinkForm(a){
+  const inp=el("input",{type:"text",value:a.name});
+  return el("div",{class:"stack",style:"gap:7px;flex:1 1 100%"},[E("b","tiny",t("today.shrinkPrompt")),inp,
+    el("button",{class:"btn accent sm",style:"align-self:flex-start",text:t("today.shrinkSave"),onclick:()=>{
+      if(inp.value.trim())a.name=inp.value.trim();ui.shrink=null;save();render();}})]);
+}
+function directionCard(){
+  const det=el("details",{class:"fold card"});
+  if(S.year.goals.some(g=>g.t))det.setAttribute("open","");
+  det.appendChild(el("summary",{},[E("div","eyebrow",t("today.direction"))]));
+  const body=el("div",{class:"stack",style:"margin-top:10px;gap:10px"});
+  body.appendChild(el("b",{style:"font-size:13px",text:t("today.year")}));
+  S.year.goals.forEach(g=>{
+    body.appendChild(el("div",{class:"goal"},[E("span","b",""),
+      el("div",{style:"flex:1;min-width:0"},[autoT({value:g.t,placeholder:t("today.yearPh"),
+        oninput:e=>{g.t=e.target.value;save();}})]),
+      el("button",{class:"tag",style:g.dir==="away"?"color:var(--warn);border-color:var(--warn)":"color:var(--accent);border-color:var(--accent-line)",
+        text:g.dir==="away"?t("today.away"):t("today.toward"),onclick:()=>{g.dir=g.dir==="away"?"toward":"away";save();render();}})]));
+  });
+  if(S.year.goals.some(g=>g.dir==="away"&&g.t))body.appendChild(el("p",{class:"tiny muted",text:t("today.awayNote")}));
+  body.appendChild(el("b",{style:"font-size:13px;margin-top:6px",text:t("today.month")+" · "+monthLabel()}));
+  S.month.goals.forEach(g=>{
+    body.appendChild(el("div",{class:"goal"},[
+      el("button",{class:"tick sm","aria-pressed":g.done?"true":"false",text:"✓",onclick:()=>{g.done=!g.done;save();render();}}),
+      el("div",{style:"flex:1;min-width:0"},[autoT({value:g.t,placeholder:t("today.monthPh"),oninput:e=>{g.t=e.target.value;save();}})])]));
+  });
+  det.appendChild(body);
+  return det;
+}
+
+/* ═════════ 11. Session ═════════ */
+function vSession(root){
+  const stack=el("div",{class:"stack"});
+  stack.appendChild(head(t("sess.eyebrow"),t("sess.title"),t("sess.sub")));
+  const modes=["focus","meditate","breathe","gratitude","visualize","journal"];
+  const mk={focus:"do",meditate:"meditate",breathe:"breathe",gratitude:"gratitude",visualize:"visualize",journal:"journal"};
+  stack.appendChild(el("div",{class:"modes"},modes.map(m=>el("button",{"aria-pressed":ui.mode===m?"true":"false",
+    disabled:T.running&&T.mode!==m,onclick:()=>{ui.mode=m;ui.flash="";ui.sessAct=null;render();}},[E("span","",KIC[mk[m]]),document.createTextNode(t("mode."+m))]))));
+
+  const c=el("div",{class:"card lift"});
+  const m=T.running?T.mode:ui.mode;
+  if(m==="focus"||m==="meditate"||m==="breathe")timedCard(c,m);
+  else if(m==="gratitude")gratCard(c);
+  else if(m==="visualize")c.appendChild(woopForm(S.viz,true));
+  else if(m==="journal")journalCard(c);
+  stack.appendChild(c);
+
+  if(ui.flash)stack.appendChild(el("div",{class:"notice acc"},[el("span",{text:"✓"}),el("div",{text:ui.flash})]));
+
+  if(ui.justFinished==="focus"&&!T.running){
+    const n=el("div",{class:"card"}),ta=el("textarea",{style:"margin-top:8px"});
+    n.appendChild(E("div","eyebrow",t("sess.after")));n.appendChild(ta);
+    n.appendChild(el("div",{class:"row",style:"margin-top:9px"},[
+      el("button",{class:"btn accent sm",text:t("sess.note"),onclick:()=>{if(S.sessions[0])S.sessions[0].note=ta.value;ui.justFinished=null;save();render();}}),
+      el("button",{class:"btn ghost sm",text:t("sess.skip"),onclick:()=>{ui.justFinished=null;render();}})]));
+    stack.appendChild(n);
+  }
+
+  const who=el("div",{class:"card",id:"liveBox"});
+  stack.appendChild(who);
+  const d=day(),wk=lastN(7).reduce((a,k)=>{const x=S.days[k]||{};return a+(x.focusMin||0)+(x.practiceMin||0);},0);
+  stack.appendChild(el("div",{class:"row",style:"gap:12px;flex-wrap:nowrap"},[
+    el("div",{class:"tile",style:"flex:1"},[E("div","v",String((d.focusMin||0)+(d.practiceMin||0))),E("div","l",t("sess.todayMin"))]),
+    el("div",{class:"tile",style:"flex:1"},[E("div","v",(wk/60).toFixed(1)+"h"),E("div","l",t("sess.week"))])]));
+  root.appendChild(stack);
+  paintLive();
+}
+function timedCard(c,m){
+  const opts=m==="focus"?[25,50,90]:(m==="meditate"?[5,10,20]:[3,5,10]);
+  if(opts.indexOf(ui.dur[m])<0)ui.dur[m]=opts[1];
+  if(m==="breathe"){
+    c.appendChild(el("div",{class:"pacewrap"},[el("div",{class:"pacer",id:"pacer"},[el("span",{id:"pacerL",text:T.running?"":"≈"})])]));
+  }
+  c.appendChild(el("div",{class:"timer"},[el("div",{id:"tmr",class:"t"+(T.running?" run":""),
+    text:T.running?fmt(Math.max(0,T.endsAt-Date.now())):pad(ui.dur[m])+":00"})]));
+  c.appendChild(el("div",{class:"bar"},[el("i",{id:"tbar",
+    style:"width:"+(T.running?(100*(1-(T.endsAt-Date.now())/(T.min*6e4))).toFixed(1):0)+"%"})]));
+  if(m==="meditate")c.appendChild(el("p",{class:"guide",style:"margin-bottom:12px",text:t("sess.medGuide")}));
+  if(m==="breathe")c.appendChild(el("p",{class:"guide",style:"margin-bottom:12px",text:t("sess.breathGuide")}));
+  if(!T.running){
+    c.appendChild(el("div",{class:"seg",style:"margin-bottom:10px"},opts.map(n=>el("button",{"aria-pressed":ui.dur[m]===n?"true":"false",
+      text:n+"m",onclick:()=>{ui.dur[m]=n;if(m==="focus"){S.set.blockMin=n;save();}render();}}))));
+    if(m==="focus")c.appendChild(el("input",{type:"text",placeholder:t("sess.what"),value:T.label,style:"margin-bottom:10px",
+      oninput:e=>{T.label=e.target.value;}}));
+    c.appendChild(el("button",{class:"btn accent lg wide",text:t("sess.start"),onclick:startT}));
+  }else{
+    if(m==="focus"&&T.label)c.appendChild(el("p",{class:"tiny",style:"text-align:center;margin-bottom:10px",text:T.label}));
+    c.appendChild(el("div",{class:"row",style:"gap:8px;flex-wrap:nowrap"},[
+      el("button",{class:"btn ghost",style:"flex:1",text:t("sess.stop"),onclick:()=>stopT("stop")}),
+      el("button",{class:"btn",style:"flex:1",text:t("sess.finish"),onclick:()=>stopT("finish")})]));
+  }
+}
+function finishPractice(kind,note){
+  const d=day();
+  markKind(kind);
+  S.sessions.unshift({at:Date.now(),min:0,mode:kind,label:"",note:String(note||"").slice(0,300)});
+  S.sessions=S.sessions.slice(0,80);
+  ui.flash=t("sess.saved");buzz([14,40,14]);save();render();
+}
+function gratCard(c){
+  const d=day();
+  c.appendChild(el("p",{class:"muted tiny",style:"margin-bottom:10px",text:t("sess.gratSub")}));
+  d.grat.forEach((g,i)=>c.appendChild(el("input",{type:"text",style:"margin-bottom:8px",placeholder:(i+1)+". "+t("sess.gratPh"),
+    value:g,oninput:e=>{d.grat[i]=e.target.value;save();}})));
+  c.appendChild(el("button",{class:"btn accent",text:t("sess.gratSave"),onclick:()=>{
+    if(!d.grat.some(x=>x.trim()))return;finishPractice("gratitude",d.grat.filter(Boolean).join(" · "));}}));
+}
+function journalCard(c){
+  const d=day(),jp=STR[LANG].jp;
+  const [y,mo,dd]=dayKey().split("-").map(Number);
+  const doy=Math.floor((new Date(y,mo-1,dd)-new Date(y,0,1))/864e5);
+  c.appendChild(el("b",{style:"font-size:16px;display:block;margin-bottom:10px",text:jp[doy%jp.length]}));
+  c.appendChild(el("textarea",{style:"min-height:140px",value:d.journal,oninput:e=>{d.journal=e.target.value;save();}}));
+  c.appendChild(el("button",{class:"btn accent",style:"margin-top:10px",text:t("sess.jSave"),onclick:()=>{
+    if(!d.journal.trim())return;finishPractice("journal","");}}));
+}
+function woopForm(o,asSession){
+  const w=el("div",{class:"stack",style:"gap:11px"});
+  if(asSession)w.appendChild(el("p",{class:"muted tiny",text:t("sess.vizSub")}));
+  const f=(key,label,ph)=>el("div",{class:"q"},[el("span",{text:label}),
+    el("textarea",{placeholder:ph||"",value:o[key]||"",style:"min-height:48px",oninput:e=>{o[key]=e.target.value;save();}})]);
+  if(asSession)w.appendChild(f("wish",t("sess.wish"),""));
+  w.appendChild(f("outcome",t("sess.outcome"),t("sess.outPh")));
+  w.appendChild(f("obstacle",t("sess.obstacle"),t("sess.obsPh")));
+  w.appendChild(f("plan",t("sess.plan"),t("sess.planPh")));
+  w.appendChild(el("button",{class:"btn accent",style:"align-self:flex-start",text:t("sess.vizSave"),onclick:()=>{
+    if(!(o.obstacle||"").trim()||!(o.plan||"").trim())return;
+    finishPractice("visualize",(o.obstacle||"")+" → "+(o.plan||""));}}));
+  return w;
+}
+let liveTk=0;
+async function paintLive(){
+  const box=document.getElementById("liveBox");if(!box)return;
+  const tk=++liveTk;
+  box.innerHTML="";
+  if(Net.mode!=="connected"||!Net.room){
+    box.appendChild(el("div",{class:"notice"},[el("span",{text:"◇"}),el("div",{},[
+      el("b",{text:t("sess.solo")+". "}),document.createTextNode(t("sess.soloBody"))])]));return;
+  }
+  const me=Net.peers.find(p=>p.isMe),others=Net.peers.filter(p=>!p.isMe).length;
+  // names come only from circle members who chose to share
+  const named=Net.cpeers.filter(p=>!p.isMe&&typeof p.presence.who==="string");
+  const anon=Math.max(0,others-named.length);
+  box.appendChild(el("div",{class:"row between"},[
+    E("div","eyebrow",others===1?"1 "+t("sess.other1"):others+" "+t("sess.others")),
+    others?el("span",{class:"dot live"}):null]));
+  if(!me&&!others){box.appendChild(el("div",{class:"empty",text:t("sess.nobody")}));return;}
+  const ids=Array.from(new Set(named.map(p=>p.presence.who).concat(me&&Net.uid?[Net.uid]:[])));
+  let profs={};
+  if(Net.user&&ids.length){try{profs=await Net.user.profiles(ids);}catch(e){}}
+  if(tk!==liveTk)return;
+  const modeOf=p=>typeof p.presence.mode==="string"&&STR.en.mode[p.presence.mode]?t("mode."+p.presence.mode):"";
+  const row=(pr,name,sub)=>{
+    const av=pr.avatarUrl?el("img",{class:"av",alt:"",src:pr.avatarUrl}):el("div",{class:"avd",text:"◉"});
+    const nm=el("div",{style:"font-weight:600;font-size:14px"});nm.textContent=name;
+    const md=el("div",{class:"tiny muted"});md.textContent=sub;
+    return el("div",{class:"peer"},[av,el("div",{style:"flex:1;min-width:0"},[nm,md]),el("span",{class:"dot live"})]);
+  };
+  const wrap=el("div",{style:"margin-top:6px"});
+  if(me){const pr=profs[Net.uid]||{};wrap.appendChild(row(pr,(pr.name||"—")+" · "+t("sess.you"),modeOf(me)));}
+  named.forEach(p=>{const pr=profs[p.presence.who]||{};
+    wrap.appendChild(row(pr,pr.name||"—",modeOf(p)+(typeof p.presence.label==="string"&&p.presence.label?" · "+p.presence.label:"")));});
+  if(anon)wrap.appendChild(row({},anon===1?t("sess.anon1"):tf("sess.anon",{n:anon}),""));
+  box.appendChild(wrap);
+}
+
+/* ═════════ 12. Circle ═════════ */
+function vCircle(root){
+  const stack=el("div",{class:"stack"});
+  stack.appendChild(head(t("circ.eyebrow"),t("circ.title"),t("circ.sub")));
+  if(Net.mode!=="connected"||!Net.db||!Net.uid){
+    stack.appendChild(el("div",{class:"card"},[el("div",{class:"notice"},[el("span",{text:"◇"}),
+      el("div",{},[el("b",{text:t("circ.solo")+". "}),document.createTextNode(t("circ.soloBody"))])])]));
+    stack.appendChild(commitCard());root.appendChild(stack);return;
+  }
+  stack.appendChild(commitCard());
+  if(S.pod.id){stack.appendChild(board());stack.appendChild(activity());}
+  else stack.appendChild(joinCard());
+  root.appendChild(stack);
+}
+function commitCard(){
+  const k=S.pod.commit,c=el("div",{class:"card"});
+  c.appendChild(el("div",{class:"row between"},[E("div","eyebrow",t("circ.commit")),
+    el("span",{class:"pill "+(k.status==="kept"?"good":k.status==="missed"?"warn":"acc"),
+      text:k.status==="kept"?t("circ.kept"):k.status==="missed"?t("circ.missed"):t("circ.open")})]));
+  c.appendChild(el("div",{class:"stack",style:"gap:9px;margin-top:11px"},[
+    el("input",{type:"text",placeholder:t("circ.commitPh"),value:k.text,oninput:e=>{k.text=e.target.value;save();}}),
+    el("div",{class:"row"},[
+      F(t("circ.by"),el("input",{type:"date",value:k.due,oninput:e=>{k.due=e.target.value;save();}})),
+      F(t("circ.stake"),el("input",{type:"text",placeholder:t("circ.stakePh"),value:k.stake,oninput:e=>{k.stake=e.target.value;save();}}))]),
+    el("p",{class:"tiny muted",text:t("circ.stakeHint")})]));
+  c.appendChild(el("div",{class:"row",style:"margin-top:11px"},[
+    el("button",{class:"btn accent sm",text:t("circ.kept"),onclick:()=>{k.status="kept";save();render();}}),
+    el("button",{class:"btn ghost sm",text:t("circ.missed"),onclick:()=>{k.status="missed";save();render();}}),
+    el("button",{class:"btn ghost sm",text:t("circ.newWeek"),onclick:()=>{S.pod.commit={text:"",due:"",stake:"",status:"open"};save();render();}})]));
+  return c;
+}
+function joinCard(){
+  const c=el("div",{class:"card"});
+  c.appendChild(E("div","eyebrow",t("circ.none")));
+  c.appendChild(el("p",{class:"tiny muted",style:"margin-top:6px",text:t("circ.codeHint")}));
+  const msg=el("div",{class:"tiny",style:"color:var(--crit);margin-top:6px"});
+  const cd=el("input",{type:"text",placeholder:t("circ.joinCode"),autocomplete:"off",autocapitalize:"off",spellcheck:"false"});
+  const nm=el("input",{type:"text",placeholder:t("circ.name")});
+  const me=el("input",{type:"text",placeholder:t("circ.myNamePh"),value:S.set.name||"",maxlength:60,
+    oninput:e=>{S.set.name=e.target.value.slice(0,60);save();}});
+  const why=e=>{const s=String((e&&e.message)||"");
+    return /full/i.test(s)?t("circ.fullMsg"):/too many/i.test(s)?t("circ.tooMany"):t("circ.failed");};
+  c.appendChild(el("div",{class:"stack",style:"gap:6px;margin-top:12px"},[el("span",{class:"tiny muted",text:t("circ.myName")}),me]));
+  c.appendChild(el("div",{class:"stack",style:"gap:8px;margin-top:12px"},[cd,
+    el("button",{class:"btn sm",style:"align-self:flex-start",text:t("circ.join"),onclick:async()=>{
+      msg.textContent="";
+      const code=cd.value.trim().toLowerCase();
+      if(!/^[a-z2-9]{22}$/.test(code)){msg.textContent=t("circ.badCode");return;}
+      try{
+        const r=await Net.sb.rpc("join_circle",{p_code:code});
+        if(r.error)throw r.error;
+        if(!r.data){msg.textContent=t("circ.badCode");return;}
+        enterCircle(r.data.id,String(r.data.name||"").slice(0,60),code);
+      }catch(e){msg.textContent=why(e);}}})]));
+  c.appendChild(el("hr",{class:"rule",style:"margin:14px 0"}));
+  c.appendChild(el("div",{class:"stack",style:"gap:8px"},[nm,
+    el("button",{class:"btn sm",style:"align-self:flex-start",text:t("circ.create"),onclick:async()=>{
+      msg.textContent="";
+      const name=nm.value.trim().slice(0,60);if(!name)return;
+      try{const r=await Net.sb.rpc("create_circle",{p_name:name});
+        if(r.error)throw r.error;
+        enterCircle(r.data.id,r.data.name,r.data.code);}catch(e){msg.textContent=why(e);}}})]));
+  c.appendChild(msg);
+  return c;
+}
+function board(){
+  const c=el("div",{class:"card"});
+  const mem=Net.members;
+  c.appendChild(el("div",{class:"row between"},[el("h3",{style:"font-size:17px",text:S.pod.name||"—"}),
+    el("button",{class:"btn ghost sm",text:t("circ.leave"),onclick:leaveCircle})]));
+  const code=el("input",{type:"text",readonly:true,value:S.pod.code||"",style:"font-family:var(--mono);font-size:13px"});
+  if(S.pod.code)c.appendChild(el("div",{style:"margin-top:10px"},[el("div",{class:"tiny muted",text:t("circ.invite")}),
+    el("div",{class:"row",style:"margin-top:4px;flex-wrap:nowrap"},[code,
+      el("button",{class:"btn ghost sm",text:t("circ.copy"),onclick:e=>{
+        const b=e.currentTarget;code.select();let ok=false;
+        try{ok=document.execCommand("copy");}catch(x){}
+        if(!ok&&navigator.clipboard)navigator.clipboard.writeText(S.pod.code).catch(()=>{});
+        b.textContent=t("circ.copied");setTimeout(()=>{b.textContent=t("circ.copy");},1600);}})])]));
+  c.appendChild(el("div",{class:"stack",style:"gap:6px;margin-top:12px"},[el("span",{class:"tiny muted",text:t("circ.myName")}),
+    el("input",{type:"text",placeholder:t("circ.myNamePh"),value:S.set.name||"",maxlength:60,
+      onchange:e=>{S.set.name=e.target.value.slice(0,60);save();push();}})]));
+  const sh=S.set.share;
+  c.appendChild(el("div",{class:"notice"+(sh?"":" acc"),style:"margin-top:12px"},[el("div",{style:"flex:1;min-width:0"},[
+    el("div",{text:sh?t("circ.sharingNote"):t("circ.privateNote")}),
+    el("button",{class:"btn "+(sh?"ghost":"accent")+" sm",style:"margin-top:8px",text:sh?t("circ.stopShare"):t("circ.shareNow"),
+      onclick:()=>{S.set.share=!S.set.share;save();push();Net.beat();render();}})])]));
+  const h=el("div",{style:"margin-top:8px"});c.appendChild(h);
+  if(!mem.some(m=>m.uid!==Net.uid))
+    h.appendChild(el("div",{class:"empty",text:t("circ.first")}));
+  if(mem.length)paintMembers(h,mem);
+  return c;
+}
+async function paintMembers(h,mem){
+  let profs={};
+  if(Net.user){try{profs=await Net.user.profiles(mem.map(m=>m.uid));}catch(e){}}
+  const live=new Set(Net.cpeers.map(p=>p.presence&&p.presence.who).filter(Boolean));
+  const w=el("div");
+  mem.slice().sort((a,b)=>(b.run||0)-(a.run||0)).forEach(m=>{
+    const p=profs[m.uid]||{};
+    const av=p.avatarUrl?el("img",{class:"av",alt:"",src:p.avatarUrl}):el("div",{class:"avd",text:"◉"});
+    const nm=el("div",{style:"font-weight:600;font-size:14px"});
+    nm.textContent=(p.name||"—")+(m.uid===Net.uid?" · "+t("sess.you"):"");
+    const body=el("div",{style:"flex:1;min-width:0"},[nm]);
+    if(m.focus){const s=el("div",{class:"tiny muted"});s.textContent=String(m.focus);body.appendChild(s);}
+    if(m.commit&&m.commit.text){const ck=el("div",{class:"tiny",style:"color:var(--ink-2);margin-top:3px"});
+      ck.textContent="↳ "+String(m.commit.text).slice(0,140);body.appendChild(ck);}
+    w.appendChild(el("div",{class:"peer"},[av,body,
+      live.has(m.uid)?el("span",{class:"pill acc",text:t("circ.practicing")}):null,
+      m.run!=null?el("span",{class:"pill",text:m.run+"d"}):null]));
+  });
+  h.appendChild(w);
+}
+function activity(){
+  const c=el("div",{class:"card"});
+  c.appendChild(E("div","eyebrow",t("circ.activity")));
+  const items=Net.feed.slice(0,24);
+  const h=el("div",{style:"margin-top:6px"});c.appendChild(h);
+  if(!items.length){h.appendChild(el("div",{class:"empty",text:t("circ.noActivity")}));return c;}
+  paintFeed(h,items);
+  return c;
+}
+async function paintFeed(h,items){
+  let profs={};
+  if(Net.user){try{profs=await Net.user.profiles(Array.from(new Set(items.map(i=>i.uid))));}catch(e){}}
+  items.forEach(it=>{
+    const p=profs[it.uid]||{};
+    const nm=el("span",{style:"font-weight:600"});nm.textContent=p.name||"—";
+    const meta=el("span",{class:"tiny muted"});
+    meta.textContent=" · "+pretty(String(it.date||""))+" · "+(it.done||0)+"/"+(it.of||0)+" "+t("circ.days")+
+      ((it.pm||0)+(it.fm||0)?" · "+((it.pm||0)+(it.fm||0))+" "+t("circ.min"):"");
+    const body=el("div",{style:"flex:1;min-width:0"},[el("div",{},[nm,meta])]);
+    if(it.note){const n=el("div",{class:"tiny",style:"margin-top:3px"});n.textContent=String(it.note);body.appendChild(n);}
+    const key=it.uid+"|"+it.date,r=Net.reacts[key]||[],mine=!!Net.uid&&r.indexOf(Net.uid)>=0;
+    body.appendChild(el("div",{style:"margin-top:7px"},[el("button",{class:"support","aria-pressed":mine?"true":"false",
+      text:"♥ "+t("circ.support")+" · "+r.length,onclick:()=>react(key,!mine)})]));
+    h.appendChild(el("div",{class:"peer",style:"align-items:flex-start"},[body]));
+  });
+}
+
+/* ═════════ 13. Progress ═════════ */
+function vProg(root){
+  const st=stats(),stack=el("div",{class:"stack"});
+  stack.appendChild(head(t("prog.eyebrow"),t("prog.title"),t("prog.sub")));
+  stack.appendChild(el("div",{class:"tiles"},[tile(String(st.done),t("prog.shown")),tile(String(st.run),t("prog.run")),
+    tile(String(st.fh),t("prog.focusH")),tile(String(st.ph),t("prog.practiceH"))]));
+  const a=el("div",{class:"card"});
+  a.appendChild(E("div","eyebrow",t("prog.auto")));
+  a.appendChild(el("p",{class:"tiny muted",style:"margin-top:5px;max-width:58ch",text:t("prog.autoSub")}));
+  S.actions.forEach(x=>{
+    const r=actRun(x.id),p=Math.min(100,Math.round(100*r/66));
+    a.appendChild(el("div",{style:"margin-top:12px"},[
+      el("div",{class:"row between",style:"flex-wrap:nowrap;gap:8px"},[
+        el("span",{style:"font-size:14px;font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap",text:x.name||"—"}),
+        el("span",{class:"num tiny muted",text:r+" / 66"})]),
+      el("div",{class:"bar",style:"margin:6px 0 0"},[el("i",{style:"width:"+p+"%"})])]));
+  });
+  stack.appendChild(a);
+  stack.appendChild(el("div",{class:"card"},[E("div","eyebrow",t("prog.grid")),
+    el("div",{class:"chartwrap",style:"margin-top:10px"},[grid()]),
+    el("p",{class:"tiny muted",style:"margin-top:10px",text:t("prog.gridSub")})]));
+  stack.appendChild(el("div",{class:"card"},[el("div",{class:"row between"},[E("div","eyebrow",t("prog.chart")),
+    el("div",{class:"row",style:"gap:10px"},[legend("var(--accent)",t("prog.legendF")),legend("var(--calm)",t("prog.legendP"))])]),
+    el("div",{class:"chartwrap",style:"margin-top:8px"},[chart()])]));
+  stack.appendChild(el("div",{class:"card"},[el("div",{class:"row between"},[E("div","eyebrow",t("prog.never")),
+    el("span",{class:"pill "+(st.breaches===0?"good":"warn"),text:st.breaches+" "+t("prog.breaches")})]),
+    el("p",{class:"tiny muted",style:"margin-top:8px",text:st.breaches===0?t("prog.clean"):t("today.missTwiceBody")})]));
+
+  if(open("week")){
+    const wk=weekKey(dayKey());S.weeks[wk]=S.weeks[wk]||{r:["","","","",""]};const w=S.weeks[wk];
+    const c=el("div",{class:"card"});
+    c.appendChild(el("div",{class:"row between"},[E("div","eyebrow",t("prog.week")+" · "+wk),
+      new Date().getDay()===5?el("span",{class:"pill acc",text:"●"}):null]));
+    c.appendChild(el("p",{class:"tiny muted",style:"margin-top:5px",text:t("prog.weekSub")}));
+    const g=el("div",{class:"stack",style:"gap:11px;margin-top:10px"});
+    STR[LANG].wq.forEach((q,i)=>g.appendChild(el("div",{class:"q"},[el("span",{text:q}),
+      el("textarea",{value:w.r[i],oninput:e=>{w.r[i]=e.target.value;save();}})])));
+    c.appendChild(g);stack.appendChild(c);
+
+    const wc=el("div",{class:"card"});
+    wc.appendChild(E("div","eyebrow",t("prog.contrast")));
+    wc.appendChild(el("p",{class:"tiny muted",style:"margin:5px 0 10px",text:t("prog.contrastSub")}));
+    const goals=S.year.goals.map((g,i)=>({g,i})).filter(x=>x.g.t);
+    if(open("cascade")&&goals.length){
+      if(!goals.some(x=>x.i===ui.woopIdx))ui.woopIdx=goals[0].i;
+      wc.appendChild(el("div",{class:"row",style:"gap:6px;margin-bottom:10px"},goals.map(x=>el("button",{
+        class:"btn "+(x.i===ui.woopIdx?"":"ghost")+" sm",text:x.g.t.slice(0,28),onclick:()=>{ui.woopIdx=x.i;render();}}))));
+      wc.appendChild(woopForm(S.year.goals[ui.woopIdx],false));
+    }else wc.appendChild(woopForm(S.viz,true));
+    stack.appendChild(wc);
+  }else stack.appendChild(lockCard("week"));
+  root.appendChild(stack);
+}
+const tile=(v,l)=>el("div",{class:"tile"},[E("div","v",v),E("div","l",l)]);
+const legend=(c,l)=>el("span",{class:"tiny muted",style:"display:inline-flex;gap:5px;align-items:center"},[
+  el("i",{style:"width:9px;height:9px;border-radius:2px;display:inline-block;background:"+c}),document.createTextNode(l)]);
+const NS="http://www.w3.org/2000/svg";
+const mk=(tag,a)=>{const n=document.createElementNS(NS,tag);for(const k in a)n.setAttribute(k,a[k]);return n;};
+function grid(){
+  const keys=lastN(28),cell=22,gap=5,cols=14,W=cols*(cell+gap)-gap+2,H=2*(cell+gap)-gap+2;
+  const svg=document.createElementNS(NS,"svg");
+  svg.setAttribute("viewBox","0 0 "+W+" "+H);svg.setAttribute("width","100%");
+  svg.style.maxWidth=(W*1.7)+"px";svg.style.display="block";
+  svg.setAttribute("role","img");svg.setAttribute("aria-label",t("prog.grid"));
+  keys.forEach((k,i)=>{const on=dayDone(k),r=Math.floor(i/cols),c=i%cols;
+    const d=S.days[k]||{},m=(d.focusMin||0)+(d.practiceMin||0);
+    const lvl=!on?0:m>=60?4:m>=30?3:m>=15?2:1;
+    const g=mk("rect",{x:c*(cell+gap)+1,y:r*(cell+gap)+1,width:cell,height:cell,rx:7,
+      fill:lvl?"var(--accent)":"var(--surface-2)","fill-opacity":[1,.38,.58,.8,1][lvl],
+      stroke:k===dayKey()?"var(--accent)":"var(--line)","stroke-width":k===dayKey()?1.5:1});
+    const ti=document.createElementNS(NS,"title");ti.textContent=pretty(k)+(m?" · "+m+" min":"");g.appendChild(ti);svg.appendChild(g);});
+  return svg;
+}
+function chart(){
+  const keys=lastN(28),F_=keys.map(k=>(S.days[k]||{}).focusMin||0),P_=keys.map(k=>(S.days[k]||{}).practiceMin||0);
+  const max=Math.max(60,...keys.map((k,i)=>F_[i]+P_[i]));
+  const W=740,H=170,pL=40,pR=10,pT=12,pB=26,iw=W-pL-pR,ih=H-pT-pB,bw=iw/keys.length;
+  const svg=document.createElementNS(NS,"svg");
+  svg.setAttribute("viewBox","0 0 "+W+" "+H);svg.setAttribute("width","100%");
+  svg.style.minWidth="540px";svg.style.display="block";
+  svg.setAttribute("role","img");svg.setAttribute("aria-label",t("prog.chart"));
+  [0,Math.round(max/2),max].forEach(v=>{const y=pT+ih-(v/max)*ih;
+    svg.appendChild(mk("line",{x1:pL,x2:W-pR,y1:y,y2:y,stroke:"var(--line)","stroke-width":1}));
+    const tx=mk("text",{x:pL-6,y:y+4,"text-anchor":"end","font-size":"10",fill:"var(--ink-3)"});tx.textContent=v+"m";svg.appendChild(tx);});
+  keys.forEach((k,i)=>{
+    const x=pL+i*bw+bw*.17,w=bw*.66,hf=(F_[i]/max)*ih,hp=(P_[i]/max)*ih;
+    if(hf>0)svg.appendChild(mk("rect",{x,y:pT+ih-hf,width:w,height:Math.max(2,hf),rx:2,fill:"var(--accent)"}));
+    if(hp>0)svg.appendChild(mk("rect",{x,y:pT+ih-hf-hp,width:w,height:Math.max(2,hp),rx:2,fill:"var(--calm)"}));
+    if(i%7===0||i===keys.length-1){const tx=mk("text",{x:x+w/2,y:H-8,"text-anchor":"middle","font-size":"9",fill:"var(--ink-3)"});
+      tx.textContent=k.slice(8)+"."+k.slice(5,7);svg.appendChild(tx);}
+  });
+  return svg;
+}
+
+/* ═════════ 15. Library ═════════ */
+function vLib(root){
+  const stack=el("div",{class:"stack"});
+  stack.appendChild(head(t("lib.eyebrow"),t("lib.title"),t("lib.sub")));
+  EV.forEach((e,i)=>{
+    const L=e[LANG]||e.en,d=el("details",{class:"ev"});
+    d.appendChild(el("summary",{},[E("span","n",pad(i+1)),el("h3",{text:L.t}),el("span",{class:"effect",text:e.eff})]));
+    d.appendChild(el("div",{class:"body"},[el("p",{text:L.w}),
+      el("div",{class:"do"},[el("b",{text:t("lib.run")}),el("p",{text:L.d})]),
+      el("div",{class:"cav"},[el("b",{text:t("lib.cav")}),el("p",{text:L.c})]),
+      el("div",{class:"src"},[document.createTextNode(L.s+" — "),el("a",{href:e.u,target:"_blank",rel:"noopener",text:t("lib.src")})])]));
+    if(i===0)d.setAttribute("open","");
+    stack.appendChild(d);
+  });
+  root.appendChild(stack);
+}
+
+/* ═════════ 16. You ═════════ */
+function vYou(root){
+  const stack=el("div",{class:"stack"});
+  stack.appendChild(head(t("you.eyebrow"),t("you.title")));
+  stack.appendChild(acctCard());
+  stack.appendChild(el("div",{class:"card"},[E("div","eyebrow",t("you.mode")),
+    el("div",{class:"row",style:"margin-top:8px;gap:8px"},[el("span",{class:"dot "+(Net.mode==="connected"?"good":"")}),
+      el("span",{class:"tiny",text:Net.mode==="connected"?t("you.connected"):t("you.solo")})])]));
+  stack.appendChild(el("div",{class:"card"},[el("div",{class:"row between"},[
+    el("div",{style:"flex:1;min-width:0"},[el("b",{text:t("you.share")}),el("div",{class:"tiny muted",text:t("you.shareHint")})]),
+    el("button",{class:"btn "+(S.set.share?"accent":"ghost")+" sm",text:S.set.share?t("you.shareOn"):t("you.shareOff"),
+      onclick:()=>{S.set.share=!S.set.share;save();push();Net.beat();render();}})])]));
+  stack.appendChild(el("div",{class:"card"},[E("div","eyebrow",t("you.language")),
+    el("div",{class:"row",style:"margin-top:9px;gap:6px"},[
+      el("button",{class:"btn "+(LANG==="en"?"":"ghost")+" sm",text:"English",onclick:()=>{LANG="en";save();render();}}),
+      el("button",{class:"btn "+(LANG==="ro"?"":"ghost")+" sm",text:"Română",onclick:()=>{LANG="ro";save();render();}})])]));
+  stack.appendChild(el("div",{class:"card"},[el("div",{class:"row between"},[
+    el("div",{style:"flex:1;min-width:0"},[el("b",{text:t("you.unlock")}),el("div",{class:"tiny muted",text:t("you.unlockHint")})]),
+    el("button",{class:"btn "+(S.set.unlockAll?"accent":"ghost")+" sm",text:S.set.unlockAll?t("you.unlockOn"):t("you.unlock"),
+      onclick:()=>{S.set.unlockAll=!S.set.unlockAll;save();render();}})])]));
+  stack.appendChild(fbCard());
+  stack.appendChild(el("div",{class:"card"},[E("div","eyebrow",t("you.about")),
+    el("p",{class:"tiny",style:"margin-top:8px;max-width:64ch",text:t("you.aboutBody")}),
+    el("p",{class:"tiny muted num",style:"margin-top:8px",text:t("you.version")+" "+APP_V}),legalLinks(false)]));
+  const exp=el("div",{class:"card"});
+  exp.appendChild(E("div","eyebrow",t("you.data")));
+  exp.appendChild(el("p",{class:"tiny muted",style:"margin-top:6px",text:t("you.dataHint")}));
+  exp.appendChild(el("div",{class:"row",style:"margin-top:8px;gap:8px"},[el("span",{class:"dot "+(Cloud.ok&&!Cloud.err?"good":"")}),
+    el("span",{class:"tiny",text:Cloud.err?t("you.syncErr"):Cloud.ok?(Auth.anon?t("you.syncAnon"):t("you.syncOk")):t("you.syncLocal")})]));
+  const ta=el("textarea",{style:"margin-top:9px;font-family:var(--mono);font-size:11px",readonly:true,value:JSON.stringify(S,null,1)});
+  exp.appendChild(ta);
+  exp.appendChild(el("button",{class:"btn ghost sm",style:"margin-top:9px",text:t("you.copy"),onclick:e=>{
+    ta.select();let ok=false;try{ok=document.execCommand("copy");}catch(x){}
+    if(!ok&&navigator.clipboard)navigator.clipboard.writeText(ta.value).catch(()=>{});
+    const b=e.currentTarget;b.textContent=t("you.copied");setTimeout(()=>{b.textContent=t("you.copy");},1600);}}));
+  stack.appendChild(exp);
+  stack.appendChild(restoreCard());
+  stack.appendChild(el("div",{class:"card"},[el("button",{class:"btn ghost sm",style:"color:var(--crit);border-color:var(--crit)",
+    text:ui.resetArm?t("you.resetConfirm"):t("you.reset"),onclick:async()=>{
+      if(!ui.resetArm){ui.resetArm=true;render();return;}
+      ui.resetArm=false;
+      if(T.running){clearInterval(T.iv);clearTimeout(bTm);T.running=false;keepAwake(false);persistT();}
+      const code=S.pod.id;Net.closeCircle();
+      await dropMember(code);await Cloud.wipe();await Auth.deleteAccount();
+      S=fresh();lastPush="";Object.assign(ui,{ob:0,tpl:null,pick:null,pickOwn:"",cue:null,cueOwn:"",tab:"today",flash:"",justFinished:null,sessAct:null,shrink:null});
+      day();save();Net.beat();render();}})]));
+  root.appendChild(stack);
+}
+
+// feedback is insert-only for users; Mihai reads it in the Supabase dashboard
+async function sendFeedback(kind,text){
+  const meta=" [tab:"+(ui.fbFrom||"you")+" lang:"+LANG+" days:"+shownUp()+"]";
+  const r=await Net.sb.from("feedback").insert({kind,app_version:APP_V,body:(text.slice(0,1940)+meta)});
+  if(r.error)throw r.error;
+}
+function fbCard(){
+  const c=el("div",{class:"card",id:"fbCard"});
+  c.appendChild(el("div",{class:"row between"},[E("div","eyebrow",t("fb.title")),el("span",{class:"pill acc",text:t("beta")})]));
+  c.appendChild(el("p",{class:"tiny muted",style:"margin-top:6px",text:t("fb.sub")}));
+  if(!Net.db||!Net.uid){
+    c.appendChild(el("div",{class:"notice",style:"margin-top:10px"},[el("div",{text:t("fb.off")})]));return c;
+  }
+  let kind="idea";
+  const kb=el("div",{class:"modes",style:"margin-top:10px"});
+  const paint=()=>{kb.innerHTML="";["bug","confusing","idea"].forEach(k=>kb.appendChild(el("button",
+    {"aria-pressed":kind===k?"true":"false",text:t("fb.kind."+k),onclick:()=>{kind=k;paint();}})));};
+  paint();
+  const ta=el("textarea",{style:"margin-top:9px",placeholder:t("fb.ph")});
+  const msg=el("div",{class:"tiny",style:"margin-top:8px"});
+  const b=el("button",{class:"btn accent sm",style:"margin-top:9px",text:t("fb.send"),onclick:async()=>{
+    const txt=ta.value.trim();if(!txt)return;
+    b.disabled=true;msg.textContent="";
+    try{await sendFeedback(kind,txt);ta.value="";msg.textContent=t("fb.sent");}
+    catch(e){msg.textContent=t("fb.err");}
+    b.disabled=false;}});
+  c.appendChild(kb);c.appendChild(ta);c.appendChild(b);c.appendChild(msg);
+  return c;
+}
+function restoreCard(){
+  const c=el("div",{class:"card"}),msg=el("div",{class:"tiny",style:"margin-top:8px"});
+  const ta=el("textarea",{style:"margin-top:9px;font-family:var(--mono);font-size:11px",placeholder:t("you.restorePh")});
+  const file=el("input",{type:"file",accept:"application/json,.json",style:"margin-top:8px;font-size:13px;max-width:100%",onchange:e=>{
+    const f=e.target.files&&e.target.files[0];if(!f)return;
+    const r=new FileReader();r.onload=()=>{ta.value=String(r.result||"");};r.readAsText(f);}});
+  let armed=false;
+  const parse=()=>{try{const o=JSON.parse(ta.value);
+    return o&&typeof o==="object"&&Array.isArray(o.actions)&&o.days&&typeof o.days==="object"&&(o.v===5||o.v===6)?o:null;
+  }catch(e){return null;}};
+  const btn=el("button",{class:"btn ghost sm",style:"margin-top:9px;display:block",text:t("you.restoreBtn"),onclick:()=>{
+    msg.textContent="";
+    const o=parse();
+    if(!o){msg.textContent=t("you.restoreBad");armed=false;btn.textContent=t("you.restoreBtn");return;}
+    if(!armed){armed=true;btn.textContent=t("you.restoreArm");return;}
+    Net.closeCircle();lastPush="";
+    S=normalize(o);if(S.lang)LANG=S.lang;
+    rollMonth();day();ui.dur.focus=S.set.blockMin||50;
+    save();if(S.pod.id)Net.openCircle();
+    render();
+    const m=document.getElementById("restoreMsg");if(m)m.textContent=t("you.restoreOk");}});
+  msg.id="restoreMsg";
+  c.appendChild(E("div","eyebrow",t("you.restore")));
+  c.appendChild(ta);c.appendChild(file);c.appendChild(btn);c.appendChild(msg);
+  return c;
+}
+
+/* ═════════ 17. Boot ═════════ */
+function initChrome(){
+  let th=null;try{th=localStorage.getItem("pow.theme");}catch(e){}
+  if(th)document.documentElement.setAttribute("data-theme",th);
+  document.getElementById("themeBtn").addEventListener("click",()=>{
+    const cur=document.documentElement.getAttribute("data-theme");
+    const dark=cur?cur==="dark":window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const next=dark?"light":"dark";document.documentElement.setAttribute("data-theme",next);
+    try{localStorage.setItem("pow.theme",next);}catch(e){}
+  });
+  document.getElementById("langBtn").addEventListener("click",()=>{LANG=LANG==="en"?"ro":"en";save();render();});
+  document.getElementById("betaBtn").addEventListener("click",()=>{
+    if(!S.onboarded)return;
+    ui.fbFrom=ui.tab;ui.tab="you";render();
+    const c=document.getElementById("fbCard");if(c)c.scrollIntoView({block:"start",behavior:"smooth"});
+  });
+}
+function start(boot){
+  try{if((navigator.language||"").toLowerCase().startsWith("ro"))LANG="ro";}catch(e){}
+  load();
+  if(boot&&boot.tab)ui.tab=boot.tab;
+  ui.dur.focus=S.set.blockMin||50;
+  initChrome();resumeT();render();Net.init();Auth.init();
+  try{if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitAll);}catch(e){}
+  let rt=null;window.addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(fitAll,120);});
+  setInterval(()=>{if(!S.days[dayKey()]){day();rollMonth();save();softRender();}},6e4);
+}
+const hot=window.claude&&window.claude.hot;
+if(hot&&hot.snapshot)hot.snapshot(()=>({tab:ui.tab}));
+if(hot&&hot.ready)hot.ready(start);else start({});
+})();
+</script>
+</html>

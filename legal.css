@@ -1,0 +1,14 @@
+:root{--bg:#f7f5f1;--ink:#1d1a22;--ink-2:#4a4552;--muted:#7a7484;--acc:#6b4fd8;--rule:#e2ddd6}
+@media (prefers-color-scheme:dark){:root{--bg:#0e0c14;--ink:#ece8f4;--ink-2:#c4bed0;--muted:#8f88a0;--acc:#b39dff;--rule:#2a2635}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Raleway,system-ui,sans-serif}
+main{max-width:720px;margin:0 auto;padding:28px 16px 64px}
+h1{font-family:Lora,Georgia,serif;font-size:30px;line-height:1.2;margin:18px 0 4px}
+h2{font-family:Lora,Georgia,serif;font-size:20px;margin:28px 0 6px}
+p,li{color:var(--ink-2)}
+li{margin:6px 0}
+b{color:var(--ink)}
+a{color:var(--acc)}
+.muted{color:var(--muted);font-size:14px;margin-top:0}
+.back{font-size:14px}
+hr{border:0;border-top:1px solid var(--rule);margin:48px 0}
