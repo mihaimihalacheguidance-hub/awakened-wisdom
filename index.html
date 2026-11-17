@@ -3,6 +3,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Awakened Wisdom</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#1E1A2E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Awakened">
 <link rel="stylesheet" href="fonts/fonts.css">
 <style>
 :root{
@@ -97,6 +103,8 @@ main{max-width:1080px;margin:0 auto;width:100%;padding:26px 16px 80px}
 .eyebrow{font-family:var(--body);font-weight:700;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
 .muted{color:var(--ink-2)} .tiny{font-size:13.5px} .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
 .rule{height:1px;background:var(--line);border:0;margin:0}
+a{color:var(--accent-2);text-underline-offset:2px}
+a.btn{display:inline-flex;text-decoration:none}
 .btn{background:var(--ink);color:var(--paper);border:1px solid var(--ink);padding:10px 18px;border-radius:999px;cursor:pointer;
   font-weight:600;font-size:14.5px;min-height:42px}
 .btn:hover{transform:translateY(-1px);box-shadow:0 8px 18px -10px rgba(30,26,46,.5)}
@@ -421,6 +429,9 @@ en:{
   acctAs:"Signed in as {e}", signOut:"Sign out", signOutArm:"Tap again to sign out",
   acctBad:"That doesn't look like an email address.", acctErr:"That didn't work. Try again in a minute.",
   acctWait:"Too many emails for now. Try again in an hour.",
+  madeBy:"Made by Mihai + AI", madeBody:"Mihai + AI shares short, practical ways to use AI for a calmer, more focused day. The free Calm AI Prompt Pack has ready-to-use prompts to start with.", packCta:"Get the free pack",
+  wbTitle:"Planning 2027?", wbBody:"The 2027 goal workbook walks you through a year review, your goals, a 90-day plan and a habit tracker, the same year → quarter → day idea this app uses.", wbCta:"See the workbook",
+  calmHint:"Need prompts? They're in the free Calm AI Prompt Pack.", sprintHint:"Want the full plan on paper? It's in the 2027 goal workbook.",
   legalPre:"By saving your progress you agree to the ", legalTerms:"Terms", legalAnd:" and the ", legalPrivacy:"Privacy policy", legalEnd:".",
   connected:"Connected — circle and live sessions active", solo:"Solo — everything works except the circle and seeing others",
   share:"Share my activity with my circle", shareOn:"Sharing", shareOff:"Private",
@@ -558,6 +569,9 @@ ro:{
   acctAs:"Conectat ca {e}", signOut:"Deconectează-te", signOutArm:"Apasă din nou ca să te deconectezi",
   acctBad:"Nu pare o adresă de email.", acctErr:"N-a mers. Încearcă din nou peste un minut.",
   acctWait:"Prea multe emailuri deocamdată. Încearcă din nou peste o oră.",
+  madeBy:"Făcută de Mihai + AI", madeBody:"Mihai + AI arată moduri scurte și practice de a folosi AI pentru o zi mai calmă și mai concentrată. Pachetul gratuit Calm AI are prompturi gata de folosit, ca să începi.", packCta:"Ia pachetul gratuit",
+  wbTitle:"Îți planifici 2027?", wbBody:"Workbook-ul de obiective 2027 te duce printr-o retrospectivă a anului, obiectivele tale, un plan de 90 de zile și un tracker de obiceiuri, aceeași idee an → trimestru → zi pe care o folosește aplicația.", wbCta:"Vezi workbook-ul",
+  calmHint:"Ai nevoie de prompturi? Sunt în pachetul gratuit Calm AI.", sprintHint:"Vrei planul complet pe hârtie? E în workbook-ul de obiective 2027.",
   legalPre:"Dacă îți păstrezi progresul, ești de acord cu ", legalTerms:"Termenii", legalAnd:" și cu ", legalPrivacy:"Politica de confidențialitate", legalEnd:".", mode:"Mod",
   connected:"Conectat — cercul și sesiunile live sunt active", solo:"Solo — funcționează tot, mai puțin cercul și vizibilitatea celorlalți",
   share:"Arată activitatea mea cercului", shareOn:"Se arată", shareOff:"Privat",
@@ -610,8 +624,18 @@ const TPL=[
   acts:[{k:"do",en:"Out of bed at the time I set",ro:"Mă ridic din pat la ora stabilită"},
         {k:"do",en:"Ten minutes outside in the morning",ro:"Zece minute afară dimineața"},
         {k:"do",en:"Phone out of the bedroom at night",ro:"Telefonul stă noaptea în afara dormitorului"}]},
+ {id:"calm",ic:"✦",en:{n:"Calm with AI",d:"A calmer day with one AI prompt (Mihai + AI)"},ro:{n:"Calm cu AI",d:"O zi mai calmă cu un prompt AI (Mihai + AI)"},
+  acts:[{k:"do",en:"Use one Calm AI prompt and act on its answer",ro:"Folosesc un prompt Calm AI și fac ce îmi propune"},
+        {k:"do",en:"Five-minute brain dump, then ask AI to sort it",ro:"Cinci minute de descărcat gândurile, apoi le cer AI-ului să le ordoneze"},
+        {k:"do",en:"Plan tomorrow in three lines",ro:"Îmi planific ziua de mâine în trei rânduri"}]},
+ {id:"sprint",ic:"▶",en:{n:"90-day sprint for 2027",d:"One goal, one quarter, one block a day"},ro:{n:"Sprint de 90 de zile pentru 2027",d:"Un obiectiv, un trimestru, un bloc pe zi"},
+  acts:[{k:"do",en:"One focused block on my 90-day goal",ro:"Un bloc concentrat pe obiectivul meu de 90 de zile"},
+        {k:"do",en:"Pick this week's three priorities",ro:"Aleg cele trei priorități ale săptămânii"},
+        {k:"do",en:"Tick the one habit I'm tracking",ro:"Bifez singurul obicei pe care îl urmăresc"}]},
  {id:"custom",ic:"＋",en:{n:"Something else",d:"Write your own from scratch"},ro:{n:"Altceva",d:"Scrie-ți propria variantă"},acts:[]}
 ];
+const FUN={pack:"https://mihai-ai.kit.com/f2c8db4bc2",wb:"https://www.etsy.com/listing/4595267088"};
+const funUrl=(k,place)=>FUN[k]+"?utm_source=awakened_wisdom&utm_medium=app&utm_campaign="+place;
 const CUES={
  en:["After I wake up","After my morning coffee","When I sit down at my desk","After work ends","After dinner","Before bed"],
  ro:["După ce mă trezesc","După cafeaua de dimineață","Când mă așez la birou","După ce termin lucrul","După cină","Înainte de culcare"]
@@ -1199,6 +1223,7 @@ const Cloud={ok:false,err:false,busy:false,again:false,last:{},uid:null,
     ["dq","grat"].forEach(f=>{const ya=Array.isArray(y[f])?y[f]:[],xa=Array.isArray(x[f])?x[f]:[];
       y[f]=Array.from({length:Math.max(ya.length,xa.length)},(_,i)=>joinText(ya[i],xa[i]));});
   });
+  if(!switched&&!a.src&&b.src){a.src=b.src;a.srcAt=b.srcAt;}
   a.days=days;S=normalize(a);
   if(S.lang)LANG=S.lang;
   rollMonth();day();
@@ -1437,6 +1462,8 @@ function vOnboard(root){
         el("span",{style:"flex:1",text:a[LANG]}),
         a.k!=="do"?E("span","kind",t("kind."+a.k)):null]);
     })));
+    if(tp.id==="calm"||tp.id==="sprint")box.appendChild(el("p",{class:"tiny muted"},[
+      tp.id==="calm"?funLink("pack","onboarding",t("you.calmHint")):funLink("wb","onboarding",t("you.sprintHint"))]));
     box.appendChild(F(t("ob.s2own"),el("input",{type:"text",value:ui.pickOwn,oninput:e=>{
       ui.pickOwn=e.target.value;if(e.target.value){ui.pick=null;ui.pickKind="do";}
       document.querySelectorAll(".pickrow").forEach(r=>r.setAttribute("aria-pressed","false"));
@@ -1458,6 +1485,20 @@ function vOnboard(root){
     box.appendChild(obNav(()=>{ui.ob=2;render();},finishOb,!(ui.cue||ui.cueOwn.trim())));
   }
   root.appendChild(box);
+}
+function funLink(k,place,txt,cls){return el("a",{href:funUrl(k,place),target:"_blank",rel:"noopener",text:txt,class:cls||""});}
+function funnelCard(kind){
+  const c=el("div",{class:"card"});
+  if(kind==="pack"){
+    c.appendChild(E("div","eyebrow",t("you.madeBy")));
+    c.appendChild(el("p",{class:"tiny",style:"margin-top:8px;max-width:64ch",text:t("you.madeBody")}));
+    c.appendChild(el("p",{style:"margin-top:10px"},[funLink("pack","you_card",t("you.packCta")+" →","btn accent sm")]));
+  }else{
+    c.appendChild(E("div","eyebrow",t("you.wbTitle")));
+    c.appendChild(el("p",{class:"tiny",style:"margin-top:8px;max-width:64ch",text:t("you.wbBody")}));
+    c.appendChild(el("p",{style:"margin-top:10px"},[funLink("wb","progress_card",t("you.wbCta")+" →","btn ghost sm")]));
+  }
+  return c;
 }
 function obNav(back,next,dis){
   return el("div",{class:"row",style:"margin-top:8px"},[
@@ -1923,6 +1964,7 @@ function vProg(root){
     }else wc.appendChild(woopForm(S.viz,true));
     stack.appendChild(wc);
   }else stack.appendChild(lockCard("week"));
+  stack.appendChild(funnelCard("wb"));
   root.appendChild(stack);
 }
 const tile=(v,l)=>el("div",{class:"tile"},[E("div","v",v),E("div","l",l)]);
@@ -2004,6 +2046,7 @@ function vYou(root){
     el("button",{class:"btn "+(S.set.unlockAll?"accent":"ghost")+" sm",text:S.set.unlockAll?t("you.unlockOn"):t("you.unlock"),
       onclick:()=>{S.set.unlockAll=!S.set.unlockAll;save();render();}})])]));
   stack.appendChild(fbCard());
+  stack.appendChild(funnelCard("pack"));
   stack.appendChild(el("div",{class:"card"},[E("div","eyebrow",t("you.about")),
     el("p",{class:"tiny",style:"margin-top:8px;max-width:64ch",text:t("you.aboutBody")}),
     el("p",{class:"tiny muted num",style:"margin-top:8px",text:t("you.version")+" "+APP_V}),legalLinks(false)]));
@@ -2107,9 +2150,20 @@ function initChrome(){
     const c=document.getElementById("fbCard");if(c)c.scrollIntoView({block:"start",behavior:"smooth"});
   });
 }
+function readSrc(){
+  try{
+    const q=new URLSearchParams(location.search);
+    const v=String(q.get("src")||q.get("utm_source")||"").toLowerCase();
+    if(!/^[a-z0-9_-]{1,32}$/.test(v))return;
+    if(!S.src){S.src=v;S.srcAt=dayKey();try{localStorage.setItem(LS,JSON.stringify(S));}catch(e){}}
+    ["src","utm_source","utm_medium","utm_campaign","utm_content","utm_term"].forEach(k=>q.delete(k));
+    const qs=q.toString();
+    history.replaceState(null,"",location.pathname+(qs?"?"+qs:"")+location.hash);
+  }catch(e){}
+}
 function start(boot){
   try{if((navigator.language||"").toLowerCase().startsWith("ro"))LANG="ro";}catch(e){}
-  load();
+  load();readSrc();
   if(boot&&boot.tab)ui.tab=boot.tab;
   ui.dur.focus=S.set.blockMin||50;
   initChrome();resumeT();render();Net.init();Auth.init();
