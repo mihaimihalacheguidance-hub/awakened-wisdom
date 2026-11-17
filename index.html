@@ -130,7 +130,7 @@ a.btn{display:inline-flex;text-decoration:none}
 .btn.wide{width:100%}
 label.field{display:flex;flex-direction:column;gap:6px;flex:1 1 180px;min-width:0}
 label.field>span{font-family:var(--body);font-weight:600;font-size:12.5px;letter-spacing:.02em;color:var(--ink-2)}
-input[type=text],input[type=date],textarea,select{background:var(--surface-3);border:1px solid var(--line);
+input[type=text],input[type=date],input[type=time],input[type=email],textarea,select{background:var(--surface-3);border:1px solid var(--line);
   border-radius:12px;padding:10px 13px;font-size:15.5px;width:100%;min-width:0;transition:border-color .18s,box-shadow .18s,background-color .18s}
 input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent);background:var(--surface);box-shadow:0 0 0 4px var(--accent-soft)}
 textarea{resize:vertical;min-height:58px;font-family:var(--body)}
@@ -196,8 +196,8 @@ details.fold[open]>summary::after{content:"－"}
 .act.done .actb .nm{color:var(--ink-3);text-decoration:line-through;text-decoration-color:var(--accent-line)}
 .cue{display:flex;gap:7px;align-items:baseline;margin-top:4px}
 .cue .k{font-family:var(--body);font-weight:700;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);flex:none}
-.cue input{border:0;background:none;padding:0;font-size:14px;color:var(--ink-2);border-radius:4px;flex:1 1 auto;min-width:0;width:100%;text-overflow:ellipsis}
-.actb .nm:focus,.cue input:focus,.goal textarea:focus{border:0;background:none;box-shadow:0 2px 0 var(--accent)}
+.cue input,.cue textarea{border:0;background:none;padding:0;font-size:14px;color:var(--ink-2);border-radius:4px;flex:1 1 auto;min-width:0;width:100%;text-overflow:ellipsis}
+.actb .nm:focus,.cue input:focus,.cue textarea:focus,.goal textarea:focus{border:0;background:none;box-shadow:0 2px 0 var(--accent)}
 .side{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:none}
 .mini{font-family:var(--mono);font-size:11px;color:var(--ink-3);text-align:right}
 .kind{font-family:var(--body);font-weight:700;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--calm)}
@@ -296,6 +296,9 @@ svg text{font-family:var(--mono)}
   .nav .badge{display:none}
   main{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
   .ev .body{padding-left:18px}
+  input[type=text],input[type=date],input[type=time],input[type=email],textarea,select{font-size:16px!important}
+  .tick{width:40px;height:40px}
+  .btn,.btn.sm{min-height:40px}
 }
 </style>
 
@@ -357,7 +360,13 @@ en:{
   hello:"Today", nothing:"Nothing ticked yet — that's fine, the day isn't over.",
   allDone:"Done for today.", partial:"You've started.",
   run:"days in a row", runNone:"Start today", monthN:"days this month", monthN1:"day this month",
-  win:"Done. Practised {label}.", back:"You came back. That's the part that matters most: one missed day doesn't undo a habit.", when:"when", start:"Start",
+  win:"Done. Practised {label}.", back:"You came back. That's the part that matters most: one missed day doesn't undo a habit.", when:"when", days66:"{r}/66 days", start:"Start",
+  calT:"Want a daily reminder?", calBody:"Add a repeating event to your calendar at the time of your practice. The app can't send notifications yet, so your calendar does it.",
+  calBtn:"Add to Google Calendar", calLater:"Not now",
+  firstT:"Your first day", firstBody:"Do the smallest version of your practice now, even 2 minutes, and tick it. Starting matters more than anything else.",
+  firstDone:"I did it now", firstWin:"Day one is done. That's the hardest one.",
+  start7:"Your 7-day start", start7body:"{n}/7 · The first 7 days matter most.",
+  rescueT:"Yesterday was a pause", rescueBody:"Today matters most. Do the smallest version, even 2 minutes, so one pause doesn't become two.",
   momentum:"Last 14 days", cta:"Start a session",
   add:"Add a practice", addHint:"Only once the first one feels easy.", cuePh:"When? For example: after my morning coffee", cueNeed:"Add a cue first. It's what starts the practice.",
   missTwice:"Two missed days in a row",
@@ -378,13 +387,13 @@ en:{
   ["Best moment of the day — how do you get more of those?","Good moments make repetition stick."],
   ["One thing you'll do better tomorrow, and why.","Specific enough to act on."]
  ],
- lock:{after:"Unlocks after {n} days you show up — {x} to go",
+ lock:{after:"Unlocks after {n} days you practise — {x} to go",
   why:"Things appear gradually on purpose: starting with too much is the most common reason people quit. You can unlock everything in You.",
   more:"More practices", guide:"The Guide", week:"Weekly review and contrast", cascade:"Direction: year and month goals"},
  sess:{
   eyebrow:"Practice", title:"Session",
   sub:"Practising alongside other people, even in silence, can make it easier to start. Others see only an anonymous count. Your circle sees your name if you turn sharing on.",
-  what:"What are you working on?", start:"Start", stop:"Stop", finish:"Finish",
+  what:"What are you working on?", start:"Start", stop:"Stop here", finish:"I'm done",
   medGuide:"Sit comfortably. Rest your attention on the breath. When the mind wanders — it will — notice, and come back. Coming back is the practice.",
   breathGuide:"Cyclic sighing: breathe in through the nose, top up with a second short inhale, then a long, slow exhale through the mouth. Stop if you feel dizzy.",
   b_in:"Inhale", b_in2:"Top up", b_out:"Long exhale",
@@ -397,7 +406,7 @@ en:{
   jSave:"Save",
   saved:"Saved. Practice marked for today.",
   after:"Session done. What did you get through?", note:"Save", skip:"Skip",
-  others:"practising right now", other1:"person practising right now", you:"you",
+  live0:"Nobody else is practising right now", live1:"1 other person is practising now", liveN:"{n} other people are practising now", savedMin:"Saved {m} min.", you:"you", youCap:"You",
   nobody:"Nobody else is here right now. Start a session and the next person to arrive will see that someone is practising.",
   anon1:"1 person, anonymous", anon:"{n} people, anonymous", short:"Too short to log, so this one wasn't saved.",
   solo:"Solo mode", soloBody:"Sessions work fully. You just won't see other people here.",
@@ -429,11 +438,11 @@ en:{
  },
  prog:{
   eyebrow:"Last 28 days", title:"Progress", sub:"Honest numbers. A missed day doesn't erase the days before it.",
-  shown:"days you showed up", run:"days in a row", focusH:"focus hours", practiceH:"practice hours",
+  shown:"days you practised", shown1:"day you practised", run:"days in a row", run1:"day in a row", br0:"No double misses", br1:"1 double miss", brN:"{n} double misses", focusH:"focus hours", practiceH:"practice hours",
   auto:"Becoming automatic", autoSub:"Toward the 66-day median. The real range is 18–254 days — a rough gauge, not a countdown.",
   grid:"Last 28 days", gridSub:"A day counts when you did at least one practice.",
   chart:"Minutes per day", legendF:"focus", legendP:"practice",
-  never:"Never miss twice", clean:"Clean. You haven't let one missed day become two.", breaches:"times missed twice",
+  never:"Never miss twice", clean:"Clean. You haven't let one missed day become two.",
   week:"Weekly review", weekSub:"Five questions, once a week. Friday works for most people.",
   contrast:"Contrast a goal", contrastSub:"The weekly version of the Visualise session, tied to your year goals."
  },
@@ -456,17 +465,17 @@ en:{
   wbTitle:"Planning 2027?", wbBody:"The 2027 goal workbook walks you through a year review, your goals, a 90-day plan and a habit tracker, the same year → quarter → day idea this app uses.", wbCta:"See the workbook",
   calmHint:"Need prompts? They're in the free Calm AI Prompt Pack.", sprintHint:"Want the full plan on paper? It's in the 2027 goal workbook.",
   legalPre:"By saving your progress you agree to the ", legalTerms:"Terms", legalAnd:" and the ", legalPrivacy:"Privacy policy", legalEnd:".",
-  connected:"Connected — circle and live sessions active", solo:"Solo — everything works except the circle and seeing others",
+  connected:"Connected — circle and live sessions active", connectedAnon:"Online with a guest account: circles and live sessions work. Save your account with an email so you don't lose your data.", solo:"Solo — everything works except the circle and seeing others",
   share:"Share my activity with my circle", shareOn:"Sharing", shareOff:"Private",
   shareHint:"Only your circle sees this: your practice, run, weekly commitment, evening notes and session label. Private means they see only that you're a member. Nothing is shared while you're not in a circle.",
   language:"Language",
   unlock:"Unlock everything now", unlockOn:"Everything unlocked", unlockHint:"For people who already have a routine. Everything appears at once.",
   about:"About this app", version:"Version",
   aboutBody:"Awakened Wisdom is a practice tracker built on published research — see Why. The year → month → day structure is adapted from a daily performance-dashboard format taught in the Success Insider programme; this app is independent and not affiliated with it. It isn't therapy or medical care. If you're struggling, please talk to a professional or someone you trust.",
-  data:"Your data", copy:"Copy my data", copied:"Copied",
-  dataHint:"Your practices and history are kept on this device and, when you're signed in, in a private part of your account that nobody else can read. This copies them as JSON so you can keep or move them.",
+  data:"Your data", copy:"Copy a backup", copied:"Copied",
+  dataHint:"Your practices and history are kept on this device and, when you're signed in, in a private part of your account that nobody else can read. This copies them as a backup so you can keep or move them.",
   syncOk:"Saved to your account", syncAnon:"Saved to this browser's guest account. Add your email above to keep it if this browser is cleared.", syncLocal:"Saved on this device only", syncErr:"Couldn't save to your account. It's still on this device.",
-  restore:"Restore from a backup", restorePh:"Paste a JSON backup here, or choose a file", restoreBtn:"Replace my data with this backup",
+  restore:"Restore from a backup", chooseFile:"Choose a file", restorePh:"Paste a JSON backup here, or choose a file", restoreBtn:"Replace my data with this backup",
   restoreArm:"Tap again to replace everything", restoreOk:"Restored.", restoreBad:"That isn't a valid backup.",
   reset:"Delete everything", resetConfirm:"Tap again to delete everything, for good", delErr:"Couldn't reach the server, so nothing was deleted. Check your connection and try again."
  }
@@ -497,7 +506,13 @@ ro:{
   hello:"Azi", nothing:"Încă nimic bifat — e în regulă, ziua nu s-a terminat.",
   allDone:"Gata pe azi.", partial:"Ai început.",
   run:"zile la rând", runNone:"Începe azi", monthN:"zile luna asta", monthN1:"zi luna asta",
-  win:"Gata. Ai practicat {label}.", back:"Ai revenit. Asta contează cel mai mult: o zi ratată nu strică un obicei.", when:"când", start:"Pornește",
+  win:"Gata. Ai practicat {label}.", back:"Ai revenit. Asta contează cel mai mult: o zi ratată nu strică un obicei.", when:"când", days66:"{r}/66 zile", start:"Pornește",
+  calT:"Vrei un memento zilnic?", calBody:"Adaugă în calendar un eveniment care se repetă la ora practicii. Aplicația încă nu poate trimite notificări, așa că o face calendarul tău.",
+  calBtn:"Adaugă în Google Calendar", calLater:"Nu acum",
+  firstT:"Prima ta zi", firstBody:"Fă acum varianta cea mai mică a practicii, chiar și 2 minute, și bifeaz-o. Începutul contează mai mult decât orice altceva.",
+  firstDone:"Am făcut-o acum", firstWin:"Prima zi e făcută. Ea e cea mai grea.",
+  start7:"Startul tău de 7 zile", start7body:"{n}/7 · Primele 7 zile contează cel mai mult.",
+  rescueT:"Ieri a fost o pauză", rescueBody:"Azi contează cel mai mult. Fă varianta cea mai mică, chiar și 2 minute, ca o pauză să nu devină două.",
   momentum:"Ultimele 14 zile", cta:"Pornește o sesiune",
   add:"Adaugă o practică", addHint:"Doar după ce prima îți vine ușor.", cuePh:"Când? De exemplu: după cafeaua de dimineață", cueNeed:"Adaugă întâi un semnal. El pornește practica.",
   missTwice:"Două zile ratate la rând",
@@ -518,13 +533,13 @@ ro:{
   ["Cel mai bun moment al zilei — cum ai putea avea mai multe?","Momentele bune ajută repetiția să prindă."],
   ["Un lucru pe care îl faci mai bine mâine și de ce contează.","Destul de concret încât să-l poți face."]
  ],
- lock:{after:"Se deblochează după {n} zile în care apari — mai ai {x}",
+ lock:{after:"Se deblochează după {n} zile în care practici — mai ai {x}",
   why:"Lucrurile apar treptat, intenționat: să începi cu prea mult e motivul cel mai frecvent de abandon. Poți debloca tot din secțiunea Tu.",
   more:"Mai multe practici", guide:"Ghidul", week:"Recapitularea săptămânală și contrastul", cascade:"Direcție: obiective pe an și pe lună"},
  sess:{
   eyebrow:"Practică", title:"Sesiune",
   sub:"Să practici alături de alți oameni, chiar și în tăcere, poate face începutul mai ușor. Ceilalți văd doar un număr anonim. Cercul tău îți vede numele dacă pornești partajarea.",
-  what:"La ce lucrezi?", start:"Pornește", stop:"Oprește", finish:"Termină",
+  what:"La ce lucrezi?", start:"Pornește", stop:"Oprește aici", finish:"Am terminat",
   medGuide:"Stai confortabil. Lasă atenția pe respirație. Când mintea pleacă — și va pleca — observă și revino. Revenirea este practica.",
   breathGuide:"Respirație ciclică: inspiră pe nas, completează cu o a doua inspirație scurtă, apoi expiră lung și lent pe gură. Oprește-te dacă ai amețeli.",
   b_in:"Inspiră", b_in2:"Completează", b_out:"Expiră lung",
@@ -537,7 +552,7 @@ ro:{
   jSave:"Salvează",
   saved:"Salvat. Practica e bifată pentru azi.",
   after:"Sesiune încheiată. Ce ai reușit?", note:"Salvează", skip:"Sari peste",
-  others:"practică chiar acum", other1:"persoană practică chiar acum", you:"tu",
+  live0:"Nimeni altcineva nu practică acum", live1:"1 persoană practică acum", liveN:"{n} persoane practică acum", liveNd:"{n} de persoane practică acum", savedMin:"Am salvat {m} min.", you:"tu", youCap:"Tu",
   nobody:"Nu mai e nimeni aici acum. Pornește o sesiune, iar următorul care vine va vedea că practică cineva.",
   anon1:"1 persoană, anonim", anon:"{n} persoane, anonim", short:"Prea scurt ca să fie înregistrat, așa că nu s-a salvat.",
   solo:"Mod solo", soloBody:"Sesiunile funcționează complet. Doar că nu vei vedea alți oameni aici.",
@@ -569,11 +584,11 @@ ro:{
  },
  prog:{
   eyebrow:"Ultimele 28 de zile", title:"Progres", sub:"Cifre oneste. O zi ratată nu șterge zilele dinaintea ei.",
-  shown:"zile în care ai apărut", run:"zile la rând", focusH:"ore de concentrare", practiceH:"ore de practică",
+  shown:"zile în care ai practicat", shown1:"zi în care ai practicat", run:"zile la rând", run1:"zi la rând", br0:"Nicio dublă ratare", br1:"1 dublă ratare", brN:"{n} duble ratări", brNd:"{n} de duble ratări", focusH:"ore de concentrare", practiceH:"ore de practică",
   auto:"Pe drumul spre automatism", autoSub:"Spre mediana de 66 de zile. Intervalul real e 18–254 de zile — un reper aproximativ, nu o numărătoare inversă.",
   grid:"Ultimele 28 de zile", gridSub:"O zi contează dacă ai făcut cel puțin o practică.",
   chart:"Minute pe zi", legendF:"concentrare", legendP:"practică",
-  never:"Nu rata de două ori", clean:"Curat. N-ai lăsat nicio zi ratată să devină două.", breaches:"ori ratat de două ori",
+  never:"Nu rata de două ori", clean:"Curat. N-ai lăsat nicio zi ratată să devină două.",
   week:"Recapitularea săptămânii", weekSub:"Cinci întrebări, o dată pe săptămână. Vinerea merge pentru cei mai mulți.",
   contrast:"Contrastează un obiectiv", contrastSub:"Varianta săptămânală a sesiunii de vizualizare, legată de obiectivele tale pe un an."
  },
@@ -596,17 +611,17 @@ ro:{
   wbTitle:"Îți planifici 2027?", wbBody:"Workbook-ul de obiective 2027 te duce printr-o retrospectivă a anului, obiectivele tale, un plan de 90 de zile și un tracker de obiceiuri, aceeași idee an → trimestru → zi pe care o folosește aplicația.", wbCta:"Vezi workbook-ul",
   calmHint:"Ai nevoie de prompturi? Sunt în pachetul gratuit Calm AI.", sprintHint:"Vrei planul complet pe hârtie? E în workbook-ul de obiective 2027.",
   legalPre:"Dacă îți păstrezi progresul, ești de acord cu ", legalTerms:"Termenii", legalAnd:" și cu ", legalPrivacy:"Politica de confidențialitate", legalEnd:".", mode:"Mod",
-  connected:"Conectat — cercul și sesiunile live sunt active", solo:"Solo — funcționează tot, mai puțin cercul și vizibilitatea celorlalți",
+  connected:"Conectat — cercul și sesiunile live sunt active", connectedAnon:"Online, cu cont de vizitator: cercul și sesiunile live funcționează. Salvează-ți contul cu email ca să nu pierzi datele.", solo:"Solo — funcționează tot, mai puțin cercul și vizibilitatea celorlalți",
   share:"Arată activitatea mea cercului", shareOn:"Se arată", shareOff:"Privat",
   shareHint:"Doar cercul tău vede asta: practica, seria, angajamentul săptămânal, notele de seară și eticheta sesiunii. Privat înseamnă că văd doar că ești membru. Cât timp nu ești într-un cerc, nu se arată nimic.",
   language:"Limbă",
   unlock:"Deblochează tot acum", unlockOn:"Totul e deblocat", unlockHint:"Pentru cine are deja o rutină. Totul apare dintr-odată.",
   about:"Despre aplicație", version:"Versiunea",
   aboutBody:"Awakened Wisdom urmărește practici zilnice și se bazează pe cercetare publicată — vezi „De ce”. Structura an → lună → zi e adaptată după un format de panou zilnic de performanță predat în programul Success Insider; aplicația e independentă și nu e afiliată. Nu este terapie și nici îngrijire medicală. Dacă îți e greu, vorbește cu un specialist sau cu cineva în care ai încredere.",
-  data:"Datele tale", copy:"Copiază-mi datele", copied:"Copiat",
-  dataHint:"Practicile și istoricul tău stau pe acest dispozitiv și, când ești autentificat, într-o zonă privată a contului tău pe care nimeni altcineva nu o poate citi. Butonul le copiază ca JSON, ca să le păstrezi sau să le muți.",
+  data:"Datele tale", copy:"Copiază o copie de siguranță", copied:"Copiat",
+  dataHint:"Practicile și istoricul tău stau pe acest dispozitiv și, când ești autentificat, într-o zonă privată a contului tău pe care nimeni altcineva nu o poate citi. Butonul face o copie de siguranță, ca să le păstrezi sau să le muți.",
   syncOk:"Salvat în contul tău", syncAnon:"Salvat în contul de vizitator al acestui browser. Adaugă-ți emailul mai sus ca să nu-l pierzi dacă se șterg datele browserului.", syncLocal:"Salvat doar pe acest dispozitiv", syncErr:"Nu s-a putut salva în cont. Datele sunt încă pe acest dispozitiv.",
-  restore:"Restaurează dintr-o copie", restorePh:"Lipește aici o copie JSON sau alege un fișier", restoreBtn:"Înlocuiește datele cu această copie",
+  restore:"Restaurează dintr-o copie", chooseFile:"Alege fișierul", restorePh:"Lipește aici o copie JSON sau alege un fișier", restoreBtn:"Înlocuiește datele cu această copie",
   restoreArm:"Apasă din nou ca să înlocuiești tot", restoreOk:"Restaurat.", restoreBad:"Nu e o copie validă.",
   reset:"Șterge tot", resetConfirm:"Apasă din nou ca să ștergi tot, definitiv", delErr:"Nu am putut ajunge la server, așa că nu s-a șters nimic. Verifică conexiunea și încearcă din nou."
  }
@@ -625,7 +640,7 @@ const TPL=[
  {id:"inner",ic:"◯",en:{n:"Inner practice",d:"Meditation, breath, gratitude, reflection"},ro:{n:"Practică interioară",d:"Meditație, respirație, recunoștință, reflecție"},
   acts:[{k:"meditate",min:10,en:"Meditate for 10 minutes",ro:"Meditez 10 minute"},
         {k:"breathe",min:5,en:"Five minutes of slow breathing",ro:"Cinci minute de respirație lentă"},
-        {k:"gratitude",en:"Write three things I'm grateful for",ro:"Scriu trei lucruri pentru care sunt recunoscător"},
+        {k:"gratitude",en:"Write three things I'm grateful for",ro:"Scriu trei lucruri pentru care sunt recunoscător/recunoscătoare"},
         {k:"journal",en:"Five minutes of evening journaling",ro:"Cinci minute de jurnal seara"}]},
  {id:"business",ic:"◆",en:{n:"Build something",d:"A business, a product, a project"},ro:{n:"Construiesc ceva",d:"O afacere, un produs, un proiect"},
   acts:[{k:"do",en:"One 90-minute build block, before anything else",ro:"Un bloc de 90 de minute de lucru, înaintea oricărui altceva"},
@@ -666,7 +681,7 @@ const CUES={
 
 /* ═════════ 3. Evidence ═════════ */
 const EV=[
- {eff:"design principle",u:"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11694054/",
+ {eff:"design principle",effRo:"principiu de design",u:"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11694054/",
   en:{t:"Why a missed day doesn't reset you here",
    w:"A scoping review of lifestyle and mental-health apps found most people stop using them within weeks. Streak mechanics that wipe out your progress after one miss turn a habit into guilt, and self-determination research links guilt-driven motivation to burnout rather than persistence.",
    d:"One missed day changes nothing here. Two in a row trigger one thing only: a prompt to make the practice smaller. The standard stays; the punishment doesn't exist.",
@@ -677,7 +692,7 @@ const EV=[
    d:"O zi ratată nu schimbă nimic aici. Două la rând declanșează un singur lucru: propunerea de a face practica mai mică. Standardul rămâne; pedeapsa nu există.",
    c:"Nu e o permisiune să te lași. „Nu rata de două ori” e o regulă strictă — doar că se uită la felul în care e gândită practica, nu la tine.",
    s:"Analiză despre abandonul aplicațiilor (2024); teoria autodeterminării"}},
- {eff:"d ≈ 0.27–0.66",u:"https://www.researchgate.net/publication/378870694_The_When_and_How_of_Planning_Meta-Analysis_of_the_Scope_and_Components_of_Implementation_Intentions_in_642_Tests",
+ {eff:"d ≈ 0.27–0.66",effRo:"efect mic spre mare",u:"https://www.researchgate.net/publication/378870694_The_When_and_How_of_Planning_Meta-Analysis_of_the_Scope_and_Components_of_Implementation_Intentions_in_642_Tests",
   en:{t:"The cue does the work, not your willpower",
    w:"An if-then plan names when and where you'll act: \"After my morning coffee, I meditate for ten minutes.\" Gollwitzer and Sheeran's meta-analysis found a medium-to-large effect on reaching goals; a later synthesis of 642 tests puts it at d ≈ 0.27–0.66. Control passes from willpower to a situation.",
    d:"Every practice here gets a cue at setup. It's the one field the app won't let you skip.",
@@ -688,7 +703,7 @@ const EV=[
    d:"Fiecare practică primește un semnal încă de la configurare. E singurul câmp pe care aplicația nu te lasă să-l sari.",
    c:"Planurile „dacă–atunci” transformă în acțiune motivația pe care o ai deja. Pentru un obiectiv care nu-ți pasă cu adevărat, nu fac nimic.",
    s:"Gollwitzer & Sheeran (2006); meta-analiză a 642 de teste"}},
- {eff:"median 66 days",u:"https://onlinelibrary.wiley.com/doi/abs/10.1002/ejsp.674",
+ {eff:"median 66 days",effRo:"în medie 66 de zile",u:"https://onlinelibrary.wiley.com/doi/abs/10.1002/ejsp.674",
   en:{t:"A habit takes longer than you think",
    w:"Lally and colleagues followed 96 people forming a daily behaviour in real life. Automaticity levelled off at a median of 66 days, with a range of 18 to 254, and the curve fitted well for only 39 of the 82 people with enough data. Missing one opportunity didn't materially affect the process.",
    d:"The app reminds you in the early stretch that this is normal, and shows progress toward 66 days rather than toward an outcome you can't control yet.",
@@ -699,7 +714,7 @@ const EV=[
    d:"Aplicația îți amintește la început de drum că e normal și îți arată progresul spre 66 de zile, nu spre un rezultat pe care încă nu-l poți controla.",
    c:"„21 de zile pentru un obicei” e un mit, iar un 66 fix e aproape la fel de greșit. A fost un singur studiu, de dimensiuni modeste, bazat pe automatism raportat de participanți.",
    s:"Lally et al. (2010), European Journal of Social Psychology"}},
- {eff:"self-reported",u:"https://www.focusmate.com/virtual-coworking-research/",
+ {eff:"self-reported",effRo:"declarat de participanți",u:"https://www.focusmate.com/virtual-coworking-research/",
   en:{t:"Practising next to someone, even a stranger",
    w:"Body doubling — working alongside another person, in silence, on unrelated things — shows strong effects. Among Focusmate members, 99% say it improves their productivity, 96% that it helps them follow through, and 83% that it makes them feel less isolated.",
    d:"The Session tab shows how many people are practising right now, anonymously, and your circle by name if they share.",
@@ -710,7 +725,7 @@ const EV=[
    d:"Secțiunea Sesiune arată câți oameni practică acum, anonim, iar cercul tău pe nume, dacă au pornit partajarea.",
    c:"Cifrele vin dintr-un sondaj al companiei printre membrii ei activi, deci ia-le ca pe un semnal puternic, nu ca pe o măsurătoare controlată. Ideea de bază — că prezența altora te ajută să începi — e bine susținută.",
    s:"Cercetarea Focusmate pe membri; teoria autodeterminării"}},
- {eff:"≈ established therapies",u:"https://centerhealthyminds.org/assets/files-publications/GoldbergMindfulness-basedInterventions.pdf",
+ {eff:"≈ established therapies",effRo:"cam cât terapiile consacrate",u:"https://centerhealthyminds.org/assets/files-publications/GoldbergMindfulness-basedInterventions.pdf",
   en:{t:"Meditation: real effects, honestly sized",
    w:"A meta-analysis of 142 randomised trials with over 12,000 people found mindfulness programmes outperformed waitlists and most comparison activities, and performed about as well as established psychological treatments.",
    d:"Short and daily beats long and occasional. Five to ten minutes: attend to the breath, notice when the mind wanders, come back. Coming back is the practice.",
@@ -721,7 +736,7 @@ const EV=[
    d:"Puțin și zilnic bate mult și rar. Cinci-zece minute: atenția pe respirație, observi când mintea pleacă, revii. Revenirea este practica.",
    c:"Față de alte activități active diferența a fost mică și nesemnificativă, iar majoritatea dovezilor vin din programe structurate, nu din aplicații. E o practică, nu un tratament — în depresie sau anxietate completează ajutorul de specialitate, nu îl înlocuiește.",
    s:"Goldberg et al. (2018), Clinical Psychology Review"}},
- {eff:"5 min/day · 1 month",u:"https://www.researchgate.net/publication/367032629_Brief_structured_respiration_practices_enhance_mood_and_reduce_physiological_arousal",
+ {eff:"5 min/day · 1 month",effRo:"5 min/zi · o lună",u:"https://www.researchgate.net/publication/367032629_Brief_structured_respiration_practices_enhance_mood_and_reduce_physiological_arousal",
   en:{t:"Five minutes of slow exhaling",
    w:"In a Stanford randomised study of 108 people, five minutes a day of cyclic sighing — two inhales through the nose, then a long slow exhale — improved mood and lowered breathing rate more than the same time spent in mindfulness meditation, over one month.",
    d:"The Breathe session paces it for you: inhale, top up, long exhale. Five minutes.",
@@ -732,7 +747,7 @@ const EV=[
    d:"Sesiunea Respirație îți dă ritmul: inspiri, completezi, expiri lung. Cinci minute.",
    c:"Un singur studiu, pe adulți sănătoși, pe o lună. Promițător și ușor de încercat — nu e știință stabilită. Oprește-te dacă ai amețeli.",
    s:"Balban et al. (2023), Cell Reports Medicine"}},
- {eff:"small, d ≈ 0.14–0.31",u:"https://scottbarrykaufman.com/wp-content/uploads/2021/05/davis2016.pdf",
+ {eff:"small, d ≈ 0.14–0.31",effRo:"efect mic",u:"https://scottbarrykaufman.com/wp-content/uploads/2021/05/davis2016.pdf",
   en:{t:"Gratitude: gentle, and modest",
    w:"A meta-analysis of gratitude exercises found small benefits to well-being compared with doing nothing, and no advantage over other psychologically active exercises. It's a gentle, low-cost practice; the evidence doesn't support big claims about it.",
    d:"Write three specific things, not general ones. \"The way my sister laughed at dinner\" beats \"my family\".",
@@ -743,7 +758,7 @@ const EV=[
    d:"Scrie trei lucruri concrete, nu generale. „Felul în care a râs sora mea la cină” bate „familia mea”.",
    c:"Dacă începe să pară forțat sau ca o acoperire a unor greutăți reale, las-o deoparte o vreme. Recunoștința nu e menită să ascundă durerea.",
    s:"Davis et al. (2016), Journal of Counseling Psychology"}},
- {eff:"fantasy alone lowers energy",u:"https://pmc.ncbi.nlm.nih.gov/articles/PMC8149892/",
+ {eff:"fantasy alone lowers energy",effRo:"fantezia singură scade energia",u:"https://pmc.ncbi.nlm.nih.gov/articles/PMC8149892/",
   en:{t:"Visualise the obstacle, not only the dream",
    w:"Imagining only the ideal outcome feels good and measurably lowers energy: across four studies, positive fantasies reduced both reported energy and systolic blood pressure, as if the mind had already arrived. Holding the outcome next to a real obstacle and planning for that obstacle — Oettingen's WOOP — is the version with a meta-analysis behind it.",
    d:"The Visualise session walks you through wish, outcome, obstacle and plan. About three minutes.",
@@ -754,7 +769,7 @@ const EV=[
    d:"Sesiunea Vizualizare te poartă prin dorință, rezultat, obstacol și plan. Cam trei minute.",
    c:"Efectele sunt modeste și variază de la om la om și de la obiectiv la obiectiv. Funcționează cel mai bine pentru obiective la care ții și pe care le crezi posibile.",
    s:"Kappes & Oettingen (2011); meta-analiza MCII (2021)"}},
- {eff:"effort drives drive",u:"https://www.annualreviews.org/content/journals/10.1146/annurev-psych-020223-012208",
+ {eff:"effort drives drive",effRo:"efortul aduce elanul",u:"https://www.annualreviews.org/content/journals/10.1146/annurev-psych-020223-012208",
   en:{t:"Action comes before the drive",
    w:"The common model says wait until you feel motivated, then act. It runs the other way: the brain's dopamine system responds to pursuing a goal and spending effort, not mainly to getting the reward. Effort itself produces the signal that keeps you going.",
    d:"Make starting absurdly easy. A session starts by sitting down, not by feeling ready. Two minutes of real effort often produce the state you were waiting for.",
@@ -765,7 +780,7 @@ const EV=[
    d:"Fă începutul absurd de ușor. O sesiune începe când te așezi, nu când te simți pregătit. Două minute de efort real aduc adesea starea pe care o așteptai.",
    c:"E un mecanism, nu o invitație să forțezi până la epuizare. Deciziile bazate pe efort se strică la oboseală — odihna face parte din sistem, nu e o răsplată după ce termini.",
    s:"Annual Review of Psychology; neuroștiința efortului"}},
- {eff:"best of 54 programmes",u:"https://authors.library.caltech.edu/records/mys88-cc756",
+ {eff:"best of 54 programmes",effRo:"cel mai bun din 54 de programe",u:"https://authors.library.caltech.edu/records/mys88-cc756",
   en:{t:"Reward the comeback, not the streak",
    w:"A 2021 megastudy tested 54 four-week programmes on 61,293 gym members. About 45% raised weekly visits, by roughly 9-27%. The best one rewarded people for coming back after a missed workout. Separately, broken streaks lower engagement, less so when a streak can be repaired.",
    d:"There's no streak to lose here. The day you come back after a gap, the app says so warmly and asks about the setup, not the miss.",
@@ -776,7 +791,7 @@ const EV=[
    d:"Aici nu ai o serie de pierdut. În ziua în care revii după o pauză, aplicația îți spune asta cu căldură și te întreabă despre felul în care e organizată practica, nu despre ratare.",
    c:"Doar 8% dintre programe mai aveau efect după cele patru săptămâni. Recompensele te ajută să începi; după aceea practica trebuie să se susțină singură, de aceea contează să-ți placă pe moment.",
    s:"Milkman et al. (2021), Nature; Silverman & Barasch (2023), Journal of Consumer Research"}},
- {eff:"optional · about 1 in 8 choose it",u:"https://ojs.aaai.org/index.php/ICWSM/article/download/31440/33600",
+ {eff:"optional · about 1 in 8 choose it",effRo:"opțional · cam 1 din 8 îl aleg",u:"https://ojs.aaai.org/index.php/ICWSM/article/download/31440/33600",
   en:{t:"Stakes: optional, small, social",
    w:"Commitment contracts work for the people who choose them. In a Philippines smoking study the offer raised quit rates by about 3-6 percentage points, still visible in surprise tests at 12 months, but only 11% took it up. In a trial of 2,538 smokers, 14% accepted a deposit versus 90% a reward. In stickK data, commitments with a stake succeeded far more often (50-68% vs 13%); having a referee made only a small difference.",
    d:"The circle's \"If I don't\" field is optional. Keep the stake small, social and chosen by you, such as telling the circle what got in the way. The app never holds money.",
@@ -787,7 +802,7 @@ const EV=[
    d:"Câmpul „Dacă nu reușesc” din cerc e opțional. Păstrează miza mică, socială și aleasă de tine, de exemplu să le spui celorlalți ce te-a oprit. Aplicația nu ține niciodată bani.",
    c:"Cifrele stickK vin de la oameni care și-au ales singuri mizele, deci exagerează efectul. Mizele îi ajută pe cei care știu că vor fi tentați; pentru ceilalți adaugă doar presiune. După o ratare, refă planul în loc să crești miza.",
    s:"Giné, Karlan & Zinman (2010); Halpern et al. (2015), NEJM; Jangra et al. (2024), ICWSM"}},
- {eff:"faster recovery",u:"https://pmc.ncbi.nlm.nih.gov/articles/PMC10288131/",
+ {eff:"faster recovery",effRo:"refacere mai rapidă",u:"https://pmc.ncbi.nlm.nih.gov/articles/PMC10288131/",
   en:{t:"Being hard on yourself makes it worse",
    w:"A lot of advice in this space says raise the pressure on yourself. The research points the other way. People who meet a bad day with self-compassion are more motivated to try again. Self-criticism undermines self-regulation and recovery; athletes higher in self-compassion recover physiologically faster after failure.",
    d:"After a missed day the app asks what broke in the setup, never what's wrong with you. That's a deliberate design choice.",
@@ -801,7 +816,7 @@ const EV=[
 ];
 
 /* ═════════ 4. State ═════════ */
-const LS="pow.v5", LS_OLD="pow.v3", LS_T="pow.timer", APP_V="0.1.0-lite";
+const LS="pow.v5", LS_OLD="pow.v3", LS_T="pow.timer", APP_V="0.3.0-lite";
 let S=null;
 const ui={tab:"today",ob:0,tpl:null,pick:null,pickKind:"do",pickMin:null,pickOwn:"",cue:null,cueOwn:"",
   mode:"focus",dur:{focus:50,meditate:10,breathe:5},justFinished:null,flash:"",woopIdx:0,busy:false,
@@ -898,7 +913,9 @@ const actRun=id=>runOf(k=>{const d=S.days[k];return !!(d&&d.done&&d.done[id]);})
 function firstDay(){let f=dayKey();
   Object.keys(S.days).concat(S.actions.map(a=>a.created||f)).forEach(k=>{if(k<f)f=k;});return f;}
 // "1 day", "2 days"; Romanian also needs "de" from 20 up ("20 de zile")
-function monthLabelN(n){return n+" "+(n===1?t("today.monthN1"):(LANG==="ro"&&n>=20?"de ":"")+t("today.monthN"));}
+// Romanian adds "de" after 20-99 and after every number ending in 00
+function roDe(n){return n%100===0||n%100>=20;}
+function monthLabelN(n){return n+" "+(n===1?t("today.monthN1"):(LANG==="ro"&&roDe(n)?"de ":"")+t("today.monthN"));}
 function monthDays(){const p=dayKey().slice(0,7);return Object.keys(S.days).filter(k=>k.slice(0,7)===p&&dayDone(k)).length;}
 // immediate, informational feedback; the warmest message is for coming back after a gap
 function winMsg(){
@@ -1011,7 +1028,7 @@ const Net={mode:"local",peers:[],cpeers:[],members:[],feed:[],reacts:{},room:nul
  },
  beat(){
   const act=!!T.running,mode=act?T.mode:null,sh=!!S.set.share;
-  if(this.room)this.room.track({active:act,mode}).catch(()=>{});
+  if(this.room)this.room.track({active:act,mode}).then(()=>setTimeout(paintLive,300)).catch(()=>{});
   if(this.chan)this.chan.track({active:act,mode,
     label:sh&&act&&T.mode==="focus"&&T.label?String(T.label).slice(0,60):null,
     who:sh?this.uid||null:null}).catch(()=>{});
@@ -1131,8 +1148,12 @@ const Auth={sb:null,user:null,ready:false,sent:"",err:"",mode:"save",busy:false,
   }catch(e){this.fail(e);}
   this.busy=false;render();
  },
- async fresh(){
-  try{const r=await this.sb.auth.signInAnonymously();this.user=r.data&&r.data.session?r.data.session.user:null;}catch(e){this.user=null;}
+ // one guest sign-in at a time: a second tap reuses the call already in flight
+ fresh(){
+  if(this._fp)return this._fp;
+  this._fp=(async()=>{try{const r=await this.sb.auth.signInAnonymously();this.user=r.data&&r.data.session?r.data.session.user:null;}catch(e){this.user=null;}})();
+  this._fp.finally(()=>{this._fp=null;});
+  return this._fp;
  },
  async signOut(){
   if(!this.sb)return;
@@ -1154,7 +1175,8 @@ const Auth={sb:null,user:null,ready:false,sent:"",err:"",mode:"save",busy:false,
     if(r.error||!r.data||r.data.deleted!==true)throw r.error||new Error("not deleted");}
   catch(e){return false;}
   Net.stop();Cloud.reset();
-  try{await this.sb.auth.signOut({scope:"local"});}catch(e){}
+  // the account is gone server-side, so a logout call would only answer 403; drop the stored session locally instead
+  try{Object.keys(localStorage).filter(k=>/^sb-.*-auth-token/.test(k)).forEach(k=>localStorage.removeItem(k));}catch(e){}
   this.user=null;this.sent="";this.mode="save";this.err="";
   return true;
  }
@@ -1355,11 +1377,11 @@ function stopT(how){
   const d=day();
   if(mins>=(T.mode==="focus"?5:1)){
     if(T.mode==="focus")d.focusMin+=mins;else d.practiceMin+=mins;
-    if(how!=="stop")tickSession();
+    if(how!=="stop"){tickSession();if(dayDone(dayKey()))ui.flash=winMsg();}
     S.sessions.unshift({at:Date.now(),min:mins,mode:T.mode,label:T.label||"",note:""});
     S.sessions=S.sessions.slice(0,80);
-    ui.justFinished=T.mode;save();
-  }else if(how==="finish")ui.flash=t("sess.short");
+    ui.justFinished=T.mode;if(how==="stop")ui.flash=tf("sess.savedMin",{m:mins});save();
+  }else if(how==="finish"||how==="stop")ui.flash=t("sess.short");
   if(how==="end"&&T.mode!=="focus")bell();
   T.label="";T.act=null;ui.sessAct=null;Net.beat();
   if(ui.tab==="session")render();else softRender();
@@ -1463,7 +1485,7 @@ function vOnboard(root){
     box.appendChild(el("p",{class:"lede",text:t("ob.lede")}));
     box.appendChild(el("div",{class:"notice acc"},[el("span",{text:"✓"}),el("div",{text:t("ob.honest")})]));
     box.appendChild(el("button",{class:"btn accent lg",style:"align-self:flex-start",text:t("ob.start"),
-      onclick:()=>{ui.ob=1;render();}}));
+      onclick:()=>{ui.ob=1;render();if(Auth.sb&&Auth.ready&&!Auth.user)Auth.fresh().then(()=>{Net.beat();softRender();});}}));
   }
   if(ui.ob===1){
     box.appendChild(el("h1",{style:"font-size:24px",text:t("ob.s1")}));
@@ -1543,6 +1565,31 @@ function finishOb(){
 function goSession(kind,id){
   ui.mode=kind==="do"?"focus":kind;ui.sessAct=id||null;ui.tab="session";render();window.scrollTo(0,0);
 }
+function calUrl(a,hm){
+  const [h,mi]=String(hm||"08:00").split(":").map(Number);
+  const d=new Date();d.setDate(d.getDate()+1);d.setHours(isNaN(h)?8:h,isNaN(mi)?0:mi,0,0);
+  const e=new Date(d.getTime()+10*6e4);
+  const f=x=>x.getFullYear()+pad(x.getMonth()+1)+pad(x.getDate())+"T"+pad(x.getHours())+pad(x.getMinutes())+"00";
+  let tz="";try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||"";}catch(x){}
+  const q=new URLSearchParams({action:"TEMPLATE",text:"Awakened Wisdom · "+(a.name||""),
+    details:a.cue?t("today.when")+": "+a.cue:"",dates:f(d)+"/"+f(e),recur:"RRULE:FREQ=DAILY"});
+  if(tz)q.set("ctz",tz);
+  return "https://calendar.google.com/calendar/render?"+q.toString();
+}
+function calCard(inYou){
+  const a=S.actions[0];if(!a)return null;
+  const c=el("div",{class:"card"});
+  c.appendChild(E("div","eyebrow",t("today.calT")));
+  c.appendChild(el("p",{class:"tiny muted",style:"margin-top:6px",text:t("today.calBody")}));
+  const tm=el("input",{type:"time",value:S.set.calTime||"08:00",style:"max-width:130px"});
+  const link=el("a",{class:"btn accent sm",target:"_blank",rel:"noopener",href:calUrl(a,tm.value),
+    style:"display:inline-flex;align-items:center;text-decoration:none",text:t("today.calBtn")});
+  tm.addEventListener("input",()=>{link.href=calUrl(a,tm.value);});
+  link.addEventListener("click",()=>{S.set.calTime=tm.value;S.set.calAsked=true;save();if(!inYou)setTimeout(render,300);});
+  c.appendChild(el("div",{class:"row",style:"margin-top:10px;gap:8px"},[tm,link,
+    inYou?null:el("button",{class:"btn ghost sm",text:t("today.calLater"),onclick:()=>{S.set.calAsked=true;save();render();}})]));
+  return c;
+}
 function vToday(root){
   const k=dayKey(),d=day(),st=stats(),stack=el("div",{class:"stack"});
   const n=S.actions.filter(a=>d.done[a.id]).length;
@@ -1560,25 +1607,46 @@ function vToday(root){
       el("div",{class:"actb"},[
         autoT({class:"nm",value:a.name,placeholder:"—",oninput:e=>{a.name=e.target.value;save();}}),
         el("div",{class:"cue"},[E("span","k",t("today.when")),
-          el("input",{type:"text",value:a.cue,placeholder:CUES[LANG][0],oninput:e=>{a.cue=e.target.value;save();}})])]),
+          autoT({value:a.cue,placeholder:CUES[LANG][0],oninput:e=>{a.cue=e.target.value;save();}})])]),
       el("div",{class:"side"},[
         a.kind!=="do"?E("span","kind",KIC[a.kind]+" "+t("kind."+a.kind)):null,
         !on?el("button",{class:"btn ghost sm",text:t("today.start"),onclick:()=>goSession(a.kind||"do",a.id)}):null,
-        el("div",{class:"mini",text:r+"d · "+(r>=66?"✓":Math.round(100*Math.min(1,r/66))+"%")})])
+        el("div",{class:"mini",text:tf("today.days66",{r})+(r>=66?" ✓":"")})])
     ]));
   });
   const mom=el("div",{class:"mom"});
   lastN(14).forEach(kk=>mom.appendChild(el("i",{class:(dayDone(kk)?"on":"")+(kk===k?" today":""),title:pretty(kk)})));
   hero.appendChild(mom);
   hero.appendChild(el("div",{class:"tiny muted",style:"margin-top:6px",text:t("today.momentum")}));
+  const shown=shownUp();
+  if(shown>0&&shown<7){
+    const dots=el("div",{class:"mom",style:"margin-top:8px"});
+    for(let i=0;i<7;i++)dots.appendChild(el("i",{class:i<shown?"on":""}));
+    hero.appendChild(el("div",{style:"margin-top:14px"},[E("div","eyebrow",t("today.start7")),dots,
+      el("div",{class:"tiny muted",style:"margin-top:6px",text:tf("today.start7body",{n:shown})})]));
+  }
   if(ui.todayMsg&&dayDone(k))hero.appendChild(el("div",{class:"notice acc",style:"margin-top:12px"},[el("span",{text:"✓"}),el("div",{text:ui.todayMsg})]));
   stack.appendChild(hero);
+
+  if(shown===0&&S.actions.length){
+    const fc=el("div",{class:"card lift"});
+    fc.appendChild(E("div","eyebrow",t("today.firstT")));
+    fc.appendChild(el("p",{style:"margin-top:6px",text:t("today.firstBody")}));
+    fc.appendChild(el("button",{class:"btn accent",style:"margin-top:10px",text:t("today.firstDone"),onclick:()=>{
+      d.done[S.actions[0].id]=true;buzz([14,40,14]);ui.todayMsg=t("today.firstWin");save();render();}}));
+    stack.appendChild(fc);
+  }
+
+  if(shown>=1&&!S.set.calAsked){const cc=calCard(false);if(cc)stack.appendChild(cc);}
 
   if(missedTwice()){
     stack.appendChild(el("div",{class:"notice crit"},[el("span",{text:"▲"}),el("div",{},[
       el("b",{text:t("today.missTwice")+". "}),document.createTextNode(t("today.missTwiceBody")),
       el("div",{class:"row",style:"margin-top:9px"},S.actions.map(a=>ui.shrink===a.id?shrinkForm(a):el("button",{class:"btn ghost sm",
         text:t("today.shrink")+(S.actions.length>1?": "+(a.name||"").slice(0,24):""),onclick:()=>{ui.shrink=a.id;render();}})))])]));
+  }else if(shown>0&&addD(k,-1)>=firstDay()&&!dayDone(addD(k,-1))&&!dayDone(k)){
+    stack.appendChild(el("div",{class:"notice acc"},[el("span",{text:"◇"}),el("div",{},[
+      el("b",{text:t("today.rescueT")+". "}),document.createTextNode(t("today.rescueBody"))])]));
   }else if(st.run>=12&&st.run<=24){
     stack.appendChild(el("div",{class:"notice acc"},[el("span",{text:"◈"}),el("div",{},[
       el("b",{text:t("today.week3")+". "}),document.createTextNode(t("today.week3body"))])]));
@@ -1770,12 +1838,12 @@ async function paintLive(){
     box.appendChild(el("div",{class:"notice"},[el("span",{text:"◇"}),el("div",{},[
       el("b",{text:t("sess.solo")+". "}),document.createTextNode(t("sess.soloBody"))])]));return;
   }
-  const me=Net.peers.find(p=>p.isMe),others=Net.peers.filter(p=>!p.isMe).length;
+  const me=T.running?Net.peers.find(p=>p.isMe):null,others=Net.peers.filter(p=>!p.isMe).length;
   // names come only from circle members who chose to share
   const named=Net.cpeers.filter(p=>!p.isMe&&typeof p.presence.who==="string");
   const anon=Math.max(0,others-named.length);
   box.appendChild(el("div",{class:"row between"},[
-    E("div","eyebrow",others===1?"1 "+t("sess.other1"):others+" "+t("sess.others")),
+    E("div","eyebrow",others===0?t("sess.live0"):others===1?t("sess.live1"):tf(LANG==="ro"&&roDe(others)?"sess.liveNd":"sess.liveN",{n:others})),
     others?el("span",{class:"dot live"}):null]));
   if(!me&&!others){box.appendChild(el("div",{class:"empty",text:t("sess.nobody")}));return;}
   const ids=Array.from(new Set(named.map(p=>p.presence.who).concat(me&&Net.uid?[Net.uid]:[])));
@@ -1790,7 +1858,7 @@ async function paintLive(){
     return el("div",{class:"peer"},[av,el("div",{style:"flex:1;min-width:0"},[nm,md]),el("span",{class:"dot live"})]);
   };
   const wrap=el("div",{style:"margin-top:6px"});
-  if(me){const pr=profs[Net.uid]||{};wrap.appendChild(row(pr,(pr.name||"—")+" · "+t("sess.you"),modeOf(me)));}
+  if(me){const pr=profs[Net.uid]||{};wrap.appendChild(row(pr,pr.name?pr.name+" · "+t("sess.you"):t("sess.youCap"),modeOf(me)));}
   named.forEach(p=>{const pr=profs[p.presence.who]||{};
     wrap.appendChild(row(pr,pr.name||"—",modeOf(p)+(typeof p.presence.label==="string"&&p.presence.label?" · "+p.presence.label:"")));});
   if(anon)wrap.appendChild(row({},anon===1?t("sess.anon1"):tf("sess.anon",{n:anon}),""));
@@ -1806,9 +1874,8 @@ function vCircle(root){
       el("div",{},[el("b",{text:t("circ.solo")+". "}),document.createTextNode(t("circ.soloBody"))])])]));
     stack.appendChild(commitCard());root.appendChild(stack);return;
   }
-  stack.appendChild(commitCard());
-  if(S.pod.id){stack.appendChild(board());stack.appendChild(activity());}
-  else stack.appendChild(joinCard());
+  if(S.pod.id){stack.appendChild(commitCard());stack.appendChild(board());stack.appendChild(activity());}
+  else{stack.appendChild(joinCard());stack.appendChild(commitCard());}
   root.appendChild(stack);
 }
 function commitCard(){
@@ -1823,8 +1890,8 @@ function commitCard(){
       F(t("circ.stake"),el("input",{type:"text",placeholder:t("circ.stakePh"),value:k.stake,oninput:e=>{k.stake=e.target.value;save();}}))]),
     el("p",{class:"tiny muted",text:t("circ.stakeHint")})]));
   c.appendChild(el("div",{class:"row",style:"margin-top:11px"},[
-    el("button",{class:"btn accent sm",text:t("circ.kept"),onclick:()=>{k.status="kept";save();render();}}),
-    el("button",{class:"btn ghost sm",text:t("circ.missed"),onclick:()=>{k.status="missed";save();render();}}),
+    el("button",{class:"btn sm "+(k.status==="kept"?"accent":"ghost"),text:t("circ.kept"),onclick:()=>{k.status="kept";save();render();}}),
+    el("button",{class:"btn sm "+(k.status==="missed"?"accent":"ghost"),text:t("circ.missed"),onclick:()=>{k.status="missed";save();render();}}),
     el("button",{class:"btn ghost sm",text:t("circ.newWeek"),onclick:()=>{S.pod.commit={text:"",due:"",stake:"",status:"open"};save();render();}})]));
   return c;
 }
@@ -1898,7 +1965,7 @@ async function paintMembers(h,mem){
     const p=profs[m.uid]||{};
     const av=p.avatarUrl?el("img",{class:"av",alt:"",src:p.avatarUrl}):el("div",{class:"avd",text:"◉"});
     const nm=el("div",{style:"font-weight:600;font-size:14px"});
-    nm.textContent=(p.name||"—")+(m.uid===Net.uid?" · "+t("sess.you"):"");
+    nm.textContent=m.uid===Net.uid?(p.name?p.name+" · "+t("sess.you"):t("sess.youCap")):(p.name||"—");
     const body=el("div",{style:"flex:1;min-width:0"},[nm]);
     if(m.focus){const s=el("div",{class:"tiny muted"});s.textContent=String(m.focus);body.appendChild(s);}
     if(m.commit&&m.commit.text){const ck=el("div",{class:"tiny",style:"color:var(--ink-2);margin-top:3px"});
@@ -1937,10 +2004,11 @@ async function paintFeed(h,items){
 }
 
 /* ═════════ 13. Progress ═════════ */
+function progL(k,n){return n===1?t("prog."+k+"1"):(LANG==="ro"&&roDe(n)?"de ":"")+t("prog."+k);}
 function vProg(root){
   const st=stats(),stack=el("div",{class:"stack"});
   stack.appendChild(head(t("prog.eyebrow"),t("prog.title"),t("prog.sub")));
-  stack.appendChild(el("div",{class:"tiles"},[tile(String(st.done),t("prog.shown")),tile(String(st.run),t("prog.run")),
+  stack.appendChild(el("div",{class:"tiles"},[tile(String(st.done),progL("shown",st.done)),tile(String(st.run),progL("run",st.run)),
     tile(String(st.fh),t("prog.focusH")),tile(String(st.ph),t("prog.practiceH"))]));
   const a=el("div",{class:"card"});
   a.appendChild(E("div","eyebrow",t("prog.auto")));
@@ -1961,7 +2029,7 @@ function vProg(root){
     el("div",{class:"row",style:"gap:10px"},[legend("var(--accent)",t("prog.legendF")),legend("var(--calm)",t("prog.legendP"))])]),
     el("div",{class:"chartwrap",style:"margin-top:8px"},[chart()])]));
   stack.appendChild(el("div",{class:"card"},[el("div",{class:"row between"},[E("div","eyebrow",t("prog.never")),
-    el("span",{class:"pill "+(st.breaches===0?"good":"warn"),text:st.breaches+" "+t("prog.breaches")})]),
+    el("span",{class:"pill "+(st.breaches===0?"good":"warn"),text:st.breaches===0?t("prog.br0"):st.breaches===1?t("prog.br1"):tf(LANG==="ro"&&roDe(st.breaches)?"prog.brNd":"prog.brN",{n:st.breaches})})]),
     el("p",{class:"tiny muted",style:"margin-top:8px",text:st.breaches===0?t("prog.clean"):t("today.missTwiceBody")})]));
 
   if(open("week")){
@@ -2037,7 +2105,7 @@ function vLib(root){
   stack.appendChild(head(t("lib.eyebrow"),t("lib.title"),t("lib.sub")));
   EV.forEach((e,i)=>{
     const L=e[LANG]||e.en,d=el("details",{class:"ev"});
-    d.appendChild(el("summary",{},[E("span","n",pad(i+1)),el("h3",{text:L.t}),el("span",{class:"effect",text:e.eff})]));
+    d.appendChild(el("summary",{},[E("span","n",pad(i+1)),el("h3",{text:L.t}),el("span",{class:"effect",text:LANG==="ro"&&e.effRo?e.effRo:e.eff})]));
     d.appendChild(el("div",{class:"body"},[el("p",{text:L.w}),
       el("div",{class:"do"},[el("b",{text:t("lib.run")}),el("p",{text:L.d})]),
       el("div",{class:"cav"},[el("b",{text:t("lib.cav")}),el("p",{text:L.c})]),
@@ -2055,7 +2123,7 @@ function vYou(root){
   stack.appendChild(acctCard());
   stack.appendChild(el("div",{class:"card"},[E("div","eyebrow",t("you.mode")),
     el("div",{class:"row",style:"margin-top:8px;gap:8px"},[el("span",{class:"dot "+(Net.mode==="connected"?"good":"")}),
-      el("span",{class:"tiny",text:Net.mode==="connected"?t("you.connected"):t("you.solo")})])]));
+      el("span",{class:"tiny",text:Net.mode==="connected"?(Auth.anon?t("you.connectedAnon"):t("you.connected")):t("you.solo")})])]));
   stack.appendChild(el("div",{class:"card"},[el("div",{class:"row between"},[
     el("div",{style:"flex:1;min-width:0"},[el("b",{text:t("you.share")}),el("div",{class:"tiny muted",text:t("you.shareHint")})]),
     el("button",{class:"btn "+(S.set.share?"accent":"ghost")+" sm",text:S.set.share?t("you.shareOn"):t("you.shareOff"),
@@ -2068,6 +2136,7 @@ function vYou(root){
     el("div",{style:"flex:1;min-width:0"},[el("b",{text:t("you.unlock")}),el("div",{class:"tiny muted",text:t("you.unlockHint")})]),
     el("button",{class:"btn "+(S.set.unlockAll?"accent":"ghost")+" sm",text:S.set.unlockAll?t("you.unlockOn"):t("you.unlock"),
       onclick:()=>{S.set.unlockAll=!S.set.unlockAll;save();render();}})])]));
+  const cy=calCard(true);if(cy)stack.appendChild(cy);
   stack.appendChild(fbCard());
   stack.appendChild(funnelCard("pack"));
   stack.appendChild(el("div",{class:"card"},[E("div","eyebrow",t("you.about")),
@@ -2092,10 +2161,11 @@ function vYou(root){
       ui.resetArm=false;
       if(T.running){clearInterval(T.iv);clearTimeout(bTm);T.running=false;keepAwake(false);persistT();}
       // rows, memberships and empty circles go with the account on the server
+      clearTimeout(sTm);
       if(Auth.sb&&Auth.user&&!(await Auth.deleteAccount())){ui.delErr=true;render();return;}
       ui.delErr=false;Net.closeCircle();
       S=fresh();lastPush="";Object.assign(ui,{ob:0,tpl:null,pick:null,pickOwn:"",cue:null,cueOwn:"",tab:"today",flash:"",justFinished:null,sessAct:null,shrink:null});
-      day();save();if(Auth.sb)await Auth.fresh();Net.beat();render();}}),
+      day();save();Net.beat();render();}}),
     ui.delErr?el("div",{class:"tiny",style:"color:var(--crit);margin-top:8px",text:t("you.delErr")}):null]));
   root.appendChild(stack);
 }
@@ -2132,7 +2202,7 @@ function fbCard(){
 function restoreCard(){
   const c=el("div",{class:"card"}),msg=el("div",{class:"tiny",style:"margin-top:8px"});
   const ta=el("textarea",{style:"margin-top:9px;font-family:var(--mono);font-size:11px",placeholder:t("you.restorePh")});
-  const file=el("input",{type:"file",accept:"application/json,.json",style:"margin-top:8px;font-size:13px;max-width:100%",onchange:e=>{
+  const file=el("input",{type:"file",accept:"application/json,.json",style:"display:none",onchange:e=>{
     const f=e.target.files&&e.target.files[0];if(!f)return;
     const r=new FileReader();r.onload=()=>{ta.value=String(r.result||"");};r.readAsText(f);}});
   let armed=false;
@@ -2152,7 +2222,8 @@ function restoreCard(){
     const m=document.getElementById("restoreMsg");if(m)m.textContent=t("you.restoreOk");}});
   msg.id="restoreMsg";
   c.appendChild(E("div","eyebrow",t("you.restore")));
-  c.appendChild(ta);c.appendChild(file);c.appendChild(btn);c.appendChild(msg);
+  const pick=el("button",{class:"btn ghost sm",style:"margin-top:8px;display:block",text:t("you.chooseFile"),onclick:()=>file.click()});
+  c.appendChild(ta);c.appendChild(file);c.appendChild(pick);c.appendChild(btn);c.appendChild(msg);
   return c;
 }
 
