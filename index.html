@@ -111,6 +111,9 @@ main{max-width:1080px;margin:0 auto;width:100%;padding:26px 16px 80px}
 .stack{display:flex;flex-direction:column;gap:14px}
 .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .between{justify-content:space-between}
+.byline{display:flex;align-items:center;gap:12px}
+.avatar{width:52px;height:52px;border-radius:50%;object-fit:cover;flex:none;border:2px solid var(--accent-line)}
+.byline b{display:block;font-size:15px} .byline span{display:block;font-size:13px;color:var(--ink-2)}
 .eyebrow{font-family:var(--body);font-weight:700;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
 .muted{color:var(--ink-2)} .tiny{font-size:13.5px} .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
 .rule{height:1px;background:var(--line);border:0;margin:0}
@@ -349,6 +352,7 @@ en:{
  ob:{
   t1:"You don't need more motivation.",
   lede:"You need one small practice, a cue that starts it, and people who notice. Setup takes about a minute.",
+  by:"Hi, I'm Mihai.", bySub:"I built this app with AI to help people keep one small practice going.",
   start:"Start", honest:"No streak punishment. No paywall. No promises we can't back up.",
   s1:"What are you working on?", s1sub:"Pick the closest one. You can change everything later.",
   s2:"Pick one daily practice", s2sub:"One. Not three. Starting with too much is the most common reason people quit.",
@@ -461,7 +465,7 @@ en:{
   acctAs:"Signed in as {e}", signOut:"Sign out", signOutArm:"Tap again to sign out",
   acctBad:"That doesn't look like an email address.", acctErr:"That didn't work. Try again in a minute.",
   acctWait:"Too many emails for now. Try again in an hour.",
-  madeBy:"Made by Mihai + AI", madeBody:"Mihai + AI shares short, practical ways to use AI for a calmer, more focused day. The free Calm AI Prompt Pack has ready-to-use prompts to start with.", packCta:"Get the free pack",
+  madeBy:"Made by Mihai + AI", madeName:"Mihai Mihalache", madeRole:"Mindset coach · Mihai + AI", madeBody:"Mihai + AI shares short, practical ways to use AI for a calmer, more focused day. The free Calm AI Prompt Pack has ready-to-use prompts to start with.", packCta:"Get the free pack",
   wbTitle:"Planning 2027?", wbBody:"The 2027 goal workbook walks you through a year review, your goals, a 90-day plan and a habit tracker, the same year → quarter → day idea this app uses.", wbCta:"See the workbook",
   calmHint:"Need prompts? They're in the free Calm AI Prompt Pack.", sprintHint:"Want the full plan on paper? It's in the 2027 goal workbook.",
   legalPre:"By saving your progress you agree to the ", legalTerms:"Terms", legalAnd:" and the ", legalPrivacy:"Privacy policy", legalEnd:".",
@@ -495,6 +499,7 @@ ro:{
  ob:{
   t1:"Nu ai nevoie de mai multă motivație.",
   lede:"Ai nevoie de o practică mică, de un semnal care o pornește și de oameni care observă. Configurarea durează cam un minut.",
+  by:"Salut, sunt Mihai.", bySub:"Am făcut aplicația cu ajutorul AI, ca să te ajute să ții o practică mică în fiecare zi.",
   start:"Începe", honest:"Fără pedepse pentru serii rupte. Fără abonament. Fără promisiuni pe care nu le putem susține.",
   s1:"La ce lucrezi?", s1sub:"Alege varianta cea mai apropiată. Poți schimba orice mai târziu.",
   s2:"Alege o singură practică zilnică", s2sub:"Una, nu trei. Să începi cu prea mult e motivul cel mai frecvent pentru care oamenii renunță.",
@@ -607,7 +612,7 @@ ro:{
   acctAs:"Conectat ca {e}", signOut:"Deconectează-te", signOutArm:"Apasă din nou ca să te deconectezi",
   acctBad:"Nu pare o adresă de email.", acctErr:"N-a mers. Încearcă din nou peste un minut.",
   acctWait:"Prea multe emailuri deocamdată. Încearcă din nou peste o oră.",
-  madeBy:"Făcută de Mihai + AI", madeBody:"Mihai + AI arată moduri scurte și practice de a folosi AI pentru o zi mai calmă și mai concentrată. Pachetul gratuit Calm AI are prompturi gata de folosit, ca să începi.", packCta:"Ia pachetul gratuit",
+  madeBy:"Făcută de Mihai + AI", madeName:"Mihai Mihalache", madeRole:"Coach de mindset · Mihai + AI", madeBody:"Mihai + AI arată moduri scurte și practice de a folosi AI pentru o zi mai calmă și mai concentrată. Pachetul gratuit Calm AI are prompturi gata de folosit, ca să începi.", packCta:"Ia pachetul gratuit",
   wbTitle:"Îți planifici 2027?", wbBody:"Workbook-ul de obiective 2027 te duce printr-o retrospectivă a anului, obiectivele tale, un plan de 90 de zile și un tracker de obiceiuri, aceeași idee an → trimestru → zi pe care o folosește aplicația.", wbCta:"Vezi workbook-ul",
   calmHint:"Ai nevoie de prompturi? Sunt în pachetul gratuit Calm AI.", sprintHint:"Vrei planul complet pe hârtie? E în workbook-ul de obiective 2027.",
   legalPre:"Dacă îți păstrezi progresul, ești de acord cu ", legalTerms:"Termenii", legalAnd:" și cu ", legalPrivacy:"Politica de confidențialitate", legalEnd:".", mode:"Mod",
@@ -1483,6 +1488,8 @@ function vOnboard(root){
   if(ui.ob===0){
     box.appendChild(el("h1",{text:t("ob.t1")}));
     box.appendChild(el("p",{class:"lede",text:t("ob.lede")}));
+    box.appendChild(el("div",{class:"byline"},[el("img",{class:"avatar",src:"icons/mihai.jpg",alt:"Mihai Mihalache",width:52,height:52}),
+      el("div",{},[el("b",{text:t("ob.by")}),el("span",{text:t("ob.bySub")})])]));
     box.appendChild(el("div",{class:"notice acc"},[el("span",{text:"✓"}),el("div",{text:t("ob.honest")})]));
     box.appendChild(el("button",{class:"btn accent lg",style:"align-self:flex-start",text:t("ob.start"),
       onclick:()=>{ui.ob=1;render();if(Auth.sb&&Auth.ready&&!Auth.user)Auth.fresh().then(()=>{Net.beat();softRender();});}}));
@@ -1536,7 +1543,9 @@ function funnelCard(kind){
   const c=el("div",{class:"card"});
   if(kind==="pack"){
     c.appendChild(E("div","eyebrow",t("you.madeBy")));
-    c.appendChild(el("p",{class:"tiny",style:"margin-top:8px;max-width:64ch",text:t("you.madeBody")}));
+    c.appendChild(el("div",{class:"byline",style:"margin-top:12px"},[el("img",{class:"avatar",src:"icons/mihai.jpg",alt:"Mihai Mihalache",width:52,height:52}),
+      el("div",{},[el("b",{text:t("you.madeName")}),el("span",{text:t("you.madeRole")})])]));
+    c.appendChild(el("p",{class:"tiny",style:"margin-top:10px;max-width:64ch",text:t("you.madeBody")}));
     c.appendChild(el("p",{style:"margin-top:10px"},[funLink("pack","you_card",t("you.packCta")+" →","btn accent sm")]));
   }else{
     c.appendChild(E("div","eyebrow",t("you.wbTitle")));
