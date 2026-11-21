@@ -325,7 +325,7 @@ svg text{font-family:var(--mono)}
 <p>Pick one small daily practice, set a cue that starts it (like "after my morning coffee"), and invite a small circle of up to 8 people with a code. They see that you showed up, and only what you choose to share.</p>
 <h2>Why no streak punishment</h2>
 <p>No ads, no paywall, no AI inside, and no sign-up needed to start. You can delete everything at any time from the You tab.</p>
-<p>Made by Mihai + AI.</p>
+<p>Made by <a href="https://mihaiplusai.com/?utm_source=app&amp;utm_medium=referral&amp;utm_campaign=intro">Mihai + AI</a>.</p>
 </article>
 </section></main>
 
@@ -1555,7 +1555,8 @@ function funnelCard(kind){
     c.appendChild(el("div",{class:"byline",style:"margin-top:12px"},[el("img",{class:"avatar",src:"icons/mihai.jpg",alt:"Mihai Mihalache",width:52,height:52}),
       el("div",{},[el("b",{text:t("you.madeName")}),el("span",{text:t("you.madeRole")})])]));
     c.appendChild(el("p",{class:"tiny",style:"margin-top:10px;max-width:64ch",text:t("you.madeBody")}));
-    c.appendChild(el("p",{style:"margin-top:10px"},[funLink("pack","you_card",t("you.packCta")+" →","btn accent sm")]));
+    c.appendChild(el("p",{class:"row",style:"margin-top:10px;gap:10px;flex-wrap:wrap"},[funLink("pack","you_card",t("you.packCta")+" →","btn accent sm"),
+      el("a",{href:"https://mihaiplusai.com/?utm_source=app&utm_medium=referral&utm_campaign=you_card",target:"_blank",rel:"noopener",class:"btn ghost sm",text:"mihaiplusai.com ↗"})]));
   }else{
     c.appendChild(E("div","eyebrow",t("you.wbTitle")));
     c.appendChild(el("p",{class:"tiny",style:"margin-top:8px;max-width:64ch",text:t("you.wbBody")}));
