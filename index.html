@@ -465,6 +465,7 @@ en:{
   acctAs:"Signed in as {e}", signOut:"Sign out", signOutArm:"Tap again to sign out",
   acctBad:"That doesn't look like an email address.", acctErr:"That didn't work. Try again in a minute.",
   acctWait:"Too many emails for now. Try again in an hour.",
+  acctExists:"This email already has an account, so we sent a sign-in link to it. Opening it loads that account's progress on this device.",
   madeBy:"Made by Mihai + AI", madeName:"Mihai Mihalache", madeRole:"Mindset coach · Mihai + AI", madeBody:"Mihai + AI shares short, practical ways to use AI for a calmer, more focused day. The free Calm AI Prompt Pack has ready-to-use prompts to start with.", packCta:"Get the free pack",
   wbTitle:"Planning 2027?", wbBody:"The 2027 goal workbook walks you through a year review, your goals, a 90-day plan and a habit tracker, the same year → quarter → day idea this app uses.", wbCta:"See the workbook",
   calmHint:"Need prompts? They're in the free Calm AI Prompt Pack.", sprintHint:"Want the full plan on paper? It's in the 2027 goal workbook.",
@@ -612,6 +613,7 @@ ro:{
   acctAs:"Conectat ca {e}", signOut:"Deconectează-te", signOutArm:"Apasă din nou ca să te deconectezi",
   acctBad:"Nu pare o adresă de email.", acctErr:"N-a mers. Încearcă din nou peste un minut.",
   acctWait:"Prea multe emailuri deocamdată. Încearcă din nou peste o oră.",
+  acctExists:"Emailul ăsta are deja un cont, așa că ți-am trimis un link de conectare. Când îl deschizi, pe acest dispozitiv se încarcă progresul din contul acela.",
   madeBy:"Făcută de Mihai + AI", madeName:"Mihai Mihalache", madeRole:"Coach de mindset · Mihai + AI", madeBody:"Mihai + AI arată moduri scurte și practice de a folosi AI pentru o zi mai calmă și mai concentrată. Pachetul gratuit Calm AI are prompturi gata de folosit, ca să începi.", packCta:"Ia pachetul gratuit",
   wbTitle:"Îți planifici 2027?", wbBody:"Workbook-ul de obiective 2027 te duce printr-o retrospectivă a anului, obiectivele tale, un plan de 90 de zile și un tracker de obiceiuri, aceeași idee an → trimestru → zi pe care o folosește aplicația.", wbCta:"Vezi workbook-ul",
   calmHint:"Ai nevoie de prompturi? Sunt în pachetul gratuit Calm AI.", sprintHint:"Vrei planul complet pe hârtie? E în workbook-ul de obiective 2027.",
@@ -1140,14 +1142,19 @@ const Auth={sb:null,user:null,ready:false,sent:"",err:"",mode:"save",busy:false,
  fail(e){const s=String((e&&(e.code||e.message))||"");
   this.err=/rate|limit|429/i.test(s)?t("you.acctWait"):t("you.acctErr");},
  async email(addr){
-  addr=String(addr||"").trim();this.err="";
+  addr=String(addr||"").trim();this.err="";this.note="";
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(addr)){this.err=t("you.acctBad");render();return;}
   if(!this.sb||this.busy)return;this.busy=true;render();
   try{
     // anonymous -> permanent keeps the user id; "I already have an account" signs in instead
-    const r=this.mode==="save"&&this.anon
+    let r=this.mode==="save"&&this.anon
       ?await this.sb.auth.updateUser({email:addr},{emailRedirectTo:this.back()})
       :await this.sb.auth.signInWithOtp({email:addr,options:{emailRedirectTo:this.back()}});
+    // the email already belongs to an account: send a sign-in link to that account instead of failing
+    if(r.error&&/email_exists|already been registered/i.test(String(r.error.code||"")+" "+String(r.error.message||""))){
+      this.mode="signin";this.note=t("you.acctExists");
+      r=await this.sb.auth.signInWithOtp({email:addr,options:{emailRedirectTo:this.back(),shouldCreateUser:false}});
+    }
     if(r.error)throw r.error;
     this.sent=addr;
   }catch(e){this.fail(e);}
@@ -1166,7 +1173,7 @@ const Auth={sb:null,user:null,ready:false,sent:"",err:"",mode:"save",busy:false,
   if(!Cloud.ok)await Cloud.pull();
   if(!Cloud.ok||!(await Cloud.flush())){this.err=t("you.syncErr");render();return;}
   try{await this.sb.auth.signOut();}catch(e){}
-  Net.stop();this.user=null;this.sent="";this.mode="save";this.err="";Cloud.reset();
+  Net.stop();this.user=null;this.sent="";this.mode="save";this.err="";this.note="";Cloud.reset();
   if(T.running){clearInterval(T.iv);clearTimeout(bTm);T.running=false;keepAwake(false);persistT();}
   S=fresh();Object.assign(ui,{ob:0,tab:"today",flash:"",justFinished:null,sessAct:null,shrink:null});day();
   try{localStorage.setItem(LS,JSON.stringify(S));}catch(e){}
@@ -1182,7 +1189,7 @@ const Auth={sb:null,user:null,ready:false,sent:"",err:"",mode:"save",busy:false,
   Net.stop();Cloud.reset();
   // the account is gone server-side, so a logout call would only answer 403; drop the stored session locally instead
   try{Object.keys(localStorage).filter(k=>/^sb-.*-auth-token/.test(k)).forEach(k=>localStorage.removeItem(k));}catch(e){}
-  this.user=null;this.sent="";this.mode="save";this.err="";
+  this.user=null;this.sent="";this.mode="save";this.err="";this.note="";
   return true;
  }
 };
@@ -1207,7 +1214,9 @@ function acctCard(){
     return c;
   }
   c.appendChild(el("p",{class:"tiny muted",style:"margin-top:6px",text:t("you.acctAnon")}));
-  if(Auth.sent){c.appendChild(el("div",{class:"notice acc",style:"margin-top:10px"},[el("div",{class:"tiny",text:tf("you.acctSent",{e:Auth.sent})})]));return c;}
+  if(Auth.sent){c.appendChild(el("div",{class:"notice acc",style:"margin-top:10px"},[
+    Auth.note?el("div",{class:"tiny",style:"margin-bottom:6px",text:Auth.note}):null,
+    el("div",{class:"tiny",text:tf("you.acctSent",{e:Auth.sent})})].filter(Boolean)));return c;}
   const inp=el("input",{type:"email",placeholder:t("you.acctPh"),autocomplete:"email",style:"margin-top:10px",
     onkeydown:e=>{if(e.key==="Enter"){e.preventDefault();Auth.email(inp.value);}}});
   c.appendChild(inp);
